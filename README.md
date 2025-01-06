@@ -1,3 +1,25 @@
+# FinTrack: AI-Powered Finance & Expenses Tracking System
+
+FinTrack is an AI-driven budget management system that evaluates users’ personal spending patterns on a monthly basis by the categorization of expenses. It provides tailored enlightenments for future budget planning using past spending behavior to recommend optimal resources allocations for various categories.
+
+This project implements four different modules:
+1. Monthly Spending Tracking Module:
+ This module focuses on the main functionality of the system encompassing user uploading receipts, automated categorization of receipts into categories and date, computation of total expenditure for each category and budget recommendation for next month’s spendings. Receipt data extraction utilizes Tesseract OCR, BERT assists in classification of receipt into expenses categories and Linear Regression for budget predictions.
+2. User Financial Profile Module:
+   This module allows users to add and manage their user details when creating or updating their accounts respectively. Additionally, this module also comprises of a user-friendly dashboard that allows users to review, track and analyze their financial activities effectively. The dashboard presents users' spending patterns on a monthly and annual basis along with the recommended expenditure limits for different expense categories for that month.
+3. Relief Labeling and Tracking Module:
+   This module serves to assist eligible taxpayers according to their income brackets where the system identifies receipts that can be filed for relief through labelling and copying them to a designated folder allowing easy access for tax filing purposes. 
+4. Infographic and Guide Module:
+   This module displays infographics on topics such as what is financial management, importance of tracking expenses, tips for following a budget, common financial mistakes to avoid and an overview of the tax-filing journey in Malaysia.
+
+## Intelligent Algorithms
+
+Fintrack employs:
+
+- Tesseract OCR: Extracts the information from receipts image or files into readable text.
+- BERT as LLM: Analyzes the contextual meaning of receipt items to determine the appropriate receipt category.
+- Linear Regression: Predicts the budget allocation for each category depending on past spending habits.
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
