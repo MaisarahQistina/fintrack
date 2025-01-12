@@ -1,25 +1,34 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { Routes, Route, useLocation } from "react-router-dom";
+import "./App.css";
+import { FinTrackLanding } from "./LandingPage/FinTrackLanding"; // Your landing page
+import { NavBar } from "./LandingPage/components/NavBar"; // Your shared header component
+import { Footer } from "./LandingPage/components/Footer"; // Your shared footer component
 
-function App() {
+const App = () => {
+  const location = useLocation();
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {/* Shared Header */}
+      <NavBar />
+
+      <main className="main-content">
+        {/* Define Routes */}
+        <Routes>
+          <Route path="/" element={<FinTrackLanding />} />
+          {/* Add more routes as needed */}
+        </Routes>
+
+        {location.pathname === '/' && (
+          <>
+            <Footer />
+          </>
+        )}
+      </main>
+
     </div>
   );
-}
+};
 
 export default App;
