@@ -34,7 +34,7 @@ export function NavBar() {
         {/* Sign In Button */}
         <button
           className="flex items-center px-4 py-2.5 bg-transparent border border-white rounded"
-          onClick={() => handleNavigation("SignIn", "/signin")}
+          onClick={() => handleNavigation("SignIn", "/sign-in")}
         >
           <span className="text-sm font-semibold text-white text-[14px] font-montserrat">Sign In</span>
         </button>
