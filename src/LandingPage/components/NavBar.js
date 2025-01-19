@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; // React Router for navigation
+import { useNavigate } from "react-router-dom"; 
 
 export function NavBar() {
-  const [activeTab, setActiveTab] = useState("Home"); // Track the active tab
-  const navigate = useNavigate(); // Navigation hook
+  const [activeTab, setActiveTab] = useState("null"); // Track the active tab
+  const navigate = useNavigate(); 
 
   const handleNavigation = (tabName, path) => {
     setActiveTab(tabName); // Set the active tab
@@ -19,8 +19,8 @@ export function NavBar() {
         </div>
         <div className="flex gap-4 items-center text-2xl">
           <div
-            className={`gap-2.5 p-2.5 border-b text-[20px] font-nats ${
-              activeTab === "Home" ? "border-white" : "border-transparent"
+            className={`gap-2.5 p-2.5 text-[20px] font-nats ${
+              activeTab === "Home" ? "border-b border-white" : "border-transparent"
             } cursor-pointer`}
             onClick={() => handleNavigation("Home", "/")} // Navigate to homepage
           >
