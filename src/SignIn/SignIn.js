@@ -1,13 +1,20 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { NavBar } from '../LandingPage/components/NavBar.js';
 import { SignInForm } from './components/SignInForm';
 import { SignUpForm } from './components/SignUpForm';
 import { AuthButton } from './components/AuthButton';
 
 export function SignIn() {
-  const [isSignIn, setIsSignIn] = useState(true);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Sync state with URL path
+  const [isSignIn, setIsSignIn] = useState(location.pathname === '/sign-in');
+
+  useEffect(() => {
+    setIsSignIn(location.pathname === '/sign-in');
+  }, [location.pathname]);
 
   const handleFormToggle = (signInValue) => {
     setIsSignIn(signInValue);
