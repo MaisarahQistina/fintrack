@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom"; 
 
 export function NavBar() {
-  const [activeTab, setActiveTab] = useState("null"); // Track the active tab
+  const [activeTab, setActiveTab] = useState("Home"); // Track the active tab
   const navigate = useNavigate(); 
 
   const handleNavigation = (tabName, path) => {
@@ -42,7 +42,7 @@ export function NavBar() {
         {/* Sign Up Button */}
         <button
           className="flex items-center px-4 py-2.5 bg-cyan-100 rounded"
-          onClick={() => handleNavigation("SignUp", "/signup")}
+          onClick={() => handleNavigation("SignUp", "/sign-up")}
         >
           <span className="text-sm font-semibold text-sky-900 text-[14px] font-montserrat">Sign Up</span>
         </button>
