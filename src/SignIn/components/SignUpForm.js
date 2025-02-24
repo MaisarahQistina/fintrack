@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export function SignUpForm() {
   const [formData, setFormData] = useState({
@@ -10,6 +11,7 @@ export function SignUpForm() {
   });
 
   const [isValid, setIsValid] = useState(false);
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -30,8 +32,15 @@ export function SignUpForm() {
     });
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (isValid) {
+      navigate('/sign-in'); // Redirect to My Expenses page
+    }
+  };
+
   return (
-    <form className="flex flex-col flex-1 shrink self-stretch w-full basis-0 min-h-[600px] max-md:max-w-full">
+    <form className="flex flex-col flex-1 shrink self-stretch w-full basis-0 min-h-[600px] max-md:max-w-full" onSubmit={handleSubmit}>
       <div className="flex flex-col mt-4 w-full max-md:max-w-full">
         <label htmlFor="fullName" className="text-xl leading-none text-black mb-3 text-[20] font-abhaya">
           Full Name

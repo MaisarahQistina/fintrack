@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export function SignInForm() {
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [isValid, setIsValid] = useState(false);
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -14,8 +16,15 @@ export function SignInForm() {
     });
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (isValid) {
+      navigate('/my-expenses'); // Redirect to My Expenses page
+    }
+  };
+
   return (
-    <form className="flex flex-col w-full mt-4">
+    <form className="flex flex-col w-full mt-4" onSubmit={handleSubmit}>
       <div className="flex flex-col w-full max-md:max-w-full">
         <label htmlFor="email" className="text-xl leading-none text-black mb-3 text-[20] font-abhaya">
           Email Address
