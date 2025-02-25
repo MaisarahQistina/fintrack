@@ -1,0 +1,150 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden; /* Prevent horizontal scrolling */
+    width: 100%;
+}
+
+.yearlyExpensesView {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centers horizontally */
+    justify-content: flex-start; /* Centers vertically */
+    height: 100vh; /* Takes full screen height */
+    width: 100vw; /* Takes full screen width */
+    position: relative; /* Prevents it from being affected by absolute positioning */
+    background-color: #F8F5EF; /* Solid background color */
+}
+  
+  .monthsContainer {
+    z-index: 1; /* Ensure it's above background */
+    border: 1px solid transparent; 
+    border-radius: 5px;
+    width: 80%; /* Adjust width dynamically */
+    max-width: 1440px;
+    margin-top: 20px;
+    position: relative; /* Change from absolute to relative */
+    bottom: auto;
+    right: auto;
+}
+
+  .monthsRowContainer {
+    width: 100%;
+    padding: 20px 0;
+  }
+  
+  .monthsBackground {
+    background-color: #f8f5ef;
+    border: 1px solid #0000;
+    border-radius: 2px;
+    gap: 40px 70px;
+    width: 100%;
+    min-height: 121px;
+    padding-bottom: 1px;
+    display: flex;
+  }
+  
+  .monthsGrid {
+    background-color: #f8f5ef;
+    border: 1px solid #0000;
+    border-radius: 2px;
+    flex-wrap: wrap;
+    justify-content: start;
+    align-items: center;
+    gap: 40px 70px;
+    width: 100%;
+    min-height: 89px;
+    /* padding: 0 70px 1px; */
+    display: flex;
+    overflow: hidden;
+  }
+  
+  .january,
+  .february,
+  .march,
+  .april,
+  .may,
+  .june,
+  .july,
+  .august,
+  .september,
+  .october,
+  .november,
+  .december {
+    flex-grow: 1;
+    flex-shrink: 1;
+    align-self: stretch;
+    font-size: 18px;
+    font-family: 'NATS', sans-serif;
+    font-weight: bold;
+    color: #05445E;
+    width: 126px;
+    margin: auto 0;
+  }
+  
+  @media (width <= 991px) {
+    .yearlyExpensesView {
+      white-space: initial;
+    }
+  
+    .backgroundImage {
+      max-width: 100%;
+    }
+  
+    .monthsContainer {
+      max-width: 100%;
+      white-space: initial;
+    }
+  
+    .monthsRowContainer {
+      max-width: 100%;
+      white-space: initial;
+    }
+  
+    .monthsBackground {
+      max-width: 100%;
+    }
+  
+    .monthsGrid {
+      max-width: 100%;
+      white-space: initial;
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+  }
+  
+  .viewBy {
+    font-size: 35px;  /* Adjust as needed */
+    font-family: 'Abhaya Libre';
+    font-weight: bold;
+    color: #049BB9; /* Adjust color if needed */
+    position: absolute;
+    display: flex;
+    top: 40px;  /* Adjust distance from the top */
+    left: 50px; /* Adjust distance from the left */
+    gap: 18px;
+  }
+
+  .taxRelief {
+    position: absolute;
+    bottom: 50px;  /* Keep it at bottom */
+    right: 50px;   /* Keep it at right */
+    display: flex;
+    flex-direction: column; /* Ensure text is below icon */
+    align-items: center; /* Center text and icon */
+    text-align: center;
+}
+
+.taxRelief img {
+    width: 90px;  /* Adjust folder size */
+    height: 90px;
+}
+
+.taxRelief span {
+    font-size: 18px;
+    font-family: 'NATS', sans-serif;
+    font-weight: bold;
+    color: #05445E;
+}
+
+

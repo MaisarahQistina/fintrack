@@ -9,16 +9,16 @@ const NavBar = ({ user, onSignOut }) => {
 
   const userNavLinks = [
     { text: "Home", path: "/" },
-    { text: "Appointments", path: "/appointment-view" },
+    { text: "My Expenses", path: "/my-expenses" },
+    { text: "Dashboard", path: "/dashboard" },
+    { text: "Infographics", path: "/infographics" },
   ];
 
   const adminNavLinks = [
     { text: "Home", path: "/admin-home" },
-    { text: "Event Details", path: "/admin-event" },
-    { text: "Medical Staff", path: "/admin-medical-staff" },
-    { text: "Appointments", path: "/admin-appointment" },
-    { text: "Feedback", path: "/admin-feedback" },
-    { text: "Blood Bank", path: "/bloodbank" },
+    { text: "Tax Relief", path: "/admin-taxrelief" },
+    { text: "Infographics", path: "/admin-infographics" },
+    { text: "Feedbacks", path: "/admin-feedbacks" },
   ];
 
   // Determine which links to display

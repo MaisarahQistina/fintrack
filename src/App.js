@@ -5,6 +5,7 @@ import { FinTrackLanding } from "./LandingPage/FinTrackLanding";
 import { SignIn } from "./SignIn/SignIn"; 
 import { ExpensesUpload } from "./ExpensesUpload/ExpensesUpload"; 
 import NavBar from "./LandingPage/components/NavBar";
+import YearlyExpensesView from "./YearlyExpenses/YearlyExpensesView";
 // import { Footer } from "./LandingPage/components/Footer"; // Your shared footer component
 
 const App = () => {
@@ -22,6 +23,7 @@ const App = () => {
           <Route path="/sign-in" element={<SignIn />} />
           <Route path="/sign-up" element={<SignIn />} />
           <Route path="/my-expenses" element={<ExpensesUpload />} />
+          <Route path="/yearly-expenses" element={<YearlyExpensesView />} />
           {/* Add more routes as needed */}
         </Routes>
 
