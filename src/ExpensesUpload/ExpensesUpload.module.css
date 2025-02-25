@@ -6,7 +6,7 @@
     justify-content: center; */
     height: 100vh;
     width: 100vw;
-    background-color: #F5F5F5; /* Set a solid background color */
+    background-color: #F8F5EF; /* Set a solid background color */
 }
   
   @media (max-width: 991px) {
@@ -114,7 +114,7 @@
     font-weight: bold;
     color: #000000; /* Adjust color if needed */
     position: absolute;
-    top: 50px;  /* Adjust distance from the top */
+    top: 40px;  /* Adjust distance from the top */
     left: 50px; /* Adjust distance from the left */
   }
 
