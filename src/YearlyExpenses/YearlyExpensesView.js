@@ -32,7 +32,7 @@ function YearlyExpensesView() {
       </section>
 
       <div className={styles.taxRelief}>
-        <img src="/folder.png" alt="Folder Icon" />
+        <img src="/taxFolder.png" alt="Folder Icon" />
         <span>Tax Relief</span>
     </div>
     </main>
