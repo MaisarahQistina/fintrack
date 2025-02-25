@@ -3,7 +3,8 @@ import { Routes, Route, useLocation } from "react-router-dom";
 import "./App.css";
 import { FinTrackLanding } from "./LandingPage/FinTrackLanding"; 
 import { SignIn } from "./SignIn/SignIn"; 
-// import { NavBar } from "./LandingPage/components/NavBar"; // Your shared header component
+import { ExpensesUpload } from "./ExpensesUpload/ExpensesUpload"; 
+import NavBar from "./LandingPage/components/NavBar";
 // import { Footer } from "./LandingPage/components/Footer"; // Your shared footer component
 
 const App = () => {
@@ -12,7 +13,7 @@ const App = () => {
   return (
     <div className="App">
       {/* Shared Header */}
-      {/* <NavBar /> */}
+      <NavBar />
 
       <main className="main-content">
         {/* Define Routes */}
@@ -20,6 +21,7 @@ const App = () => {
           <Route path="/" element={<FinTrackLanding />} />
           <Route path="/sign-in" element={<SignIn />} />
           <Route path="/sign-up" element={<SignIn />} />
+          <Route path="/my-expenses" element={<ExpensesUpload />} />
           {/* Add more routes as needed */}
         </Routes>
 

@@ -1,13 +1,11 @@
 import * as React from "react";
 import { FeatureCard } from "./components/FeatureCard";
 import { features } from "./data/features";
-import { NavBar } from "./components/NavBar";
 import { Footer } from "./components/Footer";
 
 export function FinTrackLanding() {
   return (
     <div className="flex flex-col">
-      <NavBar />
       <div className="flex flex-col w-full max-md:max-w-full">
         <div className="flex flex-col w-full min-h-screen max-md:max-w-full">
           <div className="flex items-center w-full min-h-screen max-md:max-w-full">

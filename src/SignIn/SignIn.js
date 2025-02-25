@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { NavBar } from '../LandingPage/components/NavBar.js';
 import { SignInForm } from './components/SignInForm';
 import { SignUpForm } from './components/SignUpForm';
 import { AuthButton } from './components/AuthButton';
@@ -31,7 +30,7 @@ export function SignIn() {
         backgroundRepeat: "no-repeat",
       }}
     >
-      <NavBar />
+      
       <div className="flex flex-col items-center flex-grow px-16 pt-20 pb-7 max-md:px-5 max-md:py-24 justify-center">
         <div className="flex gap-5 w-full max-w-[1253px] items-center max-md:flex-col max-md:w-full">
           <div className="flex flex-col w-[42%] max-md:w-full pl-5">
