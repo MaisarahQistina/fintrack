@@ -33,10 +33,10 @@ const NavBar = ({ user, onSignOut }) => {
       {/* Logo & Navigation */}
       <div className="flex items-center gap-6">
         {/* Logo */}
-        <div className="text-4xl font-bold text-white">FINTRACK.</div>
+        <div className="text-4xl font-bold text-white font-abhaya">FINTRACK.</div>
 
         {/* Navigation Links */}
-        <nav className="flex gap-4">
+        <nav className="flex gap-4 font-nats">
           {linksToShow.map(({ text, path }, index) => (
             <Link
               key={index}
@@ -52,7 +52,7 @@ const NavBar = ({ user, onSignOut }) => {
       </div>
 
       {/* User Authentication Section */}
-      <div className="flex gap-4 ml-auto">
+      <div className="flex gap-4 ml-auto font-nats">
         {user ? (
           <>
             <span className="text-white">Hi, {user.name}!</span>
