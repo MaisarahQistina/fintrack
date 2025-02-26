@@ -67,13 +67,13 @@ const NavBar = ({ user, onSignOut }) => {
           <>
             <Link
               to="/sign-in"
-              className="px-4 py-2 border border-white text-white rounded"
+              className="px-4 py-2 border border-white text-white rounded font-montserrat text-sm"
             >
               Sign In
             </Link>
             <Link
               to="/sign-up"
-              className="px-4 py-2 bg-cyan-100 text-sky-900 rounded"
+              className="px-4 py-2 bg-cyan-100 text-sky-900 rounded font-montserrat text-sm"
             >
               Sign Up
             </Link>

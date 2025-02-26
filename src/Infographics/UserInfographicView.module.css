@@ -1,0 +1,35 @@
+.userInfographicView {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    min-height: 100vh; /* Ensure it takes up full screen height */
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+    background-color: #F8F5EF;
+  }
+  
+  .heading {
+    text-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+    z-index: 0;
+    color: #049BB9;
+    background-color: transparent;
+    width: 1440px;
+    height: 76px;
+    font-family: 'Abhaya Libre';
+    font-size: 35px;
+    font-weight: 700;
+    position: absolute;
+    top: 40px;  /* Adjust distance from the top */
+    left: 50px; 
+    overflow: hidden;
+  }
+  
+  @media (width<=991px) {
+    .heading {
+      max-width: 100%;
+    }
+  }
+
+  

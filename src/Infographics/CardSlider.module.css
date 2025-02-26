@@ -1,0 +1,113 @@
+.sliderContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 900px;
+  margin: auto;
+  position: relative;
+  height: 65vh;
+}
+
+.viewportContainer {
+  width: 80%;
+  position: relative;
+  overflow: hidden;
+  height: 60vh;
+}
+
+.carouselTrack {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.5s ease-in-out;
+}
+
+.card {
+  min-width: 100%;
+  height: 60vh;
+  background: white;
+  border-radius: 10px;
+  padding: 5px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  opacity: 0.6;
+  transition: opacity 0.3s ease-in-out;
+  border: 1px solid rgb(126, 123, 123);
+  overflow: hidden;
+}
+
+.card.active {
+  opacity: 1;
+}
+
+.imageContainer {
+  width: 100%;
+  height: 55vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 10px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid rgb(126, 123, 123); /* Added black border */
+  box-sizing: border-box;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.title {
+  font-size: 16px;
+  font-weight: bold;
+  margin: 5px 0;
+  color: #05445E;
+}
+
+.iconContainer {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.icon {
+  width: 25px;
+  height: 25px;
+  cursor: pointer;
+  transition: opacity 0.3s;
+  border: 1px solid rgb(140, 138, 138);
+  border-radius: 4px;
+}
+
+.icon:hover {
+  opacity: 0.7;
+}
+
+.arrow {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 10px;
+  z-index: 10;
+  height: 40px;
+  width: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.7);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+.arrow:hover {
+  background-color: rgba(255, 255, 255, 0.9);
+}
