@@ -1,0 +1,114 @@
+.pageContainer {
+    background-color: #f8f5ef;
+    width: 100%;
+    min-height: 100vh;
+  }
+
+  @media (width<=640px) {
+    .header {
+      padding: 0 16px;
+    }
+  }
+  
+  @media (width<=640px) {
+    .logo {
+      font-size: 32px;
+    }
+  }
+
+  /* Welcome Message */
+  .welcomeSection {
+    color: #049BB9;
+    text-align: center;
+    padding: 100px 0 60px;
+    font-family:
+      Abhaya Libre,
+      serif;
+    font-size: 45px;
+    font-weight: 700;
+  }
+  @media (width<=991px) {
+    .welcomeSection {
+      font-size: 48px;
+    }
+  }
+  @media (width<=640px) {
+    .welcomeSection {
+      padding: 0 20px;
+      font-size: 36px;
+    }
+  }
+
+  /* Card Section */
+  .cardWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px; /* Space between card and button */
+  }
+
+  .cardsContainer {
+    justify-content: center;
+    gap: 108px;
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+  }
+  @media (width<=991px) {
+    .cardsContainer {
+      flex-direction: column;
+      align-items: center;
+      gap: 40px;
+    }
+  }
+  @media (width<=640px) {
+    .cardsContainer {
+      padding: 0 16px;
+    }
+  }
+
+  .card {
+    background-color: #d4f7fe;
+    border-radius: 20px;
+    flex-direction: column;
+    align-items: center; /* Center horizontally */
+    justify-content: center; /* Center vertically */
+    gap: 30px;
+    width: 302px;
+    height: 280px;
+    padding: 20px;
+    display: flex;
+  }
+  @media (width<=991px) {
+    .card {
+      width: 80%;
+      max-width: 302px;
+    }
+  }
+  @media (width<=640px) {
+    .card {
+      width: 100%;
+    }
+  }
+
+  .cardImage {
+    max-width: 100%; /* Ensure it doesn't overflow */
+    max-height: 100%; /* Keep it within the card */
+    object-fit: contain; /* Prevent distortion */
+  }
+  
+  .cardButton {
+    color: #fff;
+    text-align: center;
+    background-color: #05445e;
+    border-radius: 4px;
+    width: 100%;
+    margin-top: auto;
+    padding: 10px;
+    font-family: Montserrat, sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    max-width: 302px;
+  }
+  
