@@ -30,7 +30,6 @@ html, body {
 
   .monthsRowContainer {
     width: 100%;
-    padding: 20px 0;
   }
   
   .monthsBackground {
@@ -128,7 +127,7 @@ html, body {
   .taxRelief {
     position: absolute;
     bottom: 50px;  /* Keep it at bottom */
-    right: 50px;   /* Keep it at right */
+    right: 75px;   /* Keep it at right */
     display: flex;
     flex-direction: column; /* Ensure text is below icon */
     align-items: center; /* Center text and icon */
