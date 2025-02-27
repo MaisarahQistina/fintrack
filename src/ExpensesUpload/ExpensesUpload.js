@@ -31,7 +31,7 @@ export function ExpensesUpload() {
           </span>
           <br />
           <span style={{ fontFamily: 'NATS, sans-serif', fontWeight: 400, color: 'rgba(0,0,0,1)' }}>
-            Supported formats: JPEG, PDF (&lt;5MB)
+            Supported formats: JPEG, PNG, PDF (&lt;5MB)
           </span>
         </div>
         <div className={styles.uploadButtonWrapper}>
@@ -40,7 +40,7 @@ export function ExpensesUpload() {
             <input
               type="file"
               id="fileUpload"
-              accept=".jpeg,.jpg,.pdf"
+              accept=".jpeg,.jpg,.png,.pdf"
               className={styles['visually-hidden']}
             />
             <button className={styles.uploadButton} onClick={() => document.getElementById('fileUpload').click()}>
