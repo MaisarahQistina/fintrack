@@ -26,6 +26,8 @@
 .viewDropdown {
   display: flex;
   margin-top: 20px; /* 20px below the "2024 > January" text */
+  position: relative;
+  width: 100%;
 }
 
 .monthSelect {
@@ -250,3 +252,20 @@
   cursor: pointer;
 }
 
+.reliefDownload {
+  padding: 10px 16px;
+  border-radius: 4px;
+  background-color: #05445E;
+  color: rgba(250, 250, 250, 1);
+  font: 400 18px/1 Montserrat, -apple-system, Roboto, Helvetica, sans-serif;
+  border: none;
+  cursor: pointer;
+  width: 140px;
+  height: 43px;
+  display: flex;
+  align-items: center;
+  justify-content: center; 
+  gap: 10px; 
+  position: absolute;
+  right: 75px;
+}
