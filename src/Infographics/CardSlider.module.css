@@ -111,3 +111,14 @@
 .arrow:hover {
   background-color: rgba(255, 255, 255, 0.9);
 }
+
+.imageIndicator {
+  position: absolute;
+  bottom: 10px;
+  right: 30px;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  padding: 5px 8px;
+  border-radius: 10px;
+  font-size: 12px;
+}

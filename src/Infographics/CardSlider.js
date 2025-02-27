@@ -77,6 +77,10 @@ function CardSlider() {
       <button className={styles.arrow} onClick={handleNext}>
         &#10095;
       </button>
+
+      <div className={styles.imageIndicator}>
+        {currentIndex + 1} / {cards.length}
+      </div>
     </div>
   );
 }
