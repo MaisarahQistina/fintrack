@@ -1,9 +1,12 @@
 import * as React from "react";
+import { useNavigate } from "react-router-dom";
 import { FeatureCard } from "./components/FeatureCard";
 import { features } from "./data/features";
 import { Footer } from "./components/Footer";
 
 export function FinTrackLanding() {
+  const navigate = useNavigate();
+
   return (
     <div className="flex flex-col">
       <div className="flex flex-col w-full max-md:max-w-full">
@@ -61,7 +64,10 @@ export function FinTrackLanding() {
                             <div className="flex absolute inset-0 z-0 gap-2.5 items-start self-start min-h-[50px] w-[200px]">
                               <div className="flex flex-1 shrink w-full bg-sky-900 rounded basis-0 min-h-[50px]" />
                             </div>
-                            <div className="z-0 my-auto text-xl font-semibold leading-none text-center text-white">
+                            <div 
+                              className="z-0 my-auto text-xl font-semibold leading-none text-center text-white cursor-pointer"
+                              onClick={() => navigate("/sign-in")}  
+                            >
                               Get Started !
                             </div>
                           </div>
