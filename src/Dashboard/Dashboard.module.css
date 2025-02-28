@@ -1,0 +1,200 @@
+.DashboardView {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; 
+    justify-content: flex-start; 
+    height: 100vh; /* Takes full screen height */
+    width: 100vw; /* Takes full screen width */
+    position: relative; /* Prevents it from being affected by absolute positioning */
+    background-color: #F8F5EF; /* Solid background color */
+}
+
+.navigationButtons {
+    position: absolute;
+    bottom: 50px; /* 20px from bottom */
+    left: 50%;
+    transform: translateX(-50%); /* Center horizontally */
+    display: flex;
+    gap: 30px; /* Space between arrows */
+}
+
+.arrow {
+    width: 25px; /* Adjust size as needed */
+    height: 25px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.arrow:hover {
+    opacity: 0.7;
+}
+
+.title {
+    font-size: 35px;
+    font-family: 'Abhaya Libre';
+    font-weight: bold;
+    color: #049BB9;
+    display: flex; /* Allows inline alignment of child elements */
+    align-items: center; /* Vertically center title and month */
+    justify-content: space-between; /* Pushes items apart */
+    width: 100%; /* Ensures full row width */
+    padding: 0 50px; /* Adds space from both sides */
+    position: absolute;
+    top: 40px; /* Distance from the top */
+    left: 0; /* Aligns title to the left edge */
+    right: 0; /* Stretches it across */
+}
+
+.month {
+    width: 10vw;
+    height: 35px;
+    background: white;
+    border-radius: 10px;
+    font-family: 'Abhaya Libre';
+    font-weight: 700;
+    font-size: 20px;
+    color: #000000;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgb(126, 123, 123);
+    overflow: hidden;
+    margin-left: auto; /* Pushes month to the right */
+}
+
+/* ---------------------------------------------------------------------- */
+/** Dashboard Month Container **/
+/* Main wrapper for both containers */
+.dashboardWrapper {
+    display: flex; /* Puts containers side by side */
+    gap: 20px; /* Adjusts spacing between containers */
+    width: 100%; /* Ensures it spans the full width */
+    margin-top: 120px; /* Space below title */
+    padding: 0 50px; /* Horizontal padding */
+    position: relative; /* Establishes positioning context */
+}
+
+.dashboardContainer1 {
+    z-index: 1; 
+    display: grid;
+    grid-template-columns: 20vw 1fr;  /* Adjusts column width */
+    grid-template-rows: repeat(2, 15vh); /* Defines row height */
+    gap: 20px; /* Reduce gap */
+    align-items: flex-start; 
+    justify-content: flex-start; 
+    border: 1px solid transparent; 
+    border-radius: 5px;
+    width: 60vw; 
+    height: 70vh; 
+    background-color: white;
+    padding: 20px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    flex: 3; /* Takes 3/4 of available space */
+}
+
+.cardMonthlyIncome {
+    width: 20vw;
+    height: 15vh;
+    background: white;
+    border-radius: 10px;
+    font-family: 'Abhaya Libre';
+    font-weight: 700;
+    font-size: 20px;
+    color: #05445E;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border: 1px solid rgb(126, 123, 123);
+    overflow: hidden;
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
+    grid-column: 1; /* First column */
+    grid-row: 1; /* First row */
+}
+
+.cardBudget {
+    width: 20vw;
+    height: 15vh;
+    background: white;
+    border-radius: 10px;
+    font-family: 'Abhaya Libre';
+    font-weight: 700;
+    font-size: 20px;
+    color: #05445E;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border: 1px solid rgb(126, 123, 123);
+    overflow: hidden;
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
+    grid-column: 1; /* First column */
+    grid-row: 2; /* Second row */
+}
+
+.cardBalance {
+    background: white;
+    border-radius: 10px;
+    font-family: 'Abhaya Libre';
+    font-weight: 700;
+    font-size: 20px;
+    color: #05445E;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border: 1px solid rgb(126, 123, 123);
+    overflow: hidden;
+    height: 100%; /* Ensures it spans both rows correctly */
+    width: auto;
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
+    grid-column: 2 / span 2;
+    grid-row: 1 / span 2;
+}
+
+.cardBudgetCategory {
+    background: white;
+    border-radius: 10px;
+    font-family: 'Abhaya Libre';
+    font-weight: 700;
+    font-size: 20px;
+    color: #05445E;
+    text-align: left;
+    padding-left: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border: 1px solid rgb(126, 123, 123);
+    overflow: hidden;
+    height: 100%; /* Ensures it spans both rows correctly */
+    width: auto;
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
+    grid-column: 1 / span 3;
+    grid-row: 3 
+}
+
+/* Month - Container 2 */
+.dashboardContainer2 {
+    z-index: 1; /* Ensure it's above background */
+    align-items: center; /* Centers horizontally */
+    justify-content: center; /* Centers vertically */
+    border: 1px solid transparent; 
+    border-radius: 5px;
+    width: 25vw; /* Width that makes sense for side panel */
+    height: 70vh;
+    background-color: white;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    flex: 1; /* Takes 1/4 of available space */
+    margin-right: 25px;
+}
+
+.dashboardContainer2Title {
+    font-family: 'Abhaya Libre';
+    font-weight: 700;
+    font-size: 20px;
+    color: #05445E;
+    text-align: left;
+    padding-left: 10px;
+}
