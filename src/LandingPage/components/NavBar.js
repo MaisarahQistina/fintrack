@@ -29,7 +29,7 @@ const NavBar = ({ user, onSignOut }) => {
     : guestNavLinks;
 
   return (
-    <header className="flex items-center px-6 w-full bg-sky-900 border-b border-solid border-b-stone-500 min-h-[72px]">
+    <header className="flex items-center px-6 w-full bg-[#05445E] border-b border-solid border-b-stone-500 min-h-[72px]">
       {/* Logo & Navigation */}
       <div className="flex items-center gap-6">
         {/* Logo */}
