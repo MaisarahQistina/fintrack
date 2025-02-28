@@ -10,6 +10,7 @@ import MonthlyExpensesViewExpensesView from "./YearlyExpenses/MonthlyExpensesVie
 import TaxReliefFolder from "./YearlyExpenses/TaxReliefFolder";
 import UserInfographicView from "./Infographics/UserInfographicView";
 import AdminHome from "./Admin/AdminHomepage/AdminHome";
+import AdminFeedback from "./Admin/AdminFeedbacks/FeedbackPage";
 // import { Footer } from "./LandingPage/components/Footer"; // Your shared footer component
 
 const App = () => {
@@ -32,6 +33,7 @@ const App = () => {
           <Route path="/tax-relief" element={<TaxReliefFolder />} />
           <Route path="/infographics" element={<UserInfographicView />} />
           <Route path="/admin-home" element={<AdminHome />} />
+          <Route path="/admin-feedback" element={<AdminFeedback />} />
           {/* Add more routes as needed */}
         </Routes>
 
