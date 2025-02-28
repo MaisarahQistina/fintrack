@@ -1,14 +1,18 @@
+/* ---------------------------------------------------------------------- */
+/** Dashboard Main Page **/
 .DashboardView {
     display: flex;
     flex-direction: column;
     align-items: flex-start; 
     justify-content: flex-start; 
-    height: 100vh; /* Takes full screen height */
+    min-height: 100vh; /* Takes full screen height */
     width: 100vw; /* Takes full screen width */
     position: relative; /* Prevents it from being affected by absolute positioning */
     background-color: #F8F5EF; /* Solid background color */
 }
 
+/* ---------------------------------------------------------------------- */
+/** Arrows **/
 .navigationButtons {
     position: absolute;
     bottom: 50px; /* 20px from bottom */
@@ -29,6 +33,8 @@
     opacity: 0.7;
 }
 
+/* ---------------------------------------------------------------------- */
+/** Dashboard Title **/
 .title {
     font-size: 35px;
     font-family: 'Abhaya Libre';
@@ -61,6 +67,7 @@
     border: 1px solid rgb(126, 123, 123);
     overflow: hidden;
     margin-left: auto; /* Pushes month to the right */
+    margin-right: 25px;
 }
 
 /* ---------------------------------------------------------------------- */
@@ -75,6 +82,7 @@
     position: relative; /* Establishes positioning context */
 }
 
+/* Container for Month Dashboard-1 */
 .dashboardContainer1 {
     z-index: 1; 
     display: grid;
@@ -93,6 +101,8 @@
     flex: 3; /* Takes 3/4 of available space */
 }
 
+/* Cards - Month Dashboard */
+/* Card - Monthly Income */
 .cardMonthlyIncome {
     width: 20vw;
     height: 15vh;
@@ -113,6 +123,7 @@
     grid-row: 1; /* First row */
 }
 
+/* Card - Budget */
 .cardBudget {
     width: 20vw;
     height: 15vh;
@@ -133,6 +144,7 @@
     grid-row: 2; /* Second row */
 }
 
+/* Card - Balance Left */
 .cardBalance {
     background: white;
     border-radius: 10px;
@@ -153,6 +165,7 @@
     grid-row: 1 / span 2;
 }
 
+/* Card - Budget per Category */
 .cardBudgetCategory {
     background: white;
     border-radius: 10px;
@@ -174,14 +187,15 @@
     grid-row: 3 
 }
 
-/* Month - Container 2 */
+/* ----------- */
+/* Container for Month Dashboard-2 */
 .dashboardContainer2 {
     z-index: 1; /* Ensure it's above background */
     align-items: center; /* Centers horizontally */
     justify-content: center; /* Centers vertically */
     border: 1px solid transparent; 
     border-radius: 5px;
-    width: 25vw; /* Width that makes sense for side panel */
+    width: 24vw; /* Width that makes sense for side panel */
     height: 70vh;
     background-color: white;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
@@ -191,6 +205,87 @@
 }
 
 .dashboardContainer2Title {
+    font-family: 'Abhaya Libre';
+    font-weight: 700;
+    font-size: 20px;
+    color: #05445E;
+    text-align: left;
+    padding-left: 10px;
+}
+
+/* ---------------------------------------------------------------------- */
+/** Dashboard Year Container **/
+/* Main wrapper for both containers */
+.dashboard2Wrapper {
+    display: flex;
+    flex-direction: column; /* Stacks items vertically */
+    gap: 20px; /* Space between containers */
+    width: 100%;
+    margin-top: 120px;
+    padding: 0 50px;
+    position: relative;
+}
+
+/* Container for Year Dashboard-1 */
+.dashboardContainer3 {
+    z-index: 1; 
+    gap: 20px; /* Reduce gap */
+    align-items: flex-start; 
+    justify-content: flex-start; 
+    border: 1px solid transparent; 
+    border-radius: 5px;
+    width: 93vw; 
+    height: 40vh; 
+    background-color: white;
+    padding: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    font-family: 'Abhaya Libre';
+    font-weight: 700;
+    font-size: 20px;
+    color: #05445E;
+    text-align: left;
+    padding-left: 10px;
+}
+
+/* Wrapper for Dashboard-2 & Dashboard-3 */
+.rowContainer {
+    display: flex;
+    width: 100%;
+}
+
+/* Container for Year Dashboard-2 */
+.dashboardContainer4 {
+    z-index: 1; 
+    align-items: flex-start; 
+    justify-content: flex-start; 
+    border: 1px solid transparent; 
+    border-radius: 5px;
+    width: 20%; 
+    height: 27.5vh; 
+    background-color: white;
+    padding: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    margin-right: 25px;
+    font-family: 'Abhaya Libre';
+    font-weight: 700;
+    font-size: 20px;
+    color: #05445E;
+    text-align: center;
+}
+
+/* Container for Year Dashboard-3 */
+.dashboardContainer5 {
+    z-index: 1; 
+    align-items: flex-start; 
+    justify-content: flex-start; 
+    border: 1px solid transparent; 
+    border-radius: 5px;
+    width: 90%; 
+    height: 27.5vh; 
+    background-color: white;
+    padding: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    margin-right: 26px;
     font-family: 'Abhaya Libre';
     font-weight: 700;
     font-size: 20px;
