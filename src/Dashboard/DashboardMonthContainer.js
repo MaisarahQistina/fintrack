@@ -5,8 +5,14 @@ function DashboardContainer() {
     return (
       <div className={styles.dashboardWrapper}> {/* New wrapper to align side by side */}
         <section className={styles.dashboardContainer1}>
-          <div className={styles.cardMonthlyIncome}>Monthly Income</div>
-          <div className={styles.cardBudget}>Budget</div>
+          <div className={styles.cardMonthlyIncome}>
+            Monthly Income
+            <div className={styles.MonthlyIncome}>RM 5000.00</div>
+          </div>
+          <div className={styles.cardBudget}>
+            Budget
+            <div className={styles.Budget}>RM 4500.00</div>
+          </div>
           <div className={styles.cardBalance}>How much should you spend left?</div>
           <div className={styles.cardBudgetCategory}>Budget by Category</div>
         </section>

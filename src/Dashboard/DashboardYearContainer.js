@@ -11,6 +11,7 @@ function DashboardContainer() {
       <div className={styles.rowContainer}>
         <section className={styles.dashboardContainer4}>
           Total Expenses Spent
+          <div className={styles.totalExpenses}>RM 234000.00</div>
         </section>
 
         <section className={styles.dashboardContainer5}>
