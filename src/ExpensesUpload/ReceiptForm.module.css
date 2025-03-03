@@ -1,0 +1,220 @@
+/* Popup Overlay */
+.popupOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5); /* Dark shade effect */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+}
+
+/* Popup Content */
+.popupContent {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    font-family: 'NATS', sans-serif;
+    font-size: 18px;
+    text-align: center;
+    width: 90%;
+    max-width: 880px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.popupConfirmation {
+    background: white;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    font-family: 'NATS', sans-serif;
+    font-size: 18px;
+    text-align: center;
+    width: 450px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+}
+
+/* Form Container */
+.form {
+    width: 100%;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.formTitle {
+    font-size: 28px;
+    font-family: 'NATS', sans-serif;
+    padding: 10px 20px;
+    color: #ffffff;
+    text-align: left;
+    background-color: #049BB9;
+    position: relative;
+}
+
+.receiptTitle {
+    font-family: 'Abhaya Libre', serif;  /* Abhaya Libre only for this text */
+}
+
+.formTitle h1 {
+    font-size: 24px;
+    margin-bottom: 5px;
+}
+
+.formTitle p {
+    font-size: 14px;
+}
+
+.closeBtn {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 24px;
+    cursor: pointer;
+    color: white;
+}
+
+/* Form Body */
+.formBody {
+    display: flex;
+    padding: 20px;
+}
+
+/* Image Container */
+.receiptImage {
+    flex: 1;
+    padding: 10px;
+    max-width: 50%;
+}
+
+.imageContainer {
+    width: 100%;
+    height: 450px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: auto;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background-color: #fff; /* White background for image container */
+}
+
+/* Uploaded Image */
+.imageContainer img {
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 5px;
+    object-fit: contain;
+}
+
+/* Form Fields */
+.formFields {
+    flex: 1;
+    padding: 10px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.formGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.formGroup label {
+    font-weight: bold;
+    font-size: 16px;
+    text-align: left;
+}
+
+/* Input styling */
+input[type="date"], 
+input[type="text"], 
+select {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    outline: none;
+}
+
+.inputWithIcon {
+    position: relative;
+}
+
+.calendar-icon {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+/* Select styling */
+.selectWrapper {
+    position: relative;
+}
+
+.selectWrapper::after {
+    content: "";
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 6px solid #666;
+    pointer-events: none;
+}
+
+select {
+    appearance: none;
+    padding-right: 30px;
+    background-color: white;
+}
+
+/* Button Style */
+.saveButton {
+    cursor: pointer;
+    align-self: flex-end;
+    transition: background-color 0.3s;
+    justify-content: center;
+    padding: 10px 16px;
+    width: 70px;
+    border-radius: 4px;
+    background-color: rgba(43, 97, 59, 1);
+    color: rgba(250, 250, 250, 1);
+    text-align: center;
+    font: 400 14px/1 Montserrat, -apple-system, Roboto, Helvetica, sans-serif;
+    cursor: pointer;
+    margin-top: 71.5px;
+}
+
+/* Responsive styles */
+@media screen and (max-width: 768px) {
+    .formBody {
+        flex-direction: column;
+    }
+    
+    .receiptImage, 
+    .formFields {
+        max-width: 100%;
+        width: 100%;
+    }
+    
+    .imageContainer {
+        height: 350px;
+    }
+}
