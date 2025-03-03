@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import styles from "./ReceiptForm.module.css";
 
-const ReceiptForm = ({ uploadedFile, onClose }) => {
+const ReceiptForm = ({ uploadedFile, onClose, isSavedReceipt }) => {
   const [transactionDate, setTransactionDate] = useState("2024-04-01");
   const [category, setCategory] = useState("Medical Expenses");
   const [totalAmount, setTotalAmount] = useState("RM 33.26");
@@ -48,8 +48,12 @@ const ReceiptForm = ({ uploadedFile, onClose }) => {
             <div className={styles.receiptImage}>
               <div className={styles.imageContainer}>
                 {uploadedFile && (
-                  <img
-                    src={URL.createObjectURL(uploadedFile)}
+                    <img
+                    src={
+                      isSavedReceipt
+                        ? uploadedFile // Use URL directly if it's a saved receipt
+                        : URL.createObjectURL(uploadedFile) // Use file object URL if newly uploaded
+                    }
                     alt="Uploaded Receipt"
                     className={styles.uploadedImage}
                   />
