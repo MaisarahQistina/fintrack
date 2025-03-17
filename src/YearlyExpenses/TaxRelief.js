@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import styles from "./MonthlyExpensesView.module.css";
+import ReceiptForm from "../ExpensesUpload/ReceiptForm";
 
 const cards = [
   { img: "/receipt.jpg", categories: ["Medical Treatments", "Vaccinations", "Checkup"] },
@@ -15,6 +16,7 @@ const cards = [
 const TaxRelief = () => {
   const [showPopup, setShowPopup] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [selectedReceipt, setSelectedReceipt] = useState(null);
 
   const handleDeleteClick = () => {
     setShowPopup(true);
@@ -28,6 +30,16 @@ const TaxRelief = () => {
 
   const closePopup = () => {
     setShowPopup(false);
+  };
+
+  // Handle view button click
+  const handleViewClick = (card) => {
+    setSelectedReceipt(card); // Set selected receipt data
+  };
+
+  // Close the receipt form
+  const handleCloseForm = () => {
+    setSelectedReceipt(null);
   };
 
   return (
@@ -53,7 +65,9 @@ const TaxRelief = () => {
 
             {/* Buttons */}
             <div className={styles.buttonWrapper}>
-              <button className={styles.viewButton}>View</button>
+              <button className={styles.viewButton} onClick={() => handleViewClick(card)}>
+                View
+              </button>
               <button className={styles.deleteButton} onClick={handleDeleteClick}>
                 Delete
               </button>
@@ -85,6 +99,15 @@ const TaxRelief = () => {
             <p>The receipt is successfully deleted.</p>
           </div>
         </div>
+      )}
+
+      {/* Show ReceiptForm if a receipt is selected */}
+      {selectedReceipt && (
+        <ReceiptForm
+          uploadedFile={selectedReceipt.img} // Pass the selected image
+          onClose={handleCloseForm}         // Handle closing the form
+          isSavedReceipt={true}
+        />
       )}
     </>
   );
