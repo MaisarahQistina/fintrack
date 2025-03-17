@@ -308,7 +308,7 @@
     border: 1px solid transparent; 
     border-radius: 5px;
     width: 90%; 
-    height: 27.5vh; 
+    min-height: 27.5vh; 
     background-color: white;
     padding: 10px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
@@ -320,3 +320,65 @@
     text-align: left;
     padding-left: 10px;
 }
+
+/* Top 5 Categories styling */
+.categoriesContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: flex-start;
+    width: 100%;
+    padding: 18px 5px;
+  }
+  
+  .categoryBox {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 18%;
+  }
+  
+  .categorySquare {
+    width: 60px;
+    height: 60px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
+  }
+  
+  .category1 {
+    background-color: #05445E; /* Darkest blue */
+  }
+  
+  .category2 {
+    background-color: #0C6B9C; /* Dark blue */
+  }
+  
+  .category3 {
+    background-color: #049BB9; /* Medium blue */
+  }
+  
+  .category4 {
+    background-color: #A4F6FF; /* Light blue-green */
+  }
+  
+  .category5 {
+    background-color: #DFF6FB; /* Lightest blue */
+  }
+  
+  .categoryName {
+    font-family: 'NATS', sans-serif;
+    font-weight: 700;
+    font-size: 17px;
+    color: #05445E;
+    text-align: center;
+    margin-bottom: 2px;
+  }
+  
+  .categoryAmount {
+    font-family: 'NATS', sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    color: #B32828;
+    text-align: center;
+  }
