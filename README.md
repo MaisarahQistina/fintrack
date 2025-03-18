@@ -1,5 +1,6 @@
 # FinTrack: AI-Powered Finance & Expenses Tracking System
 
+*Disclaimer: This project is developed for my Final-Year Project
 FinTrack is an AI-driven budget management system that evaluates users’ personal spending patterns on a monthly basis by the categorization of expenses. It provides tailored enlightenments for future budget planning using past spending behavior to recommend optimal resources allocations for various categories.
 
 This project implements four different modules:
