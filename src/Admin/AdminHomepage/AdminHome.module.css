@@ -25,17 +25,11 @@
       Abhaya Libre,
       serif;
     font-size: 45px;
-    font-weight: 700;
-  }
-  @media (width<=991px) {
-    .welcomeSection {
-      font-size: 48px;
-    }
+    font-weight: 600;
   }
   @media (width<=640px) {
     .welcomeSection {
-      padding: 0 20px;
-      font-size: 36px;
+      padding: 0 10px;
     }
   }
 
@@ -106,9 +100,7 @@
     width: 100%;
     margin-top: auto;
     padding: 10px;
-    font-family: Montserrat, sans-serif;
-    font-size: 14px;
-    font-weight: 400;
+    font: 400 14px/1 Montserrat, -apple-system, Roboto, Helvetica, sans-serif;
     max-width: 302px;
   }
   
