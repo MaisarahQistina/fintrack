@@ -20,7 +20,7 @@ Fintrack employs:
 - BERT as LLM: Analyzes the contextual meaning of receipt items to determine the appropriate receipt category.
 - Linear Regression: Predicts the budget allocation for each category depending on past spending habits.
 
-<br></br>
+*Disclaimer: This project is developed for my Final-Year Project.
 
 # Getting Started with Create React App
 
