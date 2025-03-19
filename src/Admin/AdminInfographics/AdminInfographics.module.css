@@ -1,0 +1,432 @@
+.container {
+    background-color: #f8f5ef;
+    width: 100%;
+    min-height: 100vh;
+  }
+  
+  .main {
+    padding: 40px;
+    padding-left: 50px;
+  }
+  
+  .headerWrapper {
+    display: flex;
+    justify-content: space-between; /* Moves elements to opposite ends of the container */
+    align-items: center; /* Vertically aligns the icon and text */
+    margin-bottom: 40px;
+  }
+  
+  .iconWrapper {
+    position: absolute; /* Ensures precise positioning */
+    right: 50px; /* Moves the button 75px from the right */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .PageTitle {
+    color: #049bb9;
+    font-family:
+      Abhaya Libre,
+      serif;
+    font-size: 35px;
+    font-weight: 700;
+  }
+
+ /* Infographic Cards */
+ .cardsContainer {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr); /* 6 cards per row */
+  gap: 40px; /* Spacing between cards */
+  align-items: start;
+  width: calc(100vw - 50px); /* Accounts for left padding */
+  margin-top: 30px;
+  margin-bottom: 30px;
+  padding-right: 75px; /* Ensures right-side padding */
+  box-sizing: border-box; /* Ensures padding is included in width */
+}
+
+.card {
+  width: 100%;
+  height: 400px;
+  background: white;
+  border-radius: 10px;
+  padding: 5px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border: 1px solid rgb(126, 123, 123);
+  overflow: hidden;
+}
+
+.imageCardContainer {
+  width: 100%;
+  height: 350px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 10px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid rgb(126, 123, 123);
+  box-sizing: border-box;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.title {
+  font-size: 16px;
+  font-family: 'NATS', sans-serif;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  color: #000000;
+  text-align: left;
+}
+
+/* Button Delete & View */
+.buttonWrapper {
+  display: flex;
+  gap: 8px;
+  margin-top: 5px;
+  margin-bottom: 3px;
+  justify-content: center;
+}
+
+.viewButton {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: center;
+  padding: 5px;
+  width: 70px;
+  border-radius: 4px;
+  background-color: rgba(43, 97, 59, 1);
+  color: rgba(250, 250, 250, 1);
+  text-align: center;
+  font: 400 14px/1 Montserrat, -apple-system, Roboto, Helvetica, sans-serif;
+  border: none;
+  cursor: pointer;
+}
+
+.deleteButton {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: center;
+  padding: 5px;
+  width: 70px;
+  border-radius: 4px;
+  background-color: transparent;
+  color: rgba(43, 97, 59, 1);
+  text-align: center;
+  font: 500 14px/1 Montserrat, -apple-system, Roboto, Helvetica, sans-serif;
+  border: 1px solid rgba(43, 97, 59, 1);
+  cursor: pointer;
+}
+
+/* Popup Message */
+.popupOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5); /* Dark shade effect */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.popupContent {
+  background: white;
+  padding: 40px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  font-family: 'NATS', sans-serif;
+  font-size: 18px;
+  text-align: center;
+  width: 450px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+}
+
+.buttonWrapper {
+  display: flex;
+  gap: 10px; /* Space between buttons */
+  justify-content: center;
+  width: 100%;
+}
+
+.popupConfirmation {
+  background: white;
+  padding: 40px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  font-family: 'NATS', sans-serif;
+  font-size: 18px;
+  text-align: center;
+  width: 450px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+}
+
+.cancelButton {
+  padding: 10px 16px;
+  border-radius: 4px;
+  background-color: rgba(250, 250, 250, 1);
+  color: rgba(43, 97, 59, 1);
+  font: 400 14px/1 Montserrat, -apple-system, Roboto, Helvetica, sans-serif;
+  border: 1px solid rgba(43, 97, 59, 1);
+  cursor: pointer;
+  margin-right: 8px;
+}
+
+.confirmButton {
+  padding: 10px 16px;
+  border-radius: 4px;
+  background-color: rgba(43, 97, 59, 1);
+  color: rgba(250, 250, 250, 1);
+  font: 400 14px/1 Montserrat, -apple-system, Roboto, Helvetica, sans-serif;
+  border: none;
+  cursor: pointer;
+}
+
+/* Popup Message */
+.popupFormOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5); /* Dark shade effect */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.popupFormContent {
+  width: 100%;
+  max-width: 900px; /* Match form max-width exactly */
+  background-color: transparent;
+  margin: 0 auto; /* Center horizontally */
+  max-height: 700px; /* Limit height to 90% of viewport */
+}
+  
+/* Form Container */
+.form {
+  width: 100%;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  /* height: 600px; Let the content determine the height */
+}
+
+.formTitle {
+  font-size: 28px;
+  font-family: 'NATS', sans-serif;
+  padding: 15px 20px;
+  color: #ffffff;
+  text-align: left;
+  background-color: #049BB9;
+  position: relative;
+}
+
+.cardTitle {
+  font-size: 24px;
+  margin: 0 0 5px 0;
+  padding: 0;
+  font-family: 'Abhaya Libre', serif; 
+}
+
+.formTitle p {
+  font-size: 14px;
+  margin: 5px 0 0 0;
+}
+
+.closeBtn {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  font-size: 24px;
+  cursor: pointer;
+  color: white;
+}
+
+/* Form Body */
+.formBody {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  align-items: center;
+  max-height: calc(90vh - 100px); /* Limit body height */
+  overflow-y: auto; /* Allow scrolling within the form body */
+}
+
+/* Image Container */
+.infoImage {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.imageContainer {
+  width: 100%;
+  height: 250px; /* Reduced height */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden; /* Change from auto to hidden */
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background-color: #fff;
+}
+
+/* Uploaded Image */
+.imageContainer img {
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: 5px;
+  object-fit: contain;
+}
+
+/* Form Fields */
+.formFields {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* Reduced gap */
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.formGroup label {
+  font-weight: bold;
+  font-size: 16px;
+  text-align: left;
+  margin: 0;
+}
+
+/* Input styling */
+.inputField,
+input[type="text"], 
+select {
+  width: 100%;
+  padding: 10px 15px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 16px;
+  outline: none;
+  box-sizing: border-box;
+  padding-left: 40px;
+}
+
+.inputWithIcon {
+  position: relative;
+  width: 100%;
+}
+
+/* Button Style */
+.saveButton {
+  cursor: pointer;
+  align-self: flex-end;
+  transition: background-color 0.3s;
+  padding: 10px 16px;
+  width: 70px;
+  border: none;
+  border-radius: 4px;
+  background-color: rgba(43, 97, 59, 1);
+  color: rgba(250, 250, 250, 1);
+  text-align: center;
+  font: 400 14px/1 Montserrat, -apple-system, Roboto, Helvetica, sans-serif;
+  margin-top: 10px;
+}
+
+/* Success popup */
+.popupOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.popupConfirmation {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Input with Icon styling */
+.inputWithIcon {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.iconContainer {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1;
+  pointer-events: none; /* Makes the icon non-interactive */
+}
+
+.inputIcon {
+  width: 18px;
+  height: 18px;
+  display: block;
+}
+
+.inputWithIconField {
+  width: 100%;
+  padding: 10px 15px 10px 40px; /* Extra left padding to make room for the icon */
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 16px;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.uploadIcon {
+  width: 35px;
+  height: 35px;
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

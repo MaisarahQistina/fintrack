@@ -16,7 +16,7 @@ const CardsContainer = () => {
         "https://cdn.builder.io/api/v1/image/assets/TEMP/e72b380da57f5f6e28d258ce1ea1f20092ea5800",
       imageAlt: "Infographics illustration",
       buttonText: "Infographics",
-      link: "/infographics", // Placeholder route
+      link: "/admin-infographics", // Placeholder route
     },
     {
       imageUrl:
