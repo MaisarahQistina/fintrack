@@ -69,7 +69,7 @@ const InfographicsCard = () => {
       {showPopup && (
         <div className={styles.popupOverlay} onClick={closePopup}>
           <div className={styles.popupContent} onClick={(e) => e.stopPropagation()}>
-            <p>Are you sure you want to delete this Infographic?</p>
+            <p>Are you sure you want to delete this infographic?</p>
             <div className={styles.buttonWrapper}>
               <button className={styles.cancelButton} onClick={closePopup}>
                 Cancel
@@ -86,7 +86,7 @@ const InfographicsCard = () => {
         <div className={styles.popupOverlay} onClick={() => setShowSuccess(false)}>
           <div className={styles.popupContent} onClick={(e) => e.stopPropagation()}>
             <img src="/Checkmark.png" alt="Checkmark" width="60" height="60" />
-            <p>The receipt is successfully deleted.</p>
+            <p>The infographic is successfully deleted.</p>
           </div>
         </div>
       )}
