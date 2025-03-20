@@ -1,0 +1,176 @@
+
+/* Popup Message */
+.popupFormOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5); /* Dark shade effect */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+  }
+  
+  .popupFormContent {
+    width: 100%;
+    max-width: 900px; /* Match form max-width exactly */
+    background-color: transparent;
+    margin: 0 auto; /* Center horizontally */
+    max-height: 700px; /* Limit height to 90% of viewport */
+  }
+    
+  /* Form Container */
+  .form {
+    width: 100%;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    /* height: 600px; Let the content determine the height */
+  }
+  
+  .formTitle {
+    font-size: 28px;
+    font-family: 'NATS', sans-serif;
+    padding: 15px 20px;
+    color: #ffffff;
+    text-align: left;
+    background-color: #049BB9;
+    position: relative;
+  }
+  
+  .cardTitle {
+    font-size: 24px;
+    margin: 0 0 5px 0;
+    padding: 0;
+    font-family: 'Abhaya Libre', serif; 
+  }
+  
+  .formTitle p {
+    font-size: 14px;
+    margin: 5px 0 0 0;
+  }
+  
+  .closeBtn {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 24px;
+    cursor: pointer;
+    color: white;
+  }
+  
+  /* Form Body */
+  .formBody {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    align-items: center;
+    max-height: calc(90vh - 100px); /* Limit body height */
+    overflow-y: auto; /* Allow scrolling within the form body */
+  }
+
+
+/* Form Fields */
+.formFields {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Reduced gap */
+  }
+  
+  .formGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .formGroup label {
+    font-weight: bold;
+    font-size: 16px;
+    text-align: left;
+    margin: 0;
+  }
+  
+  /* Input styling */
+  .inputField,
+  input[type="text"], 
+  select {
+    width: 100%;
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    outline: none;
+    box-sizing: border-box;
+  }
+  
+  /* Style read-only input fields */
+  input[readonly] {
+    color: #6c757d; /* Grey text color */
+    cursor: not-allowed; /* Optional: Show a "not allowed" cursor */
+  }
+  
+  /* Button Style */
+  .saveButton {
+    cursor: pointer;
+    align-self: flex-end;
+    transition: background-color 0.3s;
+    padding: 10px 16px;
+    width: 70px;
+    border: none;
+    border-radius: 4px;
+    background-color: rgba(43, 97, 59, 1);
+    color: rgba(250, 250, 250, 1);
+    text-align: center;
+    font: 400 14px/1 Montserrat, -apple-system, Roboto, Helvetica, sans-serif;
+    margin-top: 10px;
+  }
+
+/* Popup Overlay */
+.popupOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5); /* Dark shade effect */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+}
+
+/* Popup Content */
+.popupContent {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    font-family: 'NATS', sans-serif;
+    font-size: 18px;
+    text-align: center;
+    width: 90%;
+    max-width: 880px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.popupConfirmation {
+    background: white;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    font-family: 'NATS', sans-serif;
+    font-size: 18px;
+    text-align: center;
+    width: 450px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+}
+
+  

@@ -1,0 +1,187 @@
+.table {
+    background-color: #fff;
+    border: 1px solid #000;
+    width: 1200px;
+    margin: 0 auto;
+  }
+  
+  @media (width <= 991px) {
+    .table {
+      width: 90%;
+      overflow-x: auto;
+    }
+  }
+  
+  @media (width <= 640px) {
+    .table {
+      width: 100%;
+    }
+  }
+  
+  /* Table Header */
+  .tableHeader {
+    background-color: #05445e; 
+    display: flex;
+  }
+  
+  .headerCell {
+    color: #fff;
+    border: 0.5px solid #fff;
+    padding: 13px 8px;
+    font-family: NATS, sans-serif;
+    font-size: 16px;
+    flex: 1;
+  }
+  
+  .headerCell:nth-child(1), .cell:nth-child(1) { /* No. column */
+    flex: 0.3; /* Reduce size */
+    min-width: 50px; /* Prevent from being too small */
+}
+
+.headerCell:nth-child(2), .cell:nth-child(2) { /* User ID column */
+    flex: 0.3; /* Slightly smaller */
+    min-width: 50px;
+}
+
+.headerCell:nth-child(3), .cell:nth-child(3) { /* Feedback column */
+    flex: 3; /* Takes the remaining space */
+}
+
+.headerCell:nth-child(7), .cell:nth-child(7) { /* User ID column */
+  flex: 0.3; /* Slightly smaller */
+  min-width: 70px;
+}
+
+.headerCell:nth-child(8), .cell:nth-child(8) { /* User ID column */
+  flex: 0.3; /* Slightly smaller */
+  min-width: 70px;
+}
+
+/* Table Body */
+  .tableRow {
+    border-bottom: 0.5px solid #05445e;
+    display: flex;
+  }
+  
+  .tableRowAlt {
+    border-bottom: 0.5px solid #05445e;
+    display: flex;
+    background-color: #f5f5f5;
+  }
+  
+  .cell {
+    color: #1d2433;
+    border-right: 0.5px solid #05445e;
+    padding: 10px 8px;
+    font-family: NATS, sans-serif;
+    font-size: 14px;
+    flex: 1;
+  }
+  
+  .cell:last-child {
+    border-right: none;
+  }
+  
+  .tableRow:last-child, .tableRowAlt:last-child {
+    border-bottom: none;
+}
+
+.editButton {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: center;
+  padding: 5px;
+  width: 55px;
+  border-radius: 4px;
+  background-color: rgba(43, 97, 59, 1);
+  color: rgba(250, 250, 250, 1);
+  text-align: center;
+  font: 400 14px/1 Montserrat, -apple-system, Roboto, Helvetica, sans-serif;
+  border: none;
+  cursor: pointer;
+}
+
+.deleteButton {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: center;
+  padding: 5px;
+  width: 55px;
+  border-radius: 4px;
+  background-color: #e10d0d;
+  color: rgba(250, 250, 250, 1);
+  text-align: center;
+  font: 400 14px/1 Montserrat, -apple-system, Roboto, Helvetica, sans-serif;
+  border: none;
+  cursor: pointer;
+}
+
+/* Popup Message */
+.popupOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5); /* Dark shade effect */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.popupContent {
+  background: white;
+  padding: 40px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  font-family: 'NATS', sans-serif;
+  font-size: 18px;
+  text-align: center;
+  width: 450px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+}
+
+
+.popupConfirmation {
+  background: white;
+  padding: 40px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  font-family: 'NATS', sans-serif;
+  font-size: 18px;
+  text-align: center;
+  width: 450px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+}
+
+.cancelButton {
+  padding: 10px 16px;
+  border-radius: 4px;
+  background-color: rgba(250, 250, 250, 1);
+  color: rgba(43, 97, 59, 1);
+  font: 400 14px/1 Montserrat, -apple-system, Roboto, Helvetica, sans-serif;
+  border: 1px solid rgba(43, 97, 59, 1);
+  cursor: pointer;
+  margin-right: 8px;
+}
+
+.confirmButton {
+  padding: 10px 16px;
+  border-radius: 4px;
+  background-color: rgba(43, 97, 59, 1);
+  color: rgba(250, 250, 250, 1);
+  font: 400 14px/1 Montserrat, -apple-system, Roboto, Helvetica, sans-serif;
+  border: none;
+  cursor: pointer;
+}

@@ -1,0 +1,56 @@
+.container {
+    background-color: #f8f5ef;
+    width: 100%;
+    min-height: 100vh;
+  }
+  
+  .main {
+    padding: 40px;
+    padding-left: 50px;
+  }
+  
+  .title {
+    color: #049bb9;
+    margin-bottom: 40px;
+    font-family:
+      Abhaya Libre,
+      serif;
+    font-size: 35px;
+    font-weight: 700;
+  }
+  
+  @media (width <= 640px) {
+    .title {
+      text-align: center;
+      font-size: 40px;
+    }
+  }
+  
+  .headerWrapper {
+    display: flex;
+    justify-content: space-between; /* Moves elements to opposite ends of the container */
+    align-items: center; /* Vertically aligns the icon and text */
+    margin-bottom: 40px;
+  }
+  
+  .iconWrapper {
+    position: absolute; /* Ensures precise positioning */
+    right: 50px; /* Moves the button 75px from the right */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .PageTitle {
+    color: #049bb9;
+    font-family:
+      Abhaya Libre,
+      serif;
+    font-size: 35px;
+    font-weight: 700;
+  }
+
+  .uploadIcon {
+    width: 35px;
+    height: 35px;
+  }

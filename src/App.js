@@ -13,6 +13,7 @@ import Dashboard from "./Dashboard/Dashboard";
 import AdminHome from "./Admin/AdminHomepage/AdminHome";
 import AdminFeedback from "./Admin/AdminFeedbacks/FeedbackPage";
 import AdminInfographics from "./Admin/AdminInfographics/AdminInfographics";
+import AdminTaxRelief from "./Admin/AdminTaxRelief/AdminTaxRelief";
 // import { Footer } from "./LandingPage/components/Footer"; // Your shared footer component
 
 const App = () => {
@@ -38,6 +39,7 @@ const App = () => {
           <Route path="/admin-home" element={<AdminHome />} />
           <Route path="/admin-feedback" element={<AdminFeedback />} />
           <Route path="/admin-infographics" element={<AdminInfographics />} />
+          <Route path="/admin-taxrelief" element={<AdminTaxRelief />} />
           {/* Add more routes as needed */}
         </Routes>
 
