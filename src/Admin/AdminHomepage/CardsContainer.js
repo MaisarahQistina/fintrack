@@ -9,7 +9,7 @@ const CardsContainer = () => {
         "https://cdn.builder.io/api/v1/image/assets/TEMP/92c082d118f56d989717e7052bcf65f649ed6ddb",
       imageAlt: "Tax Relief illustration",
       buttonText: "Tax Relief",
-      link: "/tax-relief", // Placeholder route
+      link: "/admin-taxrelief", // Placeholder route
     },
     {
       imageUrl:
