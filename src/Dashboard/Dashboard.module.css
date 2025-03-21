@@ -183,6 +183,120 @@
     grid-row: 1 / span 2;
 }
 
+/* BudgetProgressBar.css */
+
+/* Title styling */
+.balanceTitle {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    margin-top: 20px;
+    font-family: 'Abhaya Libre';
+    color: #05445E;
+  }
+  
+  /* Progress bar container */
+  .progressBarContainer {
+    width: 90%;
+    height: 50px;
+    background-color: #c1baba;
+    margin: 0 auto;
+    display: flex;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  
+  /* Expenses bar - darker blue */
+  .expensesBar {
+    height: 100%;
+    background-color: #05445E;
+  }
+  
+  /* Budget bar - lighter blue */
+  .budgetBar {
+    height: 100%;
+    background-color: #049BB9;
+  }
+  
+  .legendSpendContainer {
+    display: flex;
+    justify-content: space-between; /* Ensures spacing between legend and remaining amount */
+    align-items: flex-start; /* Aligns items at the top */
+    width: 90%;
+    margin: 10px auto;
+  }
+
+  /* Adjusted Legend Container */
+.legendContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  font-family: 'Abhaya Libre';
+  font-size: 18px;
+}
+
+/* Remaining Container - Aligned with Legend */
+.remainingContainer {
+  text-align: left; /* Aligns text to the left */
+  margin-top: 0; /* Removes unnecessary top margin */
+}
+
+  /* Individual legend item */
+  .legendItem {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  /* Specific colors */
+  .expensesColor {
+    background-color: #05445E; 
+    width: 15px;
+    height: 15px; 
+    display: inline-block;
+    border-radius: 3px; 
+    margin-right: 10px;
+  }
+  
+  .budgetColor {
+    background-color: #049BB9;
+    width: 15px;
+    height: 15px; 
+    display: inline-block;
+    border-radius: 3px; 
+    margin-right: 10px;
+  }
+  
+  .incomeColor {
+    background-color: #c1baba;
+    width: 15px;
+    height: 15px; 
+    display: inline-block;
+    border-radius: 3px; 
+    margin-right: 10px;
+  }
+  
+  /* Remaining amount container */
+  .remainingContainer {
+    margin-top: 5px;
+    text-align: center;
+  }
+  
+  /* Remaining amount text */
+  .remainingAmount {
+    font-size: 30px;
+    font-weight: bold;
+    color: #049BB9;
+    font-family: 'NATS', sans-serif;
+  }
+  
+  /* "Available to spend" label */
+  .remainingLabel {
+    color: #05445E;
+    font-size: 18px;
+    font-family: 'Abhaya-Libre';
+  }
+
 /* Card - Budget per Category */
 .cardBudgetCategory {
     background: white;
