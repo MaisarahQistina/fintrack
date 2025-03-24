@@ -1,6 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../../firebase"; 
+
+import { toast } from "react-toastify";
+
 export function SignInForm() {
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [isValid, setIsValid] = useState(false);
@@ -16,10 +21,26 @@ export function SignInForm() {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (isValid) {
-      navigate('/my-expenses'); // Redirect to My Expenses page
+      try {
+        await signInWithEmailAndPassword(auth, formData.email, formData.password);
+        console.log("User logged in successfully");
+        toast.success("You have logged in successfully!", {
+        position: "top-center",
+        });
+
+        setTimeout(() => {
+          navigate("/");
+        }, 3000);
+      } catch (error) {
+          console.log(error.message);
+          toast.error(error.message, {
+            position: "bottom-center",
+          });
+      }
     }
   };
 
