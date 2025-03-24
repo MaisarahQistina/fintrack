@@ -1,17 +1,21 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+
+import { auth, db } from "../../firebase"; 
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { setDoc, doc} from "firebase/firestore";
+
+import { toast } from "react-toastify";
 
 export function SignUpForm() {
   const [formData, setFormData] = useState({
-    fullName: '',
-    dob: '',
-    email: '',
-    password: '',
-    confirmPassword: ''
+    fullName: "",
+    dob: "",
+    email: "",
+    password: "",
+    confirmPassword: ""
   });
 
   const [isValid, setIsValid] = useState(false);
-  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -32,10 +36,31 @@ export function SignUpForm() {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (isValid) {
-      navigate('/sign-in'); // Redirect to My Expenses page
+      try {
+        await createUserWithEmailAndPassword(auth, formData.email, formData.password)
+        const user = auth.currentUser;
+        console.log(user);
+        if(user){
+          await setDoc(doc(db,"User", user.uid),{
+            email: user.email,
+            fullName: formData.fullName,
+            dob: formData.dob,
+          });
+        }
+        console.log("User registered successfully!");
+        toast.success("Registration successful! Please sign in to continue.", {
+          position: "top-center",
+        });
+      } catch (error) {
+        console.log(error.message);
+        toast.error(error.message, {
+          position: "bottom-center",
+        });
+      }
     }
   };
 
