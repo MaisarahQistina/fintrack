@@ -1,6 +1,7 @@
 import React from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import "./App.css";
+
 import { FinTrackLanding } from "./LandingPage/FinTrackLanding"; 
 import { SignIn } from "./SignIn/SignIn"; 
 import { ExpensesUpload } from "./ExpensesUpload/ExpensesUpload"; 
@@ -15,6 +16,7 @@ import AdminFeedback from "./Admin/AdminFeedbacks/FeedbackPage";
 import AdminInfographics from "./Admin/AdminInfographics/AdminInfographics";
 import AdminTaxRelief from "./Admin/AdminTaxRelief/AdminTaxRelief";
 // import { Footer } from "./LandingPage/components/Footer"; // Your shared footer component
+import { ToastContainer } from "react-toastify";
 
 const App = () => {
   const location = useLocation();
@@ -43,6 +45,7 @@ const App = () => {
           {/* Add more routes as needed */}
         </Routes>
 
+        <ToastContainer />
         {location.pathname === '/' && (
           <>
             {/* <Footer /> */}
