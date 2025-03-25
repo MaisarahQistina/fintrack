@@ -1,7 +1,10 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 
-const NavBar = ({ user, onSignOut }) => {
+import { signOut } from "firebase/auth";
+import { auth } from "../../firebase"; // Import your Firebase setup
+
+const NavBar = ({ user }) => {
   const location = useLocation();
 
   // Define navigation links based on user role
@@ -9,7 +12,8 @@ const NavBar = ({ user, onSignOut }) => {
 
   const userNavLinks = [
     { text: "Home", path: "/" },
-    { text: "My Expenses", path: "/my-expenses" },
+    { text: "Profile", path: "/profile" },
+    { text: "Expenses", path: "/my-expenses" },
     { text: "Dashboard", path: "/dashboard" },
     { text: "Infographics", path: "/infographics" },
   ];
@@ -21,7 +25,6 @@ const NavBar = ({ user, onSignOut }) => {
     { text: "Feedbacks", path: "/admin-feedbacks" },
   ];
 
-  // Determine which links to display
   const linksToShow = user
     ? user.role === "admin"
       ? adminNavLinks
@@ -52,13 +55,13 @@ const NavBar = ({ user, onSignOut }) => {
       </div>
 
       {/* User Authentication Section */}
-      <div className="flex gap-4 ml-auto font-nats">
+      <div className="flex items-center gap-4 ml-auto font-nats">
         {user ? (
           <>
-            <span className="text-white">Hi, {user.name}!</span>
+            <span className="text-white text-lg">Hi, {user.name}!</span>
             <button
               className="px-4 py-2 bg-red-600 text-white rounded"
-              onClick={onSignOut}
+              onClick={() => signOut(auth)}
             >
               Sign Out
             </button>
