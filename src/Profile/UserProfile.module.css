@@ -1,0 +1,182 @@
+.ProfileView {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; 
+    justify-content: flex-start; 
+    min-height: 100vh; /* Takes full screen height */
+    width: 100vw; /* Takes full screen width */
+    position: relative; /* Prevents it from being affected by absolute positioning */
+    background-color: #F8F5EF; /* Solid background color */
+}
+
+/* Popup Overlay */
+.popupOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5); /* Dark shade effect */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+}
+
+/* Popup Content */
+.popupContent {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    font-family: 'NATS', sans-serif;
+    font-size: 18px;
+    text-align: center;
+    width: 90%;
+    max-width: 880px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.popupConfirmation {
+    background: white;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    font-family: 'NATS', sans-serif;
+    font-size: 18px;
+    text-align: center;
+    width: 450px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+}
+
+.title {
+    font-size: 35px;
+    font-family: 'Abhaya Libre';
+    font-weight: bold;
+    color: #049BB9;
+    display: flex; /* Allows inline alignment of child elements */
+    align-items: center; /* Vertically center title and month */
+    justify-content: space-between; /* Pushes items apart */
+    width: 100%; /* Ensures full row width */
+    padding: 0 50px; /* Adds space from both sides */
+    position: absolute;
+    top: 40px; /* Distance from the top */
+    left: 0; /* Aligns title to the left edge */
+    right: 0; /* Stretches it across */
+}
+
+/* Form Container */
+.form {
+    position: absolute; /* Allows precise positioning */
+    top: 50%; /* Centers form vertically */
+    left: 50%; /* Centers form horizontally */
+    transform: translate(-50%, -50%); /* Ensures proper centering */
+    width: 50%; /* Define form width */
+    height: 70%;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px; 
+    padding: 20px; 
+}
+
+.inputWithIcon {
+    position: relative; /* Allows icon positioning inside input box */
+    width: 100%; /* Keeps container consistent with input size */
+}
+
+.inputField {
+    width: 100%; /* Full width of the input box */
+    padding-right: 35px; /* Add space on the right for the icon */
+    box-sizing: border-box; /* Ensure padding doesn't affect size */
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 10px 15px; /* Current spacing inside input */
+}
+
+.inputIcon {
+    position: absolute; /* Position relative to container */
+    right: 10px; /* Aligns to the right inside the input box */
+    top: 50%; /* Vertically centers within the input */
+    transform: translateY(-50%); /* Perfect vertical alignment */
+    cursor: pointer; /* Interactive cursor for the icon */
+    width: 18px; /* Adjust size to fit inside the input box */
+    height: 18px; /* Adjust size for consistency */
+}
+
+/* Form Body */
+.formBody {
+    display: flex;
+}
+
+/* Form Fields */
+.formFields {
+    flex: 1;
+    padding: 10px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.formGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.formGroup label {
+    font-weight: bold;
+    font-size: 16px;
+    text-align: left;
+}
+
+/* Input styling */
+input[type="date"], 
+input[type="text"], 
+select {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    outline: none;
+}
+
+/* Button Style */
+.saveButton {
+    cursor: pointer;
+    align-self: flex-end;
+    transition: background-color 0.3s;
+    justify-content: center;
+    padding: 10px 12px;
+    width: 70px;
+    border-radius: 4px;
+    background-color: rgba(43, 97, 59, 1);
+    color: rgba(250, 250, 250, 1);
+    text-align: center;
+    font: 400 14px/1 Montserrat, -apple-system, Roboto, Helvetica, sans-serif;
+    cursor: pointer;
+}
+
+/* Responsive styles */
+@media screen and (max-width: 768px) {
+    .formBody {
+        flex-direction: column;
+    }
+    
+    .receiptImage, 
+    .formFields {
+        max-width: 100%;
+        width: 100%;
+    }
+    
+    .imageContainer {
+        height: 350px;
+    }
+}

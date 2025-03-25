@@ -10,6 +10,7 @@ import { FinTrackLanding } from "./LandingPage/FinTrackLanding";
 import { SignIn } from "./SignIn/SignIn"; 
 import { ExpensesUpload } from "./ExpensesUpload/ExpensesUpload"; 
 import NavBar from "./LandingPage/components/NavBar";
+import Profile from "./Profile/UserProfile";
 import YearlyExpensesView from "./YearlyExpenses/YearlyExpensesView";
 import MonthlyExpensesViewExpensesView from "./YearlyExpenses/MonthlyExpensesView";
 import TaxReliefFolder from "./YearlyExpenses/TaxReliefFolder";
@@ -20,6 +21,7 @@ import AdminFeedback from "./Admin/AdminFeedbacks/FeedbackPage";
 import AdminInfographics from "./Admin/AdminInfographics/AdminInfographics";
 import AdminTaxRelief from "./Admin/AdminTaxRelief/AdminTaxRelief";
 import { Footer } from "./LandingPage/components/Footer"; // Your shared footer component
+
 import { ToastContainer } from "react-toastify";
 
 const App = () => {
@@ -44,11 +46,12 @@ const App = () => {
       setLoading(false); // Update loading state
     });
 
-    return () => unsubscribe(); // Clean up listener on component unmount
+    return () => unsubscribe(); // Clean up listener 
   }, []);
 
   if (loading) {}
 
+  // 
   return (
     <div className="App">
       <NavBar user={user} />
@@ -61,6 +64,10 @@ const App = () => {
           <Route path="/sign-up" element={<SignIn />} />
 
           {/* Protected Routes - Redirect if not logged in */}
+          <Route
+            path="/profile"
+            element={user ? <Profile /> : <Navigate to="/" replace />}
+          />
           <Route
             path="/my-expenses"
             element={user ? <ExpensesUpload /> : <Navigate to="/" replace />}
