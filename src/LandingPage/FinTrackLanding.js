@@ -2,7 +2,7 @@ import * as React from "react";
 import { useNavigate } from "react-router-dom";
 import { FeatureCard } from "./components/FeatureCard";
 import { features } from "./data/features";
-import { Footer } from "./components/Footer";
+// import { Footer } from "./components/Footer";
 
 export function FinTrackLanding() {
   const navigate = useNavigate();
@@ -84,7 +84,7 @@ export function FinTrackLanding() {
           </div>
         </div>
       </div>
-      <Footer />
+      {/* <Footer /> */}
     </div>
   );
 }

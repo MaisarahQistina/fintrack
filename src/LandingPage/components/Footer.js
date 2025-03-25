@@ -1,6 +1,7 @@
-import * as React from "react";
+import React from "react";
+import { Link } from "react-router-dom";
 
-export function Footer() {
+export function Footer({ user }) {
   return (
     <div className="flex overflow-hidden flex-col justify-center px-6 py-20 w-full bg-sky-900 max-md:px-5 max-md:max-w-full">
       <div className="flex flex-col w-full max-md:max-w-full">
@@ -14,10 +15,20 @@ export function Footer() {
           <div className="flex overflow-hidden flex-col flex-1 shrink text-base font-semibold text-white basis-0 min-w-[240px] max-md:max-w-full">
             <a href="/" className="max-md:max-w-full text-[16px] font-nats">Home</a>
             <div className="flex flex-col mt-4 w-full max-md:max-w-full">
-              <a href="/contact" className="flex-1 shrink pb-2 w-full max-md:max-w-full text-[16px] font-nats">Contact Us</a>
+              <a href="mailto:fintrack@gmail.com" className="flex-1 shrink pb-2 w-full max-md:max-w-full text-[16px] font-nats">Contact Us</a>
             </div>
           </div>
         </div>
+        {user && (
+          <div className="flex justify-center mt-8">
+            <Link
+            to="/feedback"
+            className="px-6 py-2 bg-green-600 text-white text-lg font-nats rounded text-center"
+          >
+            Feedback
+          </Link>
+          </div>
+        )}
       </div>
     </div>
   );
