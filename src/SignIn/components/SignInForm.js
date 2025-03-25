@@ -34,7 +34,7 @@ export function SignInForm() {
 
         setTimeout(() => {
           navigate("/");
-        }, 3000);
+        }, 1500);
       } catch (error) {
           console.log(error.message);
           toast.error(error.message, {
