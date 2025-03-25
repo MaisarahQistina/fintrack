@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 export function Footer({ user }) {
   return (
-    <div className="flex overflow-hidden flex-col justify-center px-6 py-20 w-full bg-sky-900 max-md:px-5 max-md:max-w-full">
+    <div className="relative flex overflow-hidden flex-col justify-center px-6 py-20 w-full bg-sky-900 max-md:px-5 max-md:max-w-full">
       <div className="flex flex-col w-full max-md:max-w-full">
         <div className="flex flex-wrap w-full max-md:max-w-full">
           <div className="overflow-hidden flex-1 shrink self-start text-4xl font-bold text-center text-white whitespace-nowrap min-w-[240px] max-md:max-w-full font-abhaya">
@@ -20,14 +20,12 @@ export function Footer({ user }) {
           </div>
         </div>
         {user && (
-          <div className="flex justify-center mt-8">
-            <Link
+          <Link
             to="/feedback"
-            className="px-6 py-2 bg-green-600 text-white text-lg font-nats rounded text-center"
+            className="absolute right-0 top-1/2  transform -translate-y-1/2 rotate-[-90deg] px-4 py-2 bg-[#189AB4] text-white text-lg font-nats rounded shadow-lg z-50"
           >
             Feedback
           </Link>
-          </div>
         )}
       </div>
     </div>
