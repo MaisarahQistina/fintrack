@@ -49,6 +49,7 @@ export function SignUpForm() {
             email: user.email,
             fullName: formData.fullName,
             dob: formData.dob,
+            role: "user", // Default role
           });
         }
         console.log("User registered successfully!");
