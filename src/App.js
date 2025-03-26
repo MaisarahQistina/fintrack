@@ -100,9 +100,11 @@ const App = () => {
             path="/dashboard"
             element={user ? <Dashboard /> : <Navigate to="/" replace />}
           />
+
+          {/* Admin only access */}
           <Route
             path="/admin-home"
-            element={user ? <AdminHome /> : <Navigate to="/" replace />}
+            element={user?.role === "admin" ? <AdminHome /> : <Navigate to="/" replace />}
           />
           <Route
             path="/admin-feedback"
