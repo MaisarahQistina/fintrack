@@ -35,6 +35,7 @@ const App = () => {
       if (authUser) {
         // Fetch user role from Firestore
         const userDoc = await getDoc(doc(db, "User", authUser.uid));
+        
         setUser({
           name: userDoc.exists() ? userDoc.data().fullName : "User",
           email: authUser.email,
@@ -49,7 +50,14 @@ const App = () => {
     return () => unsubscribe(); // Clean up listener 
   }, []);
 
-  if (loading) {}
+  if (loading) {
+    return (
+      <div className="loading-container">
+        <img alt="loading" src="./loading.svg" className="loading-spinner" />
+        <p className="loading-text">Loading...</p>
+      </div>
+    );
+  }  
 
   // 
   return (

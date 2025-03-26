@@ -1,3 +1,32 @@
 .main {
   max-width: 100vw;
 }
+
+/* Center the spinner and text */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #ffffff; /* Optional: Add a light background color */
+  z-index: 9999;
+}
+
+/* Spinner styles */
+.loading-spinner {
+  width: 250px; /* Adjust the size as needed */
+  height: 250px;
+}
+
+/* Add loading text below the spinner */
+.loading-text {
+  margin-top: 16px;
+  font-size: 25px; /* Adjust the font size as needed */
+  color: #333333; /* Optional: Customize the text color */
+  font-family: Abhaya Libre, serif;
+}
