@@ -25,6 +25,20 @@ import { Footer } from "./LandingPage/components/Footer"; // Your shared footer 
 import { ToastContainer } from "react-toastify";
 
 const App = () => {
+  // Test React connect with Flask backend
+  // const [data, setData] = useState([{}])
+
+  // useEffect(() => {
+  //   fetch("/members").then(
+  //     res => res.json()
+  //   ).then(
+  //       data => {
+  //         setData(data)
+  //         console.log(data)
+  //       }
+  //   )
+  // }, [])
+
   const location = useLocation();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -63,6 +77,15 @@ const App = () => {
   return (
     <div className="App">
       <NavBar user={user} />
+
+      {/* TEST FLASK CONNECTION */}
+      {/* {(typeof data.members === 'undefined') ? (
+        <p>Loading...</p>
+      ) : (
+        data.members.map((member, i) => {
+          return <p key={i}>{member}</p>;
+        })
+      )} */}
 
       <main className="main-content">
         <Routes>
