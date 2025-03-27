@@ -16,6 +16,7 @@ import MonthlyExpensesViewExpensesView from "./YearlyExpenses/MonthlyExpensesVie
 import TaxReliefFolder from "./YearlyExpenses/TaxReliefFolder";
 import UserInfographicView from "./Infographics/UserInfographicView";
 import Dashboard from "./Dashboard/Dashboard";
+import Feedback from "./Profile/Feedback";
 import AdminHome from "./Admin/AdminHomepage/AdminHome";
 import AdminFeedback from "./Admin/AdminFeedbacks/FeedbackPage";
 import AdminInfographics from "./Admin/AdminInfographics/AdminInfographics";
@@ -25,20 +26,6 @@ import { Footer } from "./LandingPage/components/Footer"; // Your shared footer 
 import { ToastContainer } from "react-toastify";
 
 const App = () => {
-  // Test React connect with Flask backend
-  // const [data, setData] = useState([{}])
-
-  // useEffect(() => {
-  //   fetch("/members").then(
-  //     res => res.json()
-  //   ).then(
-  //       data => {
-  //         setData(data)
-  //         console.log(data)
-  //       }
-  //   )
-  // }, [])
-
   const location = useLocation();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -51,6 +38,7 @@ const App = () => {
         const userDoc = await getDoc(doc(db, "User", authUser.uid));
         
         setUser({
+          uid: authUser.uid, 
           name: userDoc.exists() ? userDoc.data().fullName : "User",
           email: authUser.email,
           role: userDoc.exists() ? userDoc.data().role : "user", // Default role
@@ -77,15 +65,6 @@ const App = () => {
   return (
     <div className="App">
       <NavBar user={user} />
-
-      {/* TEST FLASK CONNECTION */}
-      {/* {(typeof data.members === 'undefined') ? (
-        <p>Loading...</p>
-      ) : (
-        data.members.map((member, i) => {
-          return <p key={i}>{member}</p>;
-        })
-      )} */}
 
       <main className="main-content">
         <Routes>
@@ -122,6 +101,10 @@ const App = () => {
           <Route
             path="/dashboard"
             element={user ? <Dashboard /> : <Navigate to="/" replace />}
+          />
+          <Route
+            path="/feedback"
+            element={user ? <Feedback user={user.uid} /> : <Navigate to="/" replace />}
           />
 
           {/* Admin only access */}
