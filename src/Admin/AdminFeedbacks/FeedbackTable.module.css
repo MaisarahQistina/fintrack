@@ -34,17 +34,17 @@
   }
   
   .headerCell:nth-child(1), .cell:nth-child(1) { /* No. column */
-    flex: 0.3; /* Reduce size */
-    min-width: 50px; /* Prevent from being too small */
+    flex: 0.2; /* Reduce size */
+    min-width: 30px; /* Prevent from being too small */
 }
 
 .headerCell:nth-child(2), .cell:nth-child(2) { /* User ID column */
-    flex: 0.8; /* Slightly smaller */
-    min-width: 100px;
+    flex: 1.3; /* Slightly smaller */
+    min-width: 140px;
 }
 
 .headerCell:nth-child(3), .cell:nth-child(3) { /* Feedback column */
-    flex: 3; /* Takes the remaining space */
+    flex: 4; /* Takes the remaining space */
 }
 
 /* Table Body */

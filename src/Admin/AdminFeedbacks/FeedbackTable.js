@@ -1,22 +1,42 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../../firebase"; // Import your Firestore configuration
 import styles from "./FeedbackTable.module.css";
 
 function FeedbackTable() {
-  // Sample data for the table
-  const feedbackData = [
-    { id: 1, userId: "User123", feedback: "Great service!" },
-    { id: 2, userId: "User456", feedback: "The app is very intuitive." },
-    { id: 3, userId: "User789", feedback: "Could use more features." },
-    { id: 4, userId: "User101", feedback: "Very helpful for tax planning." },
-    { id: 5, userId: "User202", feedback: "Love the interface design." },
-    { id: 6, userId: "User303", feedback: "Needs better mobile support." },
-    { id: 7, userId: "User404", feedback: "Excellent customer service." },
-    { id: 8, userId: "User505", feedback: "Would recommend to others." },
-    { id: 9, userId: "User606", feedback: "Helped me save on taxes." },
-    { id: 10, userId: "User707", feedback: "Easy to navigate." },
-    { id: 11, userId: "User808", feedback: "Could use more detailed reports." },
-    { id: 12, userId: "User909", feedback: "Very satisfied with the service." },
-  ];
+  const [feedbackData, setFeedbackData] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchFeedback = async () => {
+      try {
+        // Fetch feedback collection from Firestore
+        const feedbackCollection = collection(db, "Feedback");
+        const feedbackSnapshot = await getDocs(feedbackCollection);
+
+        // Map data into an array
+        const feedbackList = feedbackSnapshot.docs.map((doc, index) => ({
+          id: index + 1, // Add a sequential ID
+          userId: doc.data().userId,
+          feedback: doc.data().feedback,
+          timestamp: doc.data().timestamp
+          ? doc.data().timestamp.toDate().toLocaleString() // Convert Firebase Timestamp
+          : "N/A",
+        }));
+
+        setFeedbackData(feedbackList); // Set data in state
+        setLoading(false); // Stop loading
+      } catch (error) {
+        console.error("Error fetching feedback data:", error);
+      }
+    };
+
+    fetchFeedback();
+  }, []);
+
+  if (loading) {
+    return <p>Loading feedback...</p>;
+  }
 
   return (
     <div className={styles.table}>
@@ -24,15 +44,17 @@ function FeedbackTable() {
         <div className={styles.headerCell}>No.</div>
         <div className={styles.headerCell}>User ID</div>
         <div className={styles.headerCell}>Feedback</div>
+        <div className={styles.headerCell}>Timestamp</div>
       </div>
       {feedbackData.map((item, index) => (
         <div
-          key={item.id}
-          className={index % 2 === 0 ? styles.tableRow : styles.tableRowAlt}
+          key={index}
+          className={index % 3 === 0 ? styles.tableRow : styles.tableRowAlt}
         >
           <div className={styles.cell}>{item.id}</div>
           <div className={styles.cell}>{item.userId}</div>
           <div className={styles.cell}>{item.feedback}</div>
+          <div className={styles.cell}>{item.timestamp}</div>
         </div>
       ))}
     </div>
