@@ -22,7 +22,7 @@ const NavBar = ({ user }) => {
     { text: "Home", path: "/admin-home" },
     { text: "Tax Relief", path: "/admin-taxrelief" },
     { text: "Infographics", path: "/admin-infographics" },
-    { text: "Feedbacks", path: "/admin-feedbacks" },
+    { text: "Feedbacks", path: "/admin-feedback" },
   ];
 
   const linksToShow = user

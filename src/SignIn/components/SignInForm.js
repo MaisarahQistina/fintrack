@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../../firebase"; 
+import { doc, getDoc } from "firebase/firestore";
+import { auth, db } from "../../firebase"; 
 
 import { toast } from "react-toastify";
 
@@ -23,26 +23,35 @@ export function SignInForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     if (isValid) {
       try {
-        await signInWithEmailAndPassword(auth, formData.email, formData.password);
-        console.log("User logged in successfully");
-        toast.success("You have logged in successfully!", {
-        position: "top-center",
-        });
-
-        setTimeout(() => {
-          navigate("/");
-        }, 1500);
+        const userCred = await signInWithEmailAndPassword(auth, formData.email, formData.password);
+        const uid = userCred.user.uid;
+  
+        // Try fetching from "User" collection
+        const userDoc = await getDoc(doc(db, "User", uid));
+        if (userDoc.exists()) {
+          toast.success("User logged in!", { position: "top-center" });
+          navigate("/"); // redirect for normal user
+        } else {
+          // Else try Admin
+          const adminDoc = await getDoc(doc(db, "Admin", uid));
+          if (adminDoc.exists()) {
+            toast.success("Admin logged in!", { position: "top-center" });
+            navigate("/admin-home"); // redirect for admin
+          } else {
+            toast.error("User role not found!", { position: "bottom-center" });
+          }
+        }
+  
       } catch (error) {
-          console.log(error.message);
-          toast.error(error.message, {
-            position: "bottom-center",
-          });
+        console.log(error.message);
+        toast.error(error.message, { position: "bottom-center" });
       }
     }
   };
+  
 
   return (
     <form className="flex flex-col w-full mt-4" onSubmit={handleSubmit}>

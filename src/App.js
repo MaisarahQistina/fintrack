@@ -29,24 +29,51 @@ const App = () => {
   const location = useLocation();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-
+  
   useEffect(() => {
     // Listen for Firebase auth state changes
     const unsubscribe = onAuthStateChanged(auth, async (authUser) => {
       if (authUser) {
-        // Fetch user role from Firestore
-        const userDoc = await getDoc(doc(db, "User", authUser.uid));
-        
-        setUser({
-          uid: authUser.uid, 
-          name: userDoc.exists() ? userDoc.data().fullName : "User",
-          email: authUser.email,
-          role: userDoc.exists() ? userDoc.data().role : "user", // Default role
+        const uid = authUser.uid;
+        const email = authUser.email;
+
+        // Try checking User collection first
+        const userDoc = await getDoc(doc(db, "User", uid));
+
+        if (userDoc.exists()) {
+            const data = userDoc.data();
+            setUser({
+              uid,
+              name: data.fullName || "User",
+              email,
+              role: data.role || "user",
         });
+      } else {
+        // Then check Admin collection
+        const adminDoc = await getDoc(doc(db, "Admin", uid));
+
+        if (adminDoc.exists()) {
+          const data = adminDoc.data();
+          setUser({
+            uid,
+            name: data.fullName || "Admin",
+            email,
+            role: data.role || "admin",
+          });
+      } else {
+        // Not found in either collection
+        setUser({
+          uid,
+          name: "Unknown",
+          email,
+          role: "user", // fallback
+        });
+      }}
       } else {
         setUser(null);
       }
-      setLoading(false); // Update loading state
+
+      setLoading(false);
     });
 
     return () => unsubscribe(); // Clean up listener 
@@ -114,15 +141,15 @@ const App = () => {
           />
           <Route
             path="/admin-feedback"
-            element={user ? <AdminFeedback /> : <Navigate to="/" replace />}
+            element={user?.role === "admin" ? <AdminFeedback /> : <Navigate to="/" replace />}
           />
           <Route
             path="/admin-infographics"
-            element={user ? <AdminInfographics /> : <Navigate to="/" replace />}
+            element={user?.role === "admin" ? <AdminInfographics /> : <Navigate to="/" replace />}
           />
           <Route
             path="/admin-taxrelief"
-            element={user ? <AdminTaxRelief /> : <Navigate to="/" replace />}
+            element={user?.role === "admin" ? <AdminTaxRelief /> : <Navigate to="/" replace />}
           />
         </Routes>
 
