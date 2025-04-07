@@ -19,7 +19,7 @@ const AdminTaxRelief = () => {
       <div className={styles.container}>
         <main className={styles.main}>
           <div className={styles.headerWrapper}>
-            <h1 className={styles.PageTitle}>Manage Infographics</h1>
+            <h1 className={styles.PageTitle}>Manage Relief Category</h1>
 
             <div className={styles.iconWrapper}>
               <button
