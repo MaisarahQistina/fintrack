@@ -336,6 +336,7 @@ select {
   outline: none;
   box-sizing: border-box;
   padding-left: 40px;
+  text-indent: 20px;
 }
 
 .inputWithIcon {
@@ -349,7 +350,7 @@ select {
   align-self: flex-end;
   transition: background-color 0.3s;
   padding: 10px 16px;
-  width: 70px;
+  width: 90px;
   border: none;
   border-radius: 4px;
   background-color: rgba(43, 97, 59, 1);
@@ -406,7 +407,8 @@ select {
 
 .inputWithIconField {
   width: 100%;
-  padding: 10px 15px 10px 40px; /* Extra left padding to make room for the icon */
+  padding: 10px 15px 10px 40px;
+  text-indent: 20px;
   border: 1px solid #ddd;
   border-radius: 5px;
   font-size: 16px;

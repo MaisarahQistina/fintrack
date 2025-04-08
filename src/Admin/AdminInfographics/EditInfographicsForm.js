@@ -1,29 +1,45 @@
 import React, { useState } from "react";
 import styles from "./AdminInfographics.module.css";
+import { db } from "../../firebase"; // Update this path
+import { doc, updateDoc } from "firebase/firestore";
 
-const EditInfographicsForm = ({ uploadedFile, onClose }) => {
-  const [title, setTitle] = useState("Financial Planning Guide");
-  const [resource, setResource] = useState("https://example.com/finance-guide");
+const EditInfographicsForm = ({ infographicData, uploadedFile, onClose, isSavedInfo }) => {
+  const [title, setTitle] = useState(infographicData?.title || "");
+  const [resource, setResource] = useState(infographicData?.resourceLink || "");
   const [showSuccess, setShowSuccess] = useState(false);
-
-  if (!uploadedFile) return null; // No file uploaded, don't show the form
 
   const handleClose = () => {
     if (onClose) onClose();
   };
 
-  const handleSave = () => {
-    // Save logic here
-    console.log("Saving infographic data:", {
-      title,
-      resource
-    });
-    
-    setShowSuccess(true);
-    setTimeout(() => {
-      setShowSuccess(false);
-      handleClose(); // Close the main form
-    }, 2000);
+  const handleSave = async () => {
+    // Validation
+    if (!title) {
+      alert("Please fill out the infographic title.");
+      return;
+    }
+
+    try {
+      // Update the document in Firestore
+      const infographicRef = doc(db, "Infographics", infographicData.id);
+      await updateDoc(infographicRef, {
+        title: title,
+        resourceLink: resource || null,
+        updatedAt: new Date()
+      });
+      
+      // Show success message
+      setShowSuccess(true);
+      setTimeout(() => {
+        setShowSuccess(false);
+        handleClose(); // Close the form
+        window.location.reload();
+      }, 2000);
+      
+    } catch (error) {
+      console.error("Error updating infographic:", error);
+      alert("Failed to update infographic. Please try again.");
+    }
   };
 
   return (
@@ -33,7 +49,7 @@ const EditInfographicsForm = ({ uploadedFile, onClose }) => {
         <div className={styles.form}>
           <div className={styles.formTitle}>
             <h1 className={styles.cardTitle}>Edit Infographic</h1>
-            <p>Only the title and resources link can be updated. For changes to the image, add a new infographic to ensure clarity for users.</p>
+            <p>Update this infographic information.</p>
             <span className={styles.closeBtn} onClick={handleClose}>X</span>
           </div>
           
@@ -64,6 +80,7 @@ const EditInfographicsForm = ({ uploadedFile, onClose }) => {
                   <input 
                     type="text" 
                     id="title" 
+                    placeholder="Add Title"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                     className={styles.inputWithIconField}
@@ -72,7 +89,7 @@ const EditInfographicsForm = ({ uploadedFile, onClose }) => {
               </div>
               
               <div className={styles.formGroup}>
-              <label htmlFor="totalAmount">Resource Link</label>
+              <label htmlFor="resourceLink">Resource Link</label>
                 <div className={styles.inputWithIcon}>
                   <div className={styles.iconContainer}>
                     <img 
@@ -84,6 +101,7 @@ const EditInfographicsForm = ({ uploadedFile, onClose }) => {
                   <input 
                     type="text" 
                     id="resourceLink" 
+                    placeholder="Add Link"
                     value={resource}
                     onChange={(e) => setResource(e.target.value)}
                     className={styles.inputField}
@@ -104,7 +122,7 @@ const EditInfographicsForm = ({ uploadedFile, onClose }) => {
       <div className={styles.popupOverlay} onClick={() => setShowSuccess(false)}>
         <div className={styles.popupConfirmation} onClick={(e) => e.stopPropagation()}>
           <img src="/Checkmark.png" alt="Checkmark" width="60" height="60" />
-          <p>The infographic is successfully saved.</p>
+          <p>The infographic is successfully updated.</p>
         </div>
       </div>
     )}
