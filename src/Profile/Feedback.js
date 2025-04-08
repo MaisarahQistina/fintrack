@@ -38,7 +38,7 @@ function FeedbackPage({ user }) { // Assuming you pass userId as a prop
     <>
       <div className={styles.container}>
         <main className={styles.main}>
-          <h1 className={styles.title}>Give us feedback!</h1>
+          <h1 className={styles.title}>Give us your feedback!</h1>
           <div className={styles.subtitle}>
             Your input is important to us. We take our user feedback very seriously.
           </div>

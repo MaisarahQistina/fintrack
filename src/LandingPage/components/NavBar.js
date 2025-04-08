@@ -40,17 +40,26 @@ const NavBar = ({ user }) => {
 
         {/* Navigation Links */}
         <nav className="flex gap-4 font-nats">
-          {linksToShow.map(({ text, path }, index) => (
-            <Link
-              key={index}
-              to={path}
-              className={`text-white text-lg cursor-pointer ${
-                location.pathname === path ? "border-b-2 border-white" : ""
-              }`}
-            >
-              {text}
-            </Link>
-          ))}
+          {linksToShow.map(({ text, path }, index) => {
+            // Check for matching routes to apply underline
+            const isExpensesPage =
+              text === "Expenses" &&
+              (location.pathname === "/my-expenses" ||
+                location.pathname === "/yearly-expenses" ||
+                location.pathname === "/monthly-expenses");
+
+            return (
+              <Link
+                key={index}
+                to={path}
+                className={`text-white text-lg cursor-pointer ${
+                  location.pathname === path || isExpensesPage ? "border-b-2 border-white" : ""
+                }`}
+              >
+                {text}
+              </Link>
+            );
+          })}
         </nav>
       </div>
 
