@@ -15,7 +15,7 @@ const NavBar = ({ user }) => {
     { text: "Profile", path: "/profile" },
     { text: "Expenses", path: "/my-expenses" },
     { text: "Dashboard", path: "/dashboard" },
-    { text: "Infographics", path: "/infographics" },
+    { text: "Financial Tips", path: "/infographics" },
   ];
 
   const adminNavLinks = [

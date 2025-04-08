@@ -1,34 +1,45 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./CardSlider.module.css";
 import linkIcon from "./icons/link.png";
 import enlargeIcon from "./icons/enlarge.png";
-
-const cards = [
-  { img: "/info.png", title: "Tax Relief in Malaysia 2024" },
-  { img: "/cost.png", title: "7 Tips for Better Cost Control" },
-  { img: "/info.png", title: "Tax Relief in Malaysia 2026" },
-  { img: "/cost.png", title: "7 Tips for Better Cost Control" },
-  { img: "/info.png", title: "Tax Relief in Malaysia 2028" },
-  { img: "/cost.png", title: "7 Tips for Better Cost Control" },
-];
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../firebase"; // Adjust the path as needed
 
 function CardSlider() {
+  const [cards, setCards] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
-  
+
+  useEffect(() => {
+    const fetchInfographics = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, "Infographics"));
+        const fetchedCards = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+        setCards(fetchedCards);
+      } catch (error) {
+        console.error("Error fetching infographics:", error);
+      }
+    };
+
+    fetchInfographics();
+  }, []);
+
   const handleNext = () => {
-    setCurrentIndex((prev) => (prev < cards.length - 1 ? prev + 1 : 0)); // Loop back to first card
+    setCurrentIndex((prev) => (prev < cards.length - 1 ? prev + 1 : 0));
   };
 
   const handlePrev = () => {
-    setCurrentIndex((prev) => (prev > 0 ? prev - 1 : cards.length - 1)); // Loop to last card
+    setCurrentIndex((prev) => (prev > 0 ? prev - 1 : cards.length - 1));
   };
 
   const openResourceLink = (url) => {
-    window.open(url, "_blank"); // Opens link in a new tab
+    if (url) window.open(url, "_blank");
   };
 
   const openImage = (imgSrc) => {
-    window.open(imgSrc, "_blank"); // Opens image in a new tab
+    window.open(imgSrc, "_blank");
   };
 
   const translateValue = -currentIndex * 100;
@@ -40,7 +51,7 @@ function CardSlider() {
       </button>
 
       <div className={styles.viewportContainer}>
-        <div 
+        <div
           className={styles.carouselTrack}
           style={{
             transform: `translateX(${translateValue}%)`,
@@ -48,27 +59,27 @@ function CardSlider() {
         >
           {cards.map((card, index) => (
             <div
-              key={index}
+              key={card.id || index}
               className={`${styles.card} ${index === currentIndex ? styles.active : ''}`}
             >
               <div className={styles.imageContainer}>
-                <img src={card.img} alt={card.title} className={styles.image} />
+                <img src={card.imageUrl} alt={card.title} className={styles.image} />
               </div>
               <h3 className={styles.title}>{card.title}</h3>
               <div className={styles.iconContainer}>
-              <img
-                src={enlargeIcon}
-                alt="Enlarge"
-                className={styles.icon}
-                onClick={() => openImage(card.img)}
-              />
-              <img
-                src={linkIcon}
-                alt="Resource Link"
-                className={styles.icon}
-                onClick={() => openResourceLink(card.link)}
-              />
-            </div>
+                <img
+                  src={enlargeIcon}
+                  alt="Enlarge"
+                  className={styles.icon}
+                  onClick={() => openImage(card.imageUrl)}
+                />
+                <img
+                  src={linkIcon}
+                  alt="Resource Link"
+                  className={styles.icon}
+                  onClick={() => openResourceLink(card.resourceLink)}
+                />
+              </div>
             </div>
           ))}
         </div>
@@ -79,7 +90,7 @@ function CardSlider() {
       </button>
 
       <div className={styles.imageIndicator}>
-        {currentIndex + 1} / {cards.length}
+        {cards.length > 0 ? `${currentIndex + 1} / ${cards.length}` : "Loading..."}
       </div>
     </div>
   );
