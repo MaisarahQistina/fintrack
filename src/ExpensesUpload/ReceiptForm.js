@@ -1,12 +1,47 @@
 // ReceiptForm.js
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "./ReceiptForm.module.css";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../firebase"; // Make sure to import your Firestore instance
 
 const ReceiptForm = ({ uploadedFile, onClose, isSavedReceipt }) => {
   const [transactionDate, setTransactionDate] = useState("2024-04-01");
-  const [category, setCategory] = useState("Medical Expenses");
+  const [categoryId, setCategoryId] = useState(""); // Store ID instead of name
+  const [categoryName, setCategoryName] = useState(""); // For display purposes
+  const [categories, setCategories] = useState([]); // To store categories from Firestore
   const [totalAmount, setTotalAmount] = useState("RM 33.26");
   const [showSuccess, setShowSuccess] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Fetch categories from Firestore when component mounts
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        setIsLoading(true);
+        const categoriesCollection = collection(db, "SystemCategory");
+        const categorySnapshot = await getDocs(categoriesCollection);
+        const categoryList = categorySnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+        
+        setCategories(categoryList);
+        
+        // Set default category if we have categories
+        if (categoryList.length > 0) {
+          setCategoryId(categoryList[0].categoryID);
+          setCategoryName(categoryList[0].categoryName);
+        }
+        
+        setIsLoading(false);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+        setIsLoading(false);
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
   if (!uploadedFile) return null; // No file uploaded, don't show the form
 
@@ -18,7 +53,8 @@ const ReceiptForm = ({ uploadedFile, onClose, isSavedReceipt }) => {
     // Save logic here
     console.log("Saving receipt data:", {
       transactionDate,
-      category,
+      categoryId, // Save the ID rather than the name
+      categoryName, // Just for display/debugging
       totalAmount
     });
     
@@ -31,6 +67,17 @@ const ReceiptForm = ({ uploadedFile, onClose, isSavedReceipt }) => {
 
   const handleAmountChange = (e) => {
     setTotalAmount(e.target.value);
+  };
+
+  const handleCategoryChange = (e) => {
+    const selectedCategoryId = e.target.value;
+    setCategoryId(selectedCategoryId);
+    
+    // Find the corresponding category name for display
+    const selectedCategory = categories.find(cat => cat.categoryID === selectedCategoryId);
+    if (selectedCategory) {
+      setCategoryName(selectedCategory.categoryName);
+    }
   };
 
   return (
@@ -47,17 +94,13 @@ const ReceiptForm = ({ uploadedFile, onClose, isSavedReceipt }) => {
           <div className={styles.formBody}>
             <div className={styles.receiptImage}>
               <div className={styles.imageContainer}>
-                {uploadedFile && (
-                    <img
-                    src={
-                      isSavedReceipt
-                        ? uploadedFile // Use URL directly if it's a saved receipt
-                        : URL.createObjectURL(uploadedFile) // Use file object URL if newly uploaded
-                    }
-                    alt="Uploaded Receipt"
-                    className={styles.uploadedImage}
-                  />
-                )}
+              {uploadedFile && (
+                  <img
+                  src={uploadedFile} // Use the base64 string directly in all cases
+                  alt="Uploaded Receipt"
+                  className={styles.uploadedImage}
+                />
+              )}
               </div>
             </div>
             
@@ -79,17 +122,26 @@ const ReceiptForm = ({ uploadedFile, onClose, isSavedReceipt }) => {
               <div className={styles.formGroup}>
                 <label htmlFor="category">Category(s)</label>
                 <div className={styles.selectWrapper}>
-                  <select 
-                    id="category" 
-                    value={category}
-                    onChange={(e) => setCategory(e.target.value)}
-                    className={styles.inputField}
-                  >
-                    <option>Medical Expenses</option>
-                    <option>Food & Beverage</option>
-                    <option>Transport</option>
-                    <option>Entertainment</option>
-                  </select>
+                  {isLoading ? (
+                    <div>Loading categories...</div>
+                  ) : (
+                    <select 
+                      id="category" 
+                      value={categoryId}
+                      onChange={handleCategoryChange}
+                      className={styles.inputField}
+                    >
+                      {categories.length > 0 ? (
+                        categories.map(category => (
+                          <option key={category.categoryID} value={category.categoryID}>
+                            {category.categoryName}
+                          </option>
+                        ))
+                      ) : (
+                        <option value="">No categories available</option>
+                      )}
+                    </select>
+                  )}
                 </div>
               </div>
               

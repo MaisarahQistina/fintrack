@@ -1,5 +1,5 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import MonthsRow from "./MonthsRow";
 import styles from "./YearlyExpensesView.module.css";
 
@@ -8,6 +8,21 @@ const secondHalfMonths = ["July", "August", "September", "October", "November", 
 
 function YearlyExpensesView() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const [year, setYear] = useState(new Date().getFullYear().toString()); // Default to current year
+  
+  useEffect(() => {
+    // Get the year from URL query parameters
+    const queryParams = new URLSearchParams(location.search);
+    const yearParam = queryParams.get('year');
+    
+    if (yearParam) {
+      setYear(yearParam);
+    }
+    
+    // Optional: You could fetch receipts for the specified year here
+    // fetchReceiptsForYear(yearParam || year);
+  }, [location.search]);
 
   const handleTaxReliefClick = () => {
     navigate("/tax-relief");
@@ -16,12 +31,12 @@ function YearlyExpensesView() {
   return (
     <main className={styles.yearlyExpensesView}>
       <div className={styles.viewBy}>
-        <img src="/Calendar.png" alt="Calendar" width="40" height="10" /> 2024
+        <img src="/Calendar.png" alt="Calendar" width="40" height="10" /> {year}
       </div>
 
       <section className={styles.monthsContainer}>
-        <MonthsRow months={firstHalfMonths} />
-        <MonthsRow months={secondHalfMonths} />
+        <MonthsRow months={firstHalfMonths} year={year} />
+        <MonthsRow months={secondHalfMonths} year={year} />
       </section>
 
       {/* Tax Relief Folder */}
@@ -30,6 +45,7 @@ function YearlyExpensesView() {
         <span>Tax Relief</span>
       </div>
     </main>
+    
   );
 }
 

@@ -1,11 +1,25 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import styles from "./YearlyExpensesView.module.css";
 
-const MonthCell = ({ month }) => {
+const MonthCell = ({ month, year }) => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleClick = () => {
-    navigate(`/monthly-expenses?month=${month}`);
+    // Get month number (1-12) from month name
+    const monthNames = [
+      "January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"
+    ];
+    const monthNumber = monthNames.indexOf(month) + 1;
+    
+    let yearToUse = year;
+    if (!yearToUse) {
+      const params = new URLSearchParams(location.search);
+      yearToUse = params.get('year') || new Date().getFullYear().toString();
+    }
+    
+    navigate(`/monthly-expenses?year=${yearToUse}&month=${monthNumber}`);
   };
 
   return (

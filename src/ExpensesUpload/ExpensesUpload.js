@@ -1,19 +1,48 @@
-// ExpensesUpload.js
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styles from "./ExpensesUpload.module.css";
 import ReceiptForm from "./ReceiptForm";
 
 export function ExpensesUpload() {
   const [uploadedFile, setUploadedFile] = useState(null);
   const [showForm, setShowForm] = useState(false);
+  const navigate = useNavigate();
 
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setUploadedFile(file);
-      setShowForm(true);
+  const handleYearChange = (e) => {
+    const selectedYear = e.target.value;
+    if (selectedYear) {
+      navigate(`/yearly-expenses?year=${selectedYear}`);
     }
   };
+
+  const handleFileChange = async (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      try {
+        const formData = new FormData();
+        formData.append("file", file);
+  
+        const response = await fetch("http://localhost:5000/process-receipt", {
+          method: "POST",
+          body: formData,
+        });
+  
+        const data = await response.json()
+        console.log(data.message);     // Should show "Upload successful"
+  
+        if (response.ok && data.processedImage) {
+          const base64Image = `data:image/jpeg;base64,${data.processedImage}`;
+          setUploadedFile(base64Image);
+          setShowForm(true);
+        } else {
+          alert("Upload failed: " + (data.error || "Unknown error"));
+        }
+      } catch (err) {
+        console.error("Upload error:", err);
+        alert("Error uploading file.");
+      }
+    }
+  };  
 
   const closeForm = () => {
     setShowForm(false);
@@ -24,7 +53,12 @@ export function ExpensesUpload() {
     <div className={styles.expensesMainPageView}>
       <div className={styles.viewBy}>
         View By :
-        <select name="year" id="year" className={styles.yearSelect}>
+        <select 
+          name="year" 
+          id="year" 
+          className={styles.yearSelect}
+          onChange={handleYearChange}
+        >
           <option value="">- Select Year -</option>
           <option value="2022">2022</option>
           <option value="2023">2023</option>
