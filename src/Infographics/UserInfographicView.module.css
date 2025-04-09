@@ -25,6 +25,15 @@
     overflow: hidden;
   }
   
+  .subtitle {
+    font-size: 20px;  /* Adjust as needed */
+    font-family: 'NATS', sans-serif;
+    color: #000000; /* Adjust color if needed */
+    position: absolute;
+    top: 85px;  /* Adjust distance from the top */
+    left: 51px; /* Adjust distance from the left */
+  }
+
   @media (width<=991px) {
     .heading {
       max-width: 100%;

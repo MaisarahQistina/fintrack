@@ -122,3 +122,31 @@
   border-radius: 10px;
   font-size: 12px;
 }
+
+.iconWrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.iconLabel {
+  position: absolute;
+  top: -20px; /* Adjust based on desired positioning */
+  left: 50%;
+  transform: translateX(-50%);
+  visibility: hidden;
+  opacity: 0;
+  background-color: #333;
+  color: #fff;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  white-space: nowrap;
+  transition: visibility 0s, opacity 0.3s ease-in-out;
+  z-index: 1;
+}
+
+.iconWrapper:hover .iconLabel {
+  visibility: visible;
+  opacity: 1;
+}
+

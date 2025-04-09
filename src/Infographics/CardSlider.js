@@ -67,19 +67,26 @@ function CardSlider() {
               </div>
               <h3 className={styles.title}>{card.title}</h3>
               <div className={styles.iconContainer}>
+              <div className={styles.iconWrapper}>
                 <img
                   src={enlargeIcon}
                   alt="Enlarge"
                   className={styles.icon}
                   onClick={() => openImage(card.imageUrl)}
                 />
+                <span className={styles.iconLabel}>Enlarge Image</span>
+              </div>
+              <div className={styles.iconWrapper}>
                 <img
                   src={linkIcon}
                   alt="Resource Link"
                   className={styles.icon}
                   onClick={() => openResourceLink(card.resourceLink)}
                 />
+                <span className={styles.iconLabel}>Open Resource Link</span>
               </div>
+            </div>
+
             </div>
           ))}
         </div>
