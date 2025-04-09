@@ -9,7 +9,7 @@ function Dashboard() {
   return (
     <main className={styles.DashboardView}>
       {/* Title and Month/Year */}
-        <div className={styles.title}>Dashboard
+        <div className={styles.title}>User Dashboard
         <div className={styles.month}>
           {view === "month" ? "December 2024" : "2024"}
         </div>

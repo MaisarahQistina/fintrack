@@ -87,7 +87,7 @@
     z-index: 1; 
     display: grid;
     grid-template-columns: 20vw 1fr;  /* Adjusts column width */
-    grid-template-rows: repeat(2, 15vh); /* Defines row height */
+    grid-template-rows: repeat(2, 12vh); /* Defines row height */
     gap: 20px; /* Reduce gap */
     align-items: flex-start; 
     justify-content: flex-start; 
@@ -105,7 +105,7 @@
 /* Card - Monthly Income */
 .cardMonthlyIncome {
     width: 20vw;
-    height: 15vh;
+    height: 12vh;
     background: white;
     border-radius: 10px;
     font-family: 'Abhaya Libre';
@@ -135,7 +135,7 @@
 /* Card - Budget */
 .cardBudget {
     width: 20vw;
-    height: 15vh;
+    height: 12vh;
     background: white;
     border-radius: 10px;
     font-family: 'Abhaya Libre';
@@ -198,7 +198,7 @@
   /* Progress bar container */
   .progressBarContainer {
     width: 90%;
-    height: 50px;
+    height: 25px;
     background-color: #c1baba;
     margin: 0 auto;
     display: flex;
@@ -309,7 +309,7 @@
     padding-left: 10px;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    /* justify-content: space-between; */
     border: 1px solid rgb(126, 123, 123);
     overflow: hidden;
     height: 100%; /* Ensures it spans both rows correctly */
@@ -496,3 +496,130 @@
     color: #B32828;
     text-align: center;
   }
+
+  /* Wrapper for the legend container */
+.legendWrapper {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px; /* Space between columns */
+  font-size: 12px; /* Text size for legend labels */
+}
+
+/* Each column in the legend */
+.legendColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 8px; /* Space between items in each column */
+}
+
+/* Each legend item */
+.legendItem {
+  display: flex;
+  align-items: center;
+}
+
+/* Square color indicator in legend items */
+.legendColor {
+  width: 12px;
+  height: 12px;
+  margin-right: 8px; /* Space between the color indicator and the label */
+  border-radius: 2px; /* Optional: rounded edges for the indicator */
+}
+
+/* Tooltip container */
+.tooltipContainer {
+  background-color: white;
+  padding: 8px;
+  border: 1px solid #d1d5db; /* Light gray border */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  border-radius: 6px; /* Rounded corners */
+  font-size: 12px; /* Tooltip text size */
+  color: #333333; /* Dark text color */
+}
+
+/* Tooltip title */
+.tooltipTitle {
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+/* Tooltip value */
+.tooltipValue {
+  color: #4a5568; /* Medium gray for value text */
+}
+
+/* Tooltip percentage */
+.tooltipPercentage {
+  color: #718096; /* Light gray for percentage text */
+  font-size: 11px;
+}
+
+.customTooltip {
+  background-color: white;
+  padding: 0.5rem;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 0.25rem;
+}
+
+.customTooltipTitle {
+  font-weight: 600;
+}
+
+.customTooltipValue {
+  color: #374151;
+}
+
+.customTooltipPercentage {
+  color: #6b7280;
+  font-size: 0.875rem;
+}
+
+.customLegend {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  font-size: 16px;
+}
+
+.customLegendColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.customLegendItem {
+  display: flex;
+  align-items: center;
+}
+
+.customLegendColorBox {
+  width: 0.75rem;
+  height: 0.75rem;
+  margin-right: 0.5rem;
+}
+
+/* Flex helpers */
+.flex {
+  display: flex;
+}
+
+.h80 {
+  height: 20rem;
+}
+
+.wFull {
+  width: 100%;
+}
+
+.wThreeFourths {
+  width: 75%;
+  height: 100%;
+}
+
+.wOneFourth {
+  width: 25%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
