@@ -6,6 +6,7 @@ import ReceiptForm from "./ReceiptForm";
 export function ExpensesUpload() {
   const [uploadedFile, setUploadedFile] = useState(null);
   const [showForm, setShowForm] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleYearChange = (e) => {
@@ -18,32 +19,56 @@ export function ExpensesUpload() {
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
     if (file) {
+      console.log("File selected:", file.name, file.type, file.size);
       try {
+        setIsLoading(true); // Start loading
+
         const formData = new FormData();
         formData.append("file", file);
-  
+        
+        console.log("Sending request to process-receipt endpoint");
         const response = await fetch("http://localhost:5000/process-receipt", {
           method: "POST",
           body: formData,
         });
-  
-        const data = await response.json()
-        console.log(data.message);     // Should show "Upload successful"
-  
-        if (response.ok && data.processedImage) {
-          const base64Image = `data:image/jpeg;base64,${data.processedImage}`;
+        
+        console.log("Response status:", response.status);
+        
+        if (!response.ok) {
+          const text = await response.text();
+          console.error("Error response:", text);
+          alert("Upload failed: " + text);
+          return;
+        }
+        
+        const data = await response.json();
+        console.log("Response data:", Object.keys(data));
+        console.log("Message:", data.message);
+        
+        if (data.processedImage) {
+          console.log("Received processedImage, length:", data.processedImage.length);
+          const base64Image = `data:image/jpg;base64,${data.processedImage}`;
+          console.log('Base64 Image prefix:', base64Image.substring(0, 50) + '...');
+          
           setUploadedFile(base64Image);
           setShowForm(true);
+          
+          if (data.roboflowResults) {
+            console.log("Roboflow Results:", data.roboflowResults);
+          }
         } else {
-          alert("Upload failed: " + (data.error || "Unknown error"));
+          console.error("No processedImage in response");
+          alert("Upload failed: No processed image returned");
         }
       } catch (err) {
         console.error("Upload error:", err);
-        alert("Error uploading file.");
+        alert("Error uploading file: " + err.message);
+      } finally {
+        setIsLoading(false); 
       }
     }
-  };  
-
+};
+  
   const closeForm = () => {
     setShowForm(false);
     setUploadedFile(null);
@@ -51,6 +76,13 @@ export function ExpensesUpload() {
 
   return (
     <div className={styles.expensesMainPageView}>
+      {isLoading && (
+        <div className="loading-container">
+          <img alt="loading" src="./loading.svg" className="loading-spinner" />
+          <p className="loading-text">Processing receipt...</p>
+        </div>
+      )}
+
       <div className={styles.viewBy}>
         View By :
         <select 
@@ -96,7 +128,7 @@ export function ExpensesUpload() {
               color: 'rgba(0,0,0,1)',
             }}
           >
-            Supported formats: JPEG, PNG, PDF (&lt;5MB)
+            Supported formats: JPG, PNG, PDF (&lt;5MB)
           </span>
         </div>
         <div className={styles.uploadButtonWrapper}>

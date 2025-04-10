@@ -1,4 +1,3 @@
-// ReceiptForm.js
 import React, { useState, useEffect } from "react";
 import styles from "./ReceiptForm.module.css";
 import { collection, getDocs } from "firebase/firestore";
@@ -96,9 +95,9 @@ const ReceiptForm = ({ uploadedFile, onClose, isSavedReceipt }) => {
               <div className={styles.imageContainer}>
               {uploadedFile && (
                   <img
-                  src={uploadedFile} // Use the base64 string directly in all cases
-                  alt="Uploaded Receipt"
-                  className={styles.uploadedImage}
+                  src={uploadedFile} 
+                  alt="Uploaded receipt" 
+                  // className={styles.uploadedImage}
                 />
               )}
               </div>
