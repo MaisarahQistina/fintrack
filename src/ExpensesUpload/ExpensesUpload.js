@@ -19,21 +19,17 @@ export function ExpensesUpload() {
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
     if (file) {
-      console.log("File selected:", file.name, file.type, file.size);
       try {
         setIsLoading(true); // Start loading
 
         const formData = new FormData();
         formData.append("file", file);
         
-        console.log("Sending request to process-receipt endpoint");
         const response = await fetch("http://localhost:5000/process-receipt", {
           method: "POST",
           body: formData,
         });
-        
-        console.log("Response status:", response.status);
-        
+      
         if (!response.ok) {
           const text = await response.text();
           console.error("Error response:", text);
@@ -42,13 +38,9 @@ export function ExpensesUpload() {
         }
         
         const data = await response.json();
-        console.log("Response data:", Object.keys(data));
-        console.log("Message:", data.message);
         
         if (data.processedImage) {
-          console.log("Received processedImage, length:", data.processedImage.length);
           const base64Image = `data:image/jpg;base64,${data.processedImage}`;
-          console.log('Base64 Image prefix:', base64Image.substring(0, 50) + '...');
           
           setUploadedFile(base64Image);
           setShowForm(true);
@@ -67,7 +59,7 @@ export function ExpensesUpload() {
         setIsLoading(false); 
       }
     }
-};
+  };
   
   const closeForm = () => {
     setShowForm(false);

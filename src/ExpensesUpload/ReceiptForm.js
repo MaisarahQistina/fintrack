@@ -3,7 +3,7 @@ import styles from "./ReceiptForm.module.css";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase"; // Make sure to import your Firestore instance
 
-const ReceiptForm = ({ uploadedFile, onClose, isSavedReceipt }) => {
+const ReceiptForm = ({ uploadedFile, onClose }) => {
   const [transactionDate, setTransactionDate] = useState("2024-04-01");
   const [categoryId, setCategoryId] = useState(""); // Store ID instead of name
   const [categoryName, setCategoryName] = useState(""); // For display purposes
