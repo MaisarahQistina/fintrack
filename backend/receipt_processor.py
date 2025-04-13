@@ -6,40 +6,6 @@ from inference_sdk import InferenceHTTPClient
 import tempfile
 import os
 
-def enhance_receipt_for_ocr(image):
-    """
-    Enhance receipt image quality specifically for OCR processing
-    """
-    # Convert to grayscale if the image is in color
-    if len(image.shape) == 3:
-        gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    else:
-        gray = image
-
-    # Apply adaptive thresholding
-    T = threshold_local(gray, 21, offset=5, method="gaussian")
-    bw = (gray > T).astype("uint8") * 255
-
-    # Denoise the binary image
-    denoised = cv2.fastNlMeansDenoising(bw, None, 20, 7, 21)
-
-    # Adjust contrast and brightness
-    alpha = 1.3  # Reduced contrast adjustment
-    beta = 5     # Reduced brightness adjustment
-    enhanced = cv2.convertScaleAbs(denoised, alpha=alpha, beta=beta)
-
-    # Apply sharpening filter with a milder kernel
-    kernel = np.array([[0, -1, 0],
-                       [-1, 5, -1],
-                       [0, -1, 0]])
-    sharpened = cv2.filter2D(enhanced, -1, kernel)
-
-    # Clean up small black blobs using morphological opening
-    kernel_morph = cv2.getStructuringElement(cv2.MORPH_RECT, (2, 2))
-    cleaned = cv2.morphologyEx(sharpened, cv2.MORPH_OPEN, kernel_morph)
-
-    return cleaned
-
 def process_receipt_image(file):
     try:
         file.seek(0)
@@ -81,8 +47,7 @@ def process_receipt_image(file):
                 decoded_crop = base64.b64decode(crop_image)
                 nparr = np.frombuffer(decoded_crop, np.uint8)
                 crop_img_np = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-                enhanced_img = enhance_receipt_for_ocr(crop_img_np)
-                _, buffer = cv2.imencode('.jpg', enhanced_img)
+                _, buffer = cv2.imencode('.jpg', crop_img_np)
                 encoded_enhanced = base64.b64encode(buffer).decode('utf-8')
 
                 return {
