@@ -120,13 +120,18 @@ def extract_total(base64_image):
                 continue
 
         if valid_amounts:
-            valid_amounts.sort(reverse=True)
-            if len(valid_amounts) > 1 and valid_amounts[0] > 5 * valid_amounts[1]:
-                print(f"Fallback - highest value too high, using second: {valid_amounts[1]}")
-                return valid_amounts[1]
+            # Sort to find highest and also preserve order
+            amounts_with_pos = [(amt, pos) for pos, amt in enumerate(valid_amounts)]
+            highest = max(amounts_with_pos, key=lambda x: x[0])
+            last = valid_amounts[-1]
+
+            # If the highest is >5x the last, it's probably wrong
+            if highest[0] > 5 * last:
+                print(f"Fallback - highest value too high, using last: {last}")
+                return last
             else:
-                print(f"Fallback - selected amount: {valid_amounts[0]}")
-                return valid_amounts[0]
+                print(f"Fallback - using last amount (likely final total): {last}")
+                return last
 
         print("No amounts found.")
         return None
