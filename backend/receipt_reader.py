@@ -3,6 +3,7 @@ import cv2
 import numpy as np
 import pytesseract
 import re
+from datetime import datetime
 from fuzzywuzzy import fuzz
 from skimage.filters import threshold_local
 
@@ -20,6 +21,10 @@ def extract_total(base64_image):
         custom_config = r'--psm 6 --oem 3'
 
         extracted_text = pytesseract.image_to_string(enhanced_image, config=custom_config)
+
+        # 🧼 Fix OCR errors like '33 .26' → '33.26'
+        extracted_text = re.sub(r'(\d)\s*\.\s*(\d{2})', r'\1.\2', extracted_text)
+
         print("🔍 Extracted Text:\n", extracted_text)
 
         # First try strict match for Grand Total
@@ -39,14 +44,15 @@ def extract_total(base64_image):
         )
         if total_matches:
             total_value = float(total_matches[-1].replace(',', ''))
-            print(f"✅ Last total match found: {total_value}")
-            return total_value
+            formatted_total = "{:.2f}".format(total_value)
+            print(f"Last total match found: {formatted_total}")
+            return formatted_total
 
         # Structured OCR
         ocr_data = pytesseract.image_to_data(enhanced_image, output_type=pytesseract.Output.DICT, config=custom_config)
 
         keywords = [
-            'total', 'totl', 'tl', 'ttl', 'grand total', 'amount due', 'balance due',
+            'total', 'totl', 'tl', 'ttl', 'grand total', 'amount due', 'balance due', 'to-go',
             'final total', 'total amount', 'amount payable', 'total payable', 'total due'
         ]
 
@@ -88,6 +94,8 @@ def extract_total(base64_image):
                         try:
                             amount_str = match.group(1).replace(',', '').replace(':', '.')
                             amount = float(amount_str)
+                            formatted_total = "{:.2f}".format(amount)
+                            print(f"Formatted potential total: {formatted_total}")
                             conf = int(ocr_data['conf'][i])
                             matched_totals.append((amount, conf, ocr_data['top'][i]))
                             print(f"Found potential total: {amount} (confidence: {conf}, keyword: {cleaned_word})")
@@ -135,11 +143,11 @@ def extract_date(base64_image):
         nparr = np.frombuffer(image_data, np.uint8)
         image = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
         
-        # Use same OCR config as total extraction
+        # Use OCR to extract text
         custom_config = r'--psm 6 --oem 3'
         extracted_text = pytesseract.image_to_string(image, config=custom_config)
         
-        # Common date formats on receipts
+        # Date pattern list
         date_patterns = [
             # MM/DD/YYYY or MM-DD-YYYY
             r'(\d{1,2}[\/\-\.]\d{1,2}[\/\-\.]\d{2,4})',
@@ -158,7 +166,7 @@ def extract_date(base64_image):
             r'(\d{1,2}\-[A-Za-z]{3}\-\d{4})'
         ]
         
-        # Look for any date pattern
+        # Try to find all dates in the extracted text
         for pattern in date_patterns:
             matches = re.findall(pattern, extracted_text, re.IGNORECASE)
             if matches:
@@ -166,40 +174,48 @@ def extract_date(base64_image):
                 print(f"Date found: {matches[0]}")
                 return matches[0]
         
-        # If no pattern matches directly, try a more structured approach using OCR data
+        # If no pattern matches, use OCR data for further inspection
         ocr_data = pytesseract.image_to_data(image, output_type=pytesseract.Output.DICT, config=custom_config)
         
-        # Look for date indicators
         date_indicators = ['date', 'dt', 'dated', 'receipt date']
         
         for i, word in enumerate(ocr_data['text']):
             cleaned_word = word.lower().strip()
-            
-            # Check if word is a date indicator
-            if any(indicator == cleaned_word or 
-                   (cleaned_word.startswith(indicator) and 
-                    cleaned_word[len(indicator):] in [': ', ':']) 
-                   for indicator in date_indicators):
-                
-                # Check next word and same line words
+            if any(indicator == cleaned_word or (cleaned_word.startswith(indicator) and cleaned_word[len(indicator):] in [':', ': ']) for indicator in date_indicators):
                 line_num = ocr_data['line_num'][i]
-                same_line = [ocr_data['text'][j] for j in range(len(ocr_data['text'])) 
-                            if ocr_data['line_num'][j] == line_num]
-                
-                # Combine words on the line to form a potential date
+                same_line = [ocr_data['text'][j] for j in range(len(ocr_data['text'])) if ocr_data['line_num'][j] == line_num]
                 potential_date_text = ' '.join(same_line)
-                
-                # Check if any date pattern matches
                 for pattern in date_patterns:
                     date_match = re.search(pattern, potential_date_text, re.IGNORECASE)
                     if date_match:
                         date_str = date_match.group(1)
                         print(f"Date found near indicator: {date_str}")
                         return date_str
-        
+
         print("No date found on receipt.")
         return None
-        
+
     except Exception as e:
         print(f"Date extraction error: {str(e)}")
+        return None
+
+def format_date(extracted_date):
+    try:
+        date_obj = None
+        for fmt in ['%m/%d/%Y', '%m/%d/%y', '%b %d, %Y', '%d-%b-%Y', '%Y-%m-%d', '%m-%d-%Y', '%m-%d-%y']:
+            try:
+                date_obj = datetime.strptime(extracted_date, fmt)
+                break
+            except ValueError:
+                continue
+        
+        if date_obj:
+            formatted_date = date_obj.strftime('%m/%d/%Y')  # Format to MM/DD/YYYY
+            print(f"Formatted Date: {formatted_date}")  # Debug output
+            return formatted_date
+        else:
+            print("Date format not recognized.")
+            return None
+    except Exception as e:
+        print(f"Error formatting date: {e}")
         return None

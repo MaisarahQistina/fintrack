@@ -7,6 +7,9 @@ export function ExpensesUpload() {
   const [uploadedFile, setUploadedFile] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [extractedDate, setExtractedDate] = useState(null);
+  const [extractedTotal, setExtractedTotal] = useState(null);
+
   const navigate = useNavigate();
 
   const handleYearChange = (e) => {
@@ -43,6 +46,8 @@ export function ExpensesUpload() {
           const base64Image = `data:image/jpg;base64,${data.processedImage}`;
           
           setUploadedFile(base64Image);
+          setExtractedDate(data.extractedDate);
+          setExtractedTotal(data.extractedTotal);
           setShowForm(true);
           
           if (data.roboflowResults) {
@@ -109,8 +114,7 @@ export function ExpensesUpload() {
               color: 'rgba(0,0,0,1)',
             }}
           >
-            {' '}
-            to track your expenses.{' '}
+            {' '}to track your expenses.{' '}
           </span>
           <br />
           <span
@@ -120,7 +124,18 @@ export function ExpensesUpload() {
               color: 'rgba(0,0,0,1)',
             }}
           >
-            Supported formats: JPG, PNG, PDF (&lt;5MB)
+            Supported formats: JPG, PNG (&lt;5MB)
+          </span>
+          <br />
+          <span
+            style={{
+              fontFamily: 'NATS, sans-serif',
+              fontWeight: 400,
+              color: 'rgba(0,0,0,1)',
+              fontSize: 16,
+            }}
+          >
+            Please upload a clear & full receipt❗
           </span>
         </div>
         <div className={styles.uploadButtonWrapper}>
@@ -147,8 +162,14 @@ export function ExpensesUpload() {
       </div>
 
       {showForm && (
-        <ReceiptForm uploadedFile={uploadedFile} onClose={closeForm} />
+        <ReceiptForm 
+          uploadedFile={uploadedFile}
+          extractedDate={extractedDate}
+          extractedTotal={extractedTotal}
+          onClose={closeForm} 
+        />
       )}
+
     </div>
   );
 }

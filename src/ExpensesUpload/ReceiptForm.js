@@ -3,14 +3,25 @@ import styles from "./ReceiptForm.module.css";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase"; // Make sure to import your Firestore instance
 
-const ReceiptForm = ({ uploadedFile, onClose }) => {
-  const [transactionDate, setTransactionDate] = useState("2024-04-01");
+const ReceiptForm = ({ uploadedFile, extractedDate, extractedTotal, onClose }) => {
+  const [transactionDate, setTransactionDate] = useState(extractedDate || "");
+  const [totalAmount, setTotalAmount] = useState(extractedTotal || "");
   const [categoryId, setCategoryId] = useState(""); // Store ID instead of name
   const [categoryName, setCategoryName] = useState(""); // For display purposes
   const [categories, setCategories] = useState([]); // To store categories from Firestore
-  const [totalAmount, setTotalAmount] = useState("RM 33.26");
   const [showSuccess, setShowSuccess] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+
+  const formatDate = (date) => {
+    const [month, day, year] = date.split('/');
+    return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+  };
+  
+  useEffect(() => {
+    if (extractedDate) {
+      setTransactionDate(formatDate(extractedDate));
+    }
+  }, [extractedDate]);  
 
   // Fetch categories from Firestore when component mounts
   useEffect(() => {
@@ -107,13 +118,13 @@ const ReceiptForm = ({ uploadedFile, onClose }) => {
               <div className={styles.formGroup}>
                 <label htmlFor="transactionDate">Transaction Date</label>
                 <div className={styles.inputWithIcon}>
-                  <input 
-                    type="date" 
-                    id="transactionDate" 
-                    value={transactionDate}
-                    onChange={(e) => setTransactionDate(e.target.value)}
-                    className={styles.inputField}
-                  />
+                <input 
+                  type="date" 
+                  id="transactionDate" 
+                  value={transactionDate}
+                  onChange={(e) => setTransactionDate(e.target.value)}
+                  className={styles.inputField}
+                />
                   <i className={styles.calendarIcon}></i>
                 </div>
               </div>
