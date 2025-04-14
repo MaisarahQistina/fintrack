@@ -49,7 +49,7 @@ const EditInfographicsForm = ({ infographicData, uploadedFile, onClose, isSavedI
         <div className={styles.form}>
           <div className={styles.formTitle}>
             <h1 className={styles.cardTitle}>Edit Infographic</h1>
-            <p>Update this infographic information.</p>
+            <p>Only the title and resources link can be updated. For changes to the image, add a new infographic to ensure clarity for users.</p>
             <span className={styles.closeBtn} onClick={handleClose}>X</span>
           </div>
           

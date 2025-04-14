@@ -14,6 +14,7 @@ const NewInfographicsForm = ({ uploadedFile, onClose, fileObject }) => {
 
   const handleClose = () => {
     if (onClose) onClose();
+    window.location.reload();
   };
 
   const handleSave = async () => {
