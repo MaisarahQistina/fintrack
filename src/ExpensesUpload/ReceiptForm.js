@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from "react";
 import styles from "./ReceiptForm.module.css";
-import { collection, getDocs } from "firebase/firestore";
-import { db } from "../firebase"; // Make sure to import your Firestore instance
+import { getAuth } from "firebase/auth";
+import { ref, uploadString, getDownloadURL } from "firebase/storage";
+import { collection, addDoc, getDocs } from "firebase/firestore";
+import { db, storage } from "../firebase";
 
 const ReceiptForm = ({ uploadedFile, extractedDate, extractedTotal, onClose }) => {
   const [transactionDate, setTransactionDate] = useState(extractedDate || "");
   const [totalAmount, setTotalAmount] = useState(extractedTotal || "");
   const [categoryId, setCategoryId] = useState(""); // Store ID instead of name
-  const [categoryName, setCategoryName] = useState(""); // For display purposes
   const [categories, setCategories] = useState([]); // To store categories from Firestore
   const [showSuccess, setShowSuccess] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
 
   const formatDate = (date) => {
     const [month, day, year] = date.split('/');
@@ -40,7 +42,6 @@ const ReceiptForm = ({ uploadedFile, extractedDate, extractedTotal, onClose }) =
         // Set default category if we have categories
         if (categoryList.length > 0) {
           setCategoryId(categoryList[0].categoryID);
-          setCategoryName(categoryList[0].categoryName);
         }
         
         setIsLoading(false);
@@ -59,22 +60,49 @@ const ReceiptForm = ({ uploadedFile, extractedDate, extractedTotal, onClose }) =
     if (onClose) onClose();
   };
 
-  const handleSave = () => {
-    // Save logic here
-    console.log("Saving receipt data:", {
-      transactionDate,
-      categoryId, // Save the ID rather than the name
-      categoryName, // Just for display/debugging
-      totalAmount
-    });
-    
-    setShowSuccess(true);
-    setTimeout(() => {
-      setShowSuccess(false);
-      handleClose(); // Close the main form
-    }, 2000);
-  };
-
+  const handleSave = async () => {
+    try {
+      setIsSaving(true); // 🔄 Start loading
+  
+      if (!uploadedFile) return;
+  
+      const auth = getAuth();
+      const user = auth.currentUser;
+      if (!user) {
+        console.error("No user is signed in.");
+        setIsSaving(false);
+        return;
+      }
+  
+      const userID = user.uid;
+      const filename = `receipts/${userID}_${Date.now()}_${Math.floor(Math.random() * 1000)}.jpg`;
+      const storageRef = ref(storage, filename);
+      await uploadString(storageRef, uploadedFile, "data_url");
+      const downloadURL = await getDownloadURL(storageRef);
+  
+      await addDoc(collection(db, "Receipt"), {
+        userID: userID,
+        receiptURL: downloadURL,
+        receiptTransDate: transactionDate,
+        totalAmount: parseFloat(totalAmount),
+        systemCategoryID: categoryId,
+        reliefCategoryID: "",
+        isRelief: "No",
+        createdAt: new Date(),
+      });
+  
+      setShowSuccess(true);
+      setTimeout(() => {
+        setShowSuccess(false);
+        if (onClose) onClose();
+      }, 2000);
+    } catch (error) {
+      console.error("Error saving receipt:", error);
+    } finally {
+      setIsSaving(false); // ✅ End loading
+    }
+  }; 
+  
   const handleAmountChange = (e) => {
     setTotalAmount(e.target.value);
   };
@@ -83,11 +111,6 @@ const ReceiptForm = ({ uploadedFile, extractedDate, extractedTotal, onClose }) =
     const selectedCategoryId = e.target.value;
     setCategoryId(selectedCategoryId);
     
-    // Find the corresponding category name for display
-    const selectedCategory = categories.find(cat => cat.categoryID === selectedCategoryId);
-    if (selectedCategory) {
-      setCategoryName(selectedCategory.categoryName);
-    }
   };
 
   return (
@@ -168,8 +191,8 @@ const ReceiptForm = ({ uploadedFile, extractedDate, extractedTotal, onClose }) =
                 </div>
               </div>
               
-              <button className={styles.saveButton} onClick={handleSave}>
-                Save
+              <button className={styles.saveButton} onClick={handleSave} disabled={isSaving}>
+                {isSaving ? "Saving..." : "Save"}
               </button>
             </div>
           </div>
