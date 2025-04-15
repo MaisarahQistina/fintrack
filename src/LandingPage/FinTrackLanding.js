@@ -66,7 +66,7 @@ export function FinTrackLanding() {
                             </div>
                             <div 
                               className="z-0 my-auto text-xl font-semibold leading-none text-center text-white cursor-pointer"
-                              onClick={() => navigate("/my-expenses")}  
+                              onClick={() => navigate("/sign-in")}  
                             >
                               Get Started !
                             </div>
