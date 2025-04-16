@@ -107,7 +107,7 @@ const App = () => {
           />
           <Route
             path="/my-expenses"
-            element={user ? <ExpensesUpload /> : <Navigate to="/" replace />}
+            element={user ? <ExpensesUpload /> : <Navigate to="/sign-up" replace />}
           />
           <Route
             path="/yearly-expenses"
