@@ -2,28 +2,46 @@ import React, { useState, useEffect } from "react";
 import styles from "./ReceiptForm.module.css";
 import { getAuth } from "firebase/auth";
 import { ref, uploadString, getDownloadURL } from "firebase/storage";
-import { collection, addDoc, getDocs } from "firebase/firestore";
+import { collection, addDoc, getDocs, doc, updateDoc } from "firebase/firestore";
 import { db, storage } from "../firebase";
 
-const ReceiptForm = ({ uploadedFile, extractedDate, extractedTotal, onClose }) => {
+const ReceiptForm = ({ 
+  uploadedFile, 
+  extractedDate, 
+  extractedTotal, 
+  initialCategoryId,
+  onClose, 
+  isSavedReceipt,
+  receiptId
+}) => {
   const [transactionDate, setTransactionDate] = useState(extractedDate || "");
   const [totalAmount, setTotalAmount] = useState(extractedTotal || "");
-  const [categoryId, setCategoryId] = useState(""); // Store ID instead of name
-  const [categories, setCategories] = useState([]); // To store categories from Firestore
+  const [categoryId, setCategoryId] = useState(initialCategoryId || "");
+  const [categories, setCategories] = useState([]);
   const [showSuccess, setShowSuccess] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
 
   const formatDate = (date) => {
-    const [month, day, year] = date.split('/');
-    return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+    // Check if the date is already in YYYY-MM-DD format
+    if (date && date.includes('-')) {
+      return date;
+    }
+    
+    // Otherwise, format from MM/DD/YYYY to YYYY-MM-DD
+    if (date && date.includes('/')) {
+      const [month, day, year] = date.split('/');
+      return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+    }
+    
+    return date;
   };
   
   useEffect(() => {
     if (extractedDate) {
       setTransactionDate(formatDate(extractedDate));
     }
-  }, [extractedDate]);  
+  }, [extractedDate]);
 
   // Fetch categories from Firestore when component mounts
   useEffect(() => {
@@ -39,9 +57,9 @@ const ReceiptForm = ({ uploadedFile, extractedDate, extractedTotal, onClose }) =
         
         setCategories(categoryList);
         
-        // Set default category if we have categories
-        if (categoryList.length > 0) {
-          setCategoryId(categoryList[0].categoryID);
+        // Set default category if we have categories and no initialCategoryId
+        if (categoryList.length > 0 && !initialCategoryId) {
+          setCategoryId(categoryList[0].id);
         }
         
         setIsLoading(false);
@@ -52,7 +70,7 @@ const ReceiptForm = ({ uploadedFile, extractedDate, extractedTotal, onClose }) =
     };
 
     fetchCategories();
-  }, []);
+  }, [initialCategoryId]);
 
   if (!uploadedFile) return null; // No file uploaded, don't show the form
 
@@ -62,7 +80,7 @@ const ReceiptForm = ({ uploadedFile, extractedDate, extractedTotal, onClose }) =
 
   const handleSave = async () => {
     try {
-      setIsSaving(true); // 🔄 Start loading
+      setIsSaving(true);
   
       if (!uploadedFile) return;
   
@@ -75,26 +93,45 @@ const ReceiptForm = ({ uploadedFile, extractedDate, extractedTotal, onClose }) =
       }
   
       const userID = user.uid;
-      const filename = `receipts/${userID}_${Date.now()}_${Math.floor(Math.random() * 1000)}.jpg`;
-      const storageRef = ref(storage, filename);
-      await uploadString(storageRef, uploadedFile, "data_url");
-      const downloadURL = await getDownloadURL(storageRef);
-  
-      await addDoc(collection(db, "Receipt"), {
-        userID: userID,
-        receiptURL: downloadURL,
-        receiptTransDate: transactionDate,
-        totalAmount: parseFloat(totalAmount),
-        systemCategoryID: categoryId,
-        reliefCategoryID: "",
-        isRelief: "No",
-        createdAt: new Date(),
-      });
+      
+      // If this is an existing receipt being updated
+      if (isSavedReceipt && receiptId) {
+        const receiptRef = doc(db, "Receipt", receiptId);
+        await updateDoc(receiptRef, {
+          receiptTransDate: transactionDate,
+          totalAmount: parseFloat(totalAmount),
+          systemCategoryID: categoryId,
+          updatedAt: new Date()
+        });
+      } else {
+        // If this is a new receipt
+        let downloadURL = uploadedFile;
+        
+        if (!isSavedReceipt) {
+          const filename = `receipts/${userID}_${Date.now()}_${Math.floor(Math.random() * 1000)}.jpg`;
+          const storageRef = ref(storage, filename);
+          await uploadString(storageRef, uploadedFile, "data_url");
+          downloadURL = await getDownloadURL(storageRef);
+        }
+    
+        await addDoc(collection(db, "Receipt"), {
+          userID: userID,
+          receiptURL: downloadURL,
+          imageURL: downloadURL, // For backward compatibility
+          receiptTransDate: transactionDate,
+          totalAmount: parseFloat(totalAmount),
+          systemCategoryID: categoryId,
+          reliefCategoryID: "",
+          isRelief: "No",
+          createdAt: new Date(),
+        });
+      }
   
       setShowSuccess(true);
       setTimeout(() => {
         setShowSuccess(false);
         if (onClose) onClose();
+        window.location.reload();
       }, 2000);
     } catch (error) {
       console.error("Error saving receipt:", error);
@@ -110,7 +147,6 @@ const ReceiptForm = ({ uploadedFile, extractedDate, extractedTotal, onClose }) =
   const handleCategoryChange = (e) => {
     const selectedCategoryId = e.target.value;
     setCategoryId(selectedCategoryId);
-    
   };
 
   return (
@@ -166,7 +202,7 @@ const ReceiptForm = ({ uploadedFile, extractedDate, extractedTotal, onClose }) =
                     >
                       {categories.length > 0 ? (
                         categories.map(category => (
-                          <option key={category.categoryID} value={category.categoryID}>
+                          <option key={category.id} value={category.id}>
                             {category.categoryName}
                           </option>
                         ))
@@ -192,7 +228,7 @@ const ReceiptForm = ({ uploadedFile, extractedDate, extractedTotal, onClose }) =
               </div>
               
               <button className={styles.saveButton} onClick={handleSave} disabled={isSaving}>
-                {isSaving ? "Saving..." : "Save"}
+                {isSaving ? "Saving..." : (isSavedReceipt ? "Update" : "Save")}
               </button>
             </div>
           </div>
@@ -204,7 +240,7 @@ const ReceiptForm = ({ uploadedFile, extractedDate, extractedTotal, onClose }) =
       <div className={styles.popupOverlay} onClick={() => setShowSuccess(false)}>
         <div className={styles.popupConfirmation} onClick={(e) => e.stopPropagation()}>
           <img src="/Checkmark.png" alt="Checkmark" width="60" height="60" />
-          <p>The receipt is successfully saved.</p>
+          <p>The receipt is successfully {isSavedReceipt ? "updated" : "saved"}.</p>
         </div>
       </div>
     )}
