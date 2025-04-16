@@ -80,6 +80,16 @@ html, body {
     width: 126px;
     margin: auto 0;
   }
+
+  .receiptCounter {
+    font-size: 16px;
+    font-family: 'NATS', sans-serif;
+    font-weight: bold;
+    color: #05445E;
+    width: 126px;
+    text-align: center; 
+    margin-top: 4px; 
+  }  
   
   @media (width <= 991px) {
     .yearlyExpensesView {

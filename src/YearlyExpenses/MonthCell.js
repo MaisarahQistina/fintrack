@@ -1,7 +1,7 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import styles from "./YearlyExpensesView.module.css";
 
-const MonthCell = ({ month, year }) => {
+const MonthCell = ({ month, year, receiptCount }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -30,6 +30,7 @@ const MonthCell = ({ month, year }) => {
     >
       <img src="/folder.png" alt="Folder Icon" width="100" height="100" />
       <h3>{month}</h3>
+      <div className={styles.receiptCounter}>Total: {receiptCount || 0}</div>
     </article>
   );
 };
