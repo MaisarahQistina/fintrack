@@ -101,7 +101,11 @@
     flex: 3; /* Takes 3/4 of available space */
 }
 
+/* *************************************** */
 /* Cards - Month Dashboard */
+/* *************************************** */
+
+/* *************************************** */
 /* Card - Monthly Income */
 .cardMonthlyIncome {
     width: 20vw;
@@ -132,6 +136,7 @@
     margin-bottom: 5px;
 }
 
+/* *************************************** */
 /* Card - Budget */
 .cardBudget {
     width: 20vw;
@@ -162,6 +167,7 @@
     margin-bottom: 5px;
 }
 
+/* *************************************** */
 /* Card - Balance Left */
 .cardBalance {
     background: white;
@@ -297,6 +303,7 @@
     font-family: 'Abhaya-Libre';
   }
 
+/* *************************************** */
 /* Card - Budget per Category */
 .cardBudgetCategory {
     background: white;
@@ -319,8 +326,151 @@
     grid-row: 3 
 }
 
-/* ----------- */
+  /* Wrapper for the legend container */
+  .legendWrapper {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px; /* Space between columns */
+    font-size: 12px; /* Text size for legend labels */
+  }
+  
+  /* Each column in the legend */
+  .legendColumn {
+    display: flex;
+    flex-direction: column;
+    gap: 8px; /* Space between items in each column */
+  }
+  
+  /* Each legend item */
+  .legendItem {
+    display: flex;
+    align-items: center;
+  }
+  
+  /* Square color indicator in legend items */
+  .legendColor {
+    width: 12px;
+    height: 12px;
+    margin-right: 8px; /* Space between the color indicator and the label */
+    border-radius: 2px; /* Optional: rounded edges for the indicator */
+  }
+  
+  /* Tooltip container */
+  .tooltipContainer {
+    background-color: white;
+    padding: 8px;
+    border: 1px solid #d1d5db; /* Light gray border */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    border-radius: 6px; /* Rounded corners */
+    font-size: 12px; /* Tooltip text size */
+    color: #333333; /* Dark text color */
+  }
+  
+  /* Tooltip title */
+  .tooltipTitle {
+    font-weight: bold;
+    margin-bottom: 4px;
+  }
+  
+  /* Tooltip value */
+  .tooltipValue {
+    color: #4a5568; /* Medium gray for value text */
+  }
+  
+  /* Tooltip percentage */
+  .tooltipPercentage {
+    color: #718096; /* Light gray for percentage text */
+    font-size: 11px;
+  }
+  
+  .customTooltip {
+    background-color: white;
+    padding: 0.5rem;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 0.25rem;
+  }
+  
+  .customTooltipTitle {
+    font-weight: 600;
+  }
+  
+  .customTooltipValue {
+    color: #374151;
+  }
+  
+  .customTooltipPercentage {
+    color: #6b7280;
+    font-size: 0.875rem;
+  }
+  
+  .customLegend {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    font-size: 16px;
+  }
+  
+  .customLegendColumn {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .customLegendItem {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* This ensures space between label and value */
+    width: 100%;
+  }
+  
+  .customLegendColorBox {
+    width: 0.75rem;
+    height: 0.75rem;
+    margin-right: 0.5rem;
+    flex-shrink: 0;
+  }
+  
+  .budgetLabel {
+    display: flex;
+    align-items: center;
+    flex: 1; /* Takes up remaining space */
+  }
+  
+  .budgetValue {
+    margin-left: 0.5rem;
+    font-weight: bold;
+    color: #333;
+    white-space: nowrap; /* Prevents breaking into a new line */
+  }
+  
+  /* Flex helpers */
+  .flex {
+    display: flex;
+  }
+  
+  .h80 {
+    height: 20rem;
+  }
+  
+  .wFull {
+    width: 100%;
+  }
+  
+  .wThreeFourths {
+    width: 75%;
+    height: 100%;
+  }
+  
+  .wOneFourth {
+    height: 100%;
+    display: flex;
+    align-items: center;
+  }
+    
+/* *************************************** */
 /* Container for Month Dashboard-2 */
+/* *************************************** */
 .dashboardContainer2 {
     z-index: 1; /* Ensure it's above background */
     align-items: center; /* Centers horizontally */
@@ -344,6 +494,116 @@
     text-align: left;
     padding-left: 10px;
 }
+
+.dashboardContainer2 {
+  background-color: white;
+  border-radius: 5px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  min-height: 350px;
+}
+
+.dashboardContainer2Title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 15px;
+  color: #333;
+  text-align: center;
+}
+
+.spendingBreakdownWrapper {
+  flex: 1;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: #f0f0f0 transparent;
+}
+
+.spendingBreakdown {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-height: 450px;
+  overflow-y: auto;
+  padding-right: 5px;
+  width: 400px;
+}
+
+/* Make scrollbar more subtle */
+.spendingBreakdown::-webkit-scrollbar {
+  width: 4px;
+}
+
+.spendingBreakdown::-webkit-scrollbar-track {
+  background: #f0f0f0;
+  border-radius: 4px;
+}
+
+.spendingBreakdown::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 4px;
+}
+
+.spendingCategory {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.spendingCategoryHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2px;
+}
+
+.spendingCategoryName {
+  font-family: Abhaya Libre, serif;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+}
+
+.categoryColorIndicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+}
+
+.spendingValues {
+  font-size: 14px;
+  display: flex;
+  gap: 4px;
+}
+
+.spendingAmount {
+  font-weight: 600;
+}
+
+.spendingBudget {
+  color: #777;
+}
+
+/* Make progress container wider by reducing padding */
+.spendingProgressContainer {
+  width: 100%;
+  height: 8px;
+  background-color: #f0f0f0;
+  border-radius: 4px;
+  overflow: hidden;
+  margin: 0;
+}
+
+.spendingProgressBar {
+  height: 100%;
+  border-radius: 4px;
+}
+
+/* *************************************** */
+/* *************************************** */
+/* *************************************** */
 
 /* ---------------------------------------------------------------------- */
 /** Dashboard Year Container **/
@@ -497,129 +757,39 @@
     text-align: center;
   }
 
-  /* Wrapper for the legend container */
-.legendWrapper {
-  display: flex;
-  justify-content: space-between;
-  gap: 16px; /* Space between columns */
-  font-size: 12px; /* Text size for legend labels */
-}
-
-/* Each column in the legend */
-.legendColumn {
-  display: flex;
-  flex-direction: column;
-  gap: 8px; /* Space between items in each column */
-}
-
-/* Each legend item */
-.legendItem {
-  display: flex;
-  align-items: center;
-}
-
-/* Square color indicator in legend items */
-.legendColor {
-  width: 12px;
-  height: 12px;
-  margin-right: 8px; /* Space between the color indicator and the label */
-  border-radius: 2px; /* Optional: rounded edges for the indicator */
-}
-
-/* Tooltip container */
-.tooltipContainer {
-  background-color: white;
-  padding: 8px;
-  border: 1px solid #d1d5db; /* Light gray border */
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-  border-radius: 6px; /* Rounded corners */
-  font-size: 12px; /* Tooltip text size */
-  color: #333333; /* Dark text color */
-}
-
-/* Tooltip title */
-.tooltipTitle {
-  font-weight: bold;
-  margin-bottom: 4px;
-}
-
-/* Tooltip value */
-.tooltipValue {
-  color: #4a5568; /* Medium gray for value text */
-}
-
-/* Tooltip percentage */
-.tooltipPercentage {
-  color: #718096; /* Light gray for percentage text */
-  font-size: 11px;
-}
-
-.customTooltip {
-  background-color: white;
-  padding: 0.5rem;
-  border: 1px solid #e5e7eb;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  border-radius: 0.25rem;
-}
-
-.customTooltipTitle {
-  font-weight: 600;
-}
-
-.customTooltipValue {
-  color: #374151;
-}
-
-.customTooltipPercentage {
-  color: #6b7280;
-  font-size: 0.875rem;
-}
-
-.customLegend {
-  display: flex;
-  justify-content: space-between;
-  gap: 1rem;
-  font-size: 16px;
-}
-
-.customLegendColumn {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.customLegendItem {
-  display: flex;
-  align-items: center;
-}
-
-.customLegendColorBox {
-  width: 0.75rem;
-  height: 0.75rem;
-  margin-right: 0.5rem;
-}
-
-/* Flex helpers */
-.flex {
-  display: flex;
-}
-
-.h80 {
-  height: 20rem;
-}
-
-.wFull {
-  width: 100%;
-}
-
-.wThreeFourths {
-  width: 75%;
-  height: 100%;
-}
-
-.wOneFourth {
-  width: 25%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-}
+  .customLegend {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    font-size: 12px;
+  }
+  
+  .customLegendColumn {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  
+  .customLegendItem {
+    display: flex;
+    align-items: center;
+    margin-bottom: 4px;
+  }
+  
+  .legendLabel {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  
+  .customLegendColorBox {
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+  }
+  
+  .legendName {
+    font-size: 16px;
+    white-space: nowrap;
+    margin-right: 10px;
+  }

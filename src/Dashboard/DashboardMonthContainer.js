@@ -9,20 +9,38 @@ function DashboardContainer() {
   const remaining = budget - expenses;
 
   const budgetCategoriesData = [
-    { name: "Housing", value: 1300, color: "#FF8042" },
-    { name: "Food", value: 700, color: "#00C49F" },
-    { name: "Transportation", value: 450, color: "#FFBB28" },
-    { name: "Utilities", value: 350, color: "#0088FE" },
-    { name: "Entertainment", value: 250, color: "#FF6384" },
-    { name: "Shopping", value: 300, color: "#36A2EB" },
-    { name: "Savings", value: 300, color: "#8884d8" },
-    { name: "Healthcare", value: 200, color: "#82ca9d" },
-    { name: "Education", value: 150, color: "#ffc658" },
-    { name: "Insurance", value: 180, color: "#a4de6c" },
-    { name: "Childcare", value: 220, color: "#d0ed57" },
-    { name: "Personal Care", value: 100, color: "#83a6ed" },
-    { name: "Subscriptions", value: 80, color: "#8dd1e1" },
-    { name: "Miscellaneous", value: 120, color: "#e288d8" },
+    { name: "Rent", value: 1300, color: "#FF8042" },
+    { name: "Family", value: 700, color: "#00C49F" },
+    { name: "Personal Gadget", value: 450, color: "#FFBB28" },
+    { name: "Internet Subscription", value: 350, color: "#0088FE" },
+    { name: "Food & Drinks", value: 250, color: "#FF6384" },
+    { name: "Transportation", value: 300, color: "#36A2EB" },
+    { name: "Sports", value: 300, color: "#8884d8" },
+    { name: "Insurance", value: 200, color: "#82ca9d" },
+    { name: "Contributions", value: 150, color: "#ffc658" },
+    { name: "Groceries", value: 180, color: "#a4de6c" },
+    { name: "Healthcare", value: 220, color: "#d0ed57" },
+    { name: "Utilities", value: 100, color: "#83a6ed" },
+    { name: "Education", value: 80, color: "#8dd1e1" },
+    { name: "Books & Magazines", value: 120, color: "#e288d8" },
+  ];
+
+  // Creating spending data similar to your screenshot
+  const spendingData = [
+    { name: "Family", value: 700, spent: 690, color: "#00C49F" },
+    { name: "Education", value: 80, spent: 75, color: "#8dd1e1" },
+    { name: "Insurance", value: 200, spent: 175, color: "#82ca9d" },
+    { name: "Transportation", value: 300, spent: 175, color: "#36A2EB" },
+    { name: "Rent", value: 1300, spent: 1079, color: "#FF8042" },
+    { name: "Groceries", value: 180, spent: 100, color: "#a4de6c" },
+    { name: "Utilities", value: 100, spent: 81, color: "#83a6ed" },
+    { name: "Healthcare", value: 220, spent: 181, color: "#d0ed57" },
+    { name: "Internet Subscription", value: 350, spent: 272, color: "#0088FE" },
+    { name: "Food & Drinks", value: 250, spent: 193, color: "#FF6384" },
+    { name: "Sports", value: 300, spent: 227, color: "#8884d8" },
+    { name: "Contributions", value: 150, spent: 0, color: "#ffc658" },
+    { name: "Books & Magazines", value: 120, spent: 90, color: "#e288d8" },
+    { name: "Personal Gadget", value: 450, spent: 327, color: "#FFBB28" },
   ];
 
   const CustomTooltip = ({ active, payload }) => {
@@ -44,35 +62,39 @@ function DashboardContainer() {
     const { payload } = props;
     const firstHalf = payload.slice(0, 7);
     const secondHalf = payload.slice(7);
-
+  
     return (
       <div className={styles.customLegend}>
         <div className={styles.customLegendColumn}>
           {firstHalf.map((entry, index) => (
             <div key={`legend-item-${index}`} className={styles.customLegendItem}>
-              <div
-                className={styles.customLegendColorBox}
-                style={{ backgroundColor: entry.color }}
-              ></div>
-              <span>{entry.value}</span>
+              <div className={styles.legendLabel}>
+                <div
+                  className={styles.customLegendColorBox}
+                  style={{ backgroundColor: entry.color }}
+                ></div>
+                <span className={styles.legendName}>{entry.value}</span>
+              </div>
             </div>
           ))}
         </div>
         <div className={styles.customLegendColumn}>
           {secondHalf.map((entry, index) => (
             <div key={`legend-item-${index + 7}`} className={styles.customLegendItem}>
-              <div
-                className={styles.customLegendColorBox}
-                style={{ backgroundColor: entry.color }}
-              ></div>
-              <span>{entry.value}</span>
+              <div className={styles.legendLabel}>
+                <div
+                  className={styles.customLegendColorBox}
+                  style={{ backgroundColor: entry.color }}
+                ></div>
+                <span className={styles.legendName}>{entry.value}</span>
+              </div>
             </div>
           ))}
         </div>
       </div>
     );
   };
-
+  
   return (
     <div className={styles.dashboardWrapper}>
       <section className={styles.dashboardContainer1}>
@@ -126,7 +148,7 @@ function DashboardContainer() {
         </div>
 
         <div className={styles.cardBudgetCategory}>
-          Budget by Category
+          <div className={styles.pieTitle}>Budget by Category</div>
           <div className={`${styles.flex} ${styles.h80} ${styles.wFull}`}>
             <div className={styles.wThreeFourths}>
               <ResponsiveContainer width="100%" height="100%">
@@ -163,6 +185,40 @@ function DashboardContainer() {
 
       <section className={styles.dashboardContainer2}>
         <div className={styles.dashboardContainer2Title}>Where did your money go?</div>
+        <div className={styles.spendingBreakdownWrapper}>
+          <div className={styles.spendingBreakdown}>
+            {spendingData.map((category, index) => (
+              <div key={`spending-${index}`} className={styles.spendingCategory}>
+                <div className={styles.spendingCategoryHeader}>
+                  <div className={styles.spendingCategoryName}>
+                    <div 
+                      className={styles.categoryColorIndicator} 
+                      style={{ backgroundColor: category.color }}
+                    ></div>
+                    <span>{category.name}</span>
+                  </div>
+                  <div className={styles.spendingValues}>
+                    <span className={styles.spendingAmount}>
+                      RM {category.spent.toFixed(2)}
+                    </span>
+                    <span className={styles.spendingBudget}>
+                      / RM {category.value.toFixed(2)}
+                    </span>
+                  </div>
+                </div>
+                <div className={styles.spendingProgressContainer}>
+                  <div 
+                    className={styles.spendingProgressBar}
+                    style={{ 
+                      width: `${(category.spent / category.value) * 100}%`,
+                      backgroundColor: category.color 
+                    }}
+                  ></div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       </section>
     </div>
   );
