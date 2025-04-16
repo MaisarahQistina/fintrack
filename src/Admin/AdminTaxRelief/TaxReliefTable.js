@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import styles from "./TaxReliefTable.module.css";
 import EditReliefForm from "./EditReliefForm";
 import { db } from "../../firebase"; // Make sure you have firebase config set up
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, deleteDoc, doc } from "firebase/firestore"; // Import deleteDoc and doc
 
 function TaxReliefTable() {
   const [categoryData, setCategoryData] = useState([]);
@@ -10,6 +10,7 @@ function TaxReliefTable() {
   const [showPopup, setShowPopup] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [selectedCard, setSelectedCard] = useState(null);
+  const [selectedCategoryId, setSelectedCategoryId] = useState(null); // Store selected category ID for deletion
 
   // Fetch the system categories from Firestore
   useEffect(() => {
@@ -40,27 +41,38 @@ function TaxReliefTable() {
           docData.reliefCatID = doc.id;
           data.push(docData);
         });
-  
+
         // Sort by reliefYear in descending order
         data.sort((a, b) => parseInt(b.reliefYear) - parseInt(a.reliefYear));
-  
+
         setCategoryData(data);
       } catch (error) {
         console.error("Error fetching relief categories:", error);
       }
     };
-  
+
     fetchCategoryData();
   }, []);
 
-  const handleDeleteClick = () => {
+  const handleDeleteClick = (itemId) => {
+    setSelectedCategoryId(itemId); // Store the category ID to be deleted
     setShowPopup(true);
   };
 
-  const handleConfirmDelete = () => {
-    setShowPopup(false);
-    setShowSuccess(true);
-    setTimeout(() => setShowSuccess(false), 2000); // Hide success message after 2 seconds
+  const handleConfirmDelete = async () => {
+    try {
+      // Delete the selected category from Firestore
+      await deleteDoc(doc(db, "ReliefCategory", selectedCategoryId));
+      
+      // Remove the deleted category from the UI state
+      setCategoryData(categoryData.filter((item) => item.reliefCatID !== selectedCategoryId));
+      
+      setShowPopup(false);
+      setShowSuccess(true);
+      setTimeout(() => setShowSuccess(false), 2000); // Hide success message after 2 seconds
+    } catch (error) {
+      console.error("Error deleting category:", error);
+    }
   };
 
   const closePopup = () => {
@@ -105,7 +117,7 @@ function TaxReliefTable() {
             <button className={styles.editButton} onClick={() => handleEditClick(item)}>Edit</button>
           </div>
           <div className={styles.cell}>
-            <button className={styles.deleteButton} onClick={handleDeleteClick}>Delete</button>
+            <button className={styles.deleteButton} onClick={() => handleDeleteClick(item.reliefCatID)}>Delete</button>
           </div>
         </div>
       ))}

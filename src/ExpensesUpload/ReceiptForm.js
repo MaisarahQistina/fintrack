@@ -99,7 +99,7 @@ const ReceiptForm = ({ uploadedFile, extractedDate, extractedTotal, onClose }) =
     } catch (error) {
       console.error("Error saving receipt:", error);
     } finally {
-      setIsSaving(false); // ✅ End loading
+      setIsSaving(false);
     }
   }; 
   
