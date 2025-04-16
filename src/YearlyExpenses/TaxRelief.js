@@ -1,43 +1,108 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "./MonthlyExpensesView.module.css";
 import ReceiptForm from "../ExpensesUpload/ReceiptForm";
+import { collection, getDocs, doc, deleteDoc } from "firebase/firestore";
+import { db } from "../firebase";
+import { getAuth } from "firebase/auth";
 
-const cards = [
-  { img: "/receipt.jpg", categories: ["Medical Treatments", "Vaccinations", "Checkup"] },
-  { img: "/receipt2.jpg", categories: ["Office Supplies", "Books"] },
-  { img: "/receipt.jpg", categories: ["Groceries", "Dining", "Snacks"] },
-  { img: "/receipt2.jpg", categories: ["Transportation", "Fuel"] },
-  { img: "/receipt.jpg", categories: ["Medical Treatments", "Vaccinations", "Checkup"] },
-  { img: "/receipt2.jpg", categories: ["Office Supplies", "Books"] },
-  { img: "/receipt.jpg", categories: ["Groceries", "Dining", "Snacks"] },
-  { img: "/receipt2.jpg", categories: ["Transportation", "Fuel"] },
-];
-
-const TaxRelief = () => {
+const TaxRelief = ({ year, categoryId }) => {
+  const [receipts, setReceipts] = useState([]);
+  const [categoriesMap, setCategoriesMap] = useState({});
   const [showPopup, setShowPopup] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [selectedReceipt, setSelectedReceipt] = useState(null);
+  const [receiptToDelete, setReceiptToDelete] = useState(null);
 
-  const handleDeleteClick = () => {
+  // Fetch categories and tax relief receipts based on year and categoryId
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const auth = getAuth();
+        const user = auth.currentUser;
+  
+        if (!user) {
+          console.error("No user is signed in.");
+          return;
+        }
+  
+        const userID = user.uid;
+  
+        // Fetch categories
+        const categorySnapshot = await getDocs(collection(db, "SystemCategory"));
+        const categoryData = {};
+        categorySnapshot.forEach(doc => {
+          categoryData[doc.id] = doc.data().categoryName;
+        });
+        setCategoriesMap(categoryData);
+  
+        // Fetch tax relief receipts
+        const receiptSnapshot = await getDocs(collection(db, "Receipt"));
+        const filteredReceipts = [];
+  
+        receiptSnapshot.forEach(doc => {
+          const receipt = doc.data();
+          const receiptDateStr = receipt.receiptTransDate || receipt.transactionDate;
+          const isUserMatch = receipt.userID === userID;
+          const isTaxRelief = receipt.isRelief === "Yes";
+          const matchCategory = !categoryId || receipt.systemCategoryID === categoryId;
+  
+          if (receiptDateStr && isUserMatch && isTaxRelief && matchCategory) {
+            const receiptDate = new Date(receiptDateStr);
+            const receiptYear = receiptDate.getFullYear();
+  
+            if (!year || receiptYear === parseInt(year)) {
+              filteredReceipts.push({
+                id: doc.id,
+                ...receipt
+              });
+            }
+          }
+        });
+  
+        setReceipts(filteredReceipts);
+      } catch (error) {
+        console.error("Error fetching tax relief receipts:", error);
+      }
+    };
+  
+    fetchData();
+  }, [year, categoryId]);  
+
+  const handleDeleteClick = (receipt) => {
+    setReceiptToDelete(receipt);
     setShowPopup(true);
   };
 
-  const handleConfirmDelete = () => {
-    setShowPopup(false);
-    setShowSuccess(true);
-    setTimeout(() => setShowSuccess(false), 2000); // Hide success message after 2 seconds
+  const handleConfirmDelete = async () => {
+    try {
+      if (receiptToDelete && receiptToDelete.id) {
+        // Delete the document from Firestore
+        await deleteDoc(doc(db, "Receipt", receiptToDelete.id));
+        
+        // Update local state by removing the deleted receipt
+        setReceipts((prevReceipts) => 
+          prevReceipts.filter(receipt => receipt.id !== receiptToDelete.id)
+        );
+      }
+      
+      setShowPopup(false);
+      setShowSuccess(true);
+      setTimeout(() => setShowSuccess(false), 2000);
+    } catch (error) {
+      console.error("Error deleting receipt:", error);
+      setShowPopup(false);
+    }
   };
 
   const closePopup = () => {
     setShowPopup(false);
+    setReceiptToDelete(null);
   };
 
-  // Handle view button click
-  const handleViewClick = (card) => {
-    setSelectedReceipt(card); // Set selected receipt data
+  const handleViewClick = (receipt) => {
+    setSelectedReceipt(receipt);
   };
 
-  // Close the receipt form
   const handleCloseForm = () => {
     setSelectedReceipt(null);
   };
@@ -45,30 +110,37 @@ const TaxRelief = () => {
   return (
     <>
       <div className={styles.receiptsContainer}>
-        {cards.map((card, index) => (
-          <div key={index} className={styles.card}>
+        {receipts.length === 0 && (
+          <p style={{ textAlign: "center", marginTop: "2rem", whiteSpace: "nowrap" }}>
+            No tax relief receipts found{year ? ` for ${year}` : ''}{categoryId ? ' in the selected category' : ''}.
+          </p>       
+        )}
+        {receipts.map((receipt) => (
+          <div key={receipt.id} className={styles.card}>
             <div className={styles.imageContainer}>
-              <img src={card.img} alt="Receipt" className={styles.image} />
+              <img 
+                src={receipt.receiptURL} 
+                alt="Receipt" 
+                className={styles.image} 
+              />
             </div>
 
             {/* Category Section */}
             <h3 className={styles.title}>Category:</h3>
             <div className={styles.categoryWrapper}>
               <div className={styles.categoryScroll}>
-                {card.categories.map((category, i) => (
-                  <span key={i} className={styles.categoryLabel}>
-                    {category}
-                  </span>
-                ))}
+                <span className={styles.categoryLabel}>
+                  {categoriesMap[receipt.systemCategoryID] || "Unknown"}
+                </span>
               </div>
             </div>
 
             {/* Buttons */}
             <div className={styles.buttonWrapper}>
-              <button className={styles.viewButton} onClick={() => handleViewClick(card)}>
+              <button className={styles.viewButton} onClick={() => handleViewClick(receipt)}>
                 View
               </button>
-              <button className={styles.deleteButton} onClick={handleDeleteClick}>
+              <button className={styles.deleteButton} onClick={() => handleDeleteClick(receipt)}>
                 Delete
               </button>
             </div>
@@ -101,12 +173,15 @@ const TaxRelief = () => {
         </div>
       )}
 
-      {/* Show ReceiptForm if a receipt is selected */}
       {selectedReceipt && (
         <ReceiptForm
-          uploadedFile={selectedReceipt.img} // Pass the selected image
-          onClose={handleCloseForm}         // Handle closing the form
+          uploadedFile={selectedReceipt.receiptURL}
+          extractedDate={selectedReceipt.receiptTransDate || selectedReceipt.transactionDate}
+          extractedTotal={selectedReceipt.totalAmount ? selectedReceipt.totalAmount.toString() : ""}
+          initialCategoryId={selectedReceipt.systemCategoryID}
+          onClose={handleCloseForm}
           isSavedReceipt={true}
+          receiptId={selectedReceipt.id}
         />
       )}
     </>

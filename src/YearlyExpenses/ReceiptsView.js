@@ -119,7 +119,7 @@ const ReceiptsView = ({ year, month, categoryId }) => {
       <div className={styles.receiptsContainer}>
         {receipts.length === 0 && (
           <p style={{ textAlign: "center", marginTop: "2rem", whiteSpace: "nowrap" }}>
-            No receipts found for {month} {year}.
+            No receipts found for {month} {year} {categoryId ? ' in the selected category' : ''}.
           </p>       
         )}
         {receipts.map((receipt) => (

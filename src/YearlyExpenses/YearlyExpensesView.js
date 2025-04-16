@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { collection, query, where, getDocs } from "firebase/firestore";
+import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase"; // Adjust this import to your Firebase setup
 import MonthsRow from "./MonthsRow";
 import styles from "./YearlyExpensesView.module.css";
@@ -25,7 +25,7 @@ function YearlyExpensesView() {
     
     // Fetch receipts for the specified year
     fetchReceiptCountsByMonth(yearParam || year);
-  }, [location.search]);
+  }, [location.search, year]);
 
   const fetchReceiptCountsByMonth = async (year) => {
     try {
@@ -81,7 +81,7 @@ function YearlyExpensesView() {
   };
 
   const handleTaxReliefClick = () => {
-    navigate("/tax-relief");
+    navigate(`/tax-relief?year=${year}`);
   };
 
   return (
