@@ -1,7 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./ExpensesUpload.module.css";
 import ReceiptForm from "./ReceiptForm";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../firebase";
+import { getAuth } from "firebase/auth";
 
 export function ExpensesUpload() {
   const [uploadedFile, setUploadedFile] = useState(null);
@@ -9,8 +12,38 @@ export function ExpensesUpload() {
   const [isLoading, setIsLoading] = useState(false);
   const [extractedDate, setExtractedDate] = useState(null);
   const [extractedTotal, setExtractedTotal] = useState(null);
+  const [availableYears, setAvailableYears] = useState([]);
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchYearsFromFirebase = async () => {
+      try {
+        const auth = getAuth();
+        const user = auth.currentUser;
+        if (!user) return;
+
+        const receiptSnapshot = await getDocs(collection(db, "Receipt"));
+        const yearSet = new Set();
+
+        receiptSnapshot.forEach((doc) => {
+          const data = doc.data();
+          const isUserMatch = data.userID === user.uid;
+          const dateStr = data.receiptTransDate || data.transactionDate;
+          if (isUserMatch && dateStr) {
+            const year = new Date(dateStr).getFullYear();
+            yearSet.add(year);
+          }
+        });
+
+        setAvailableYears([...yearSet].sort((a, b) => b - a));
+      } catch (err) {
+        console.error("Error fetching years:", err);
+      }
+    };
+
+    fetchYearsFromFirebase();
+  }, []);
 
   const handleYearChange = (e) => {
     const selectedYear = e.target.value;
@@ -27,29 +60,29 @@ export function ExpensesUpload() {
 
         const formData = new FormData();
         formData.append("file", file);
-        
+
         const response = await fetch("http://localhost:5000/process-receipt", {
           method: "POST",
           body: formData,
         });
-      
+
         if (!response.ok) {
           const text = await response.text();
           console.error("Error response:", text);
           alert("Upload failed: " + text);
           return;
         }
-        
+
         const data = await response.json();
-        
+
         if (data.processedImage) {
           const base64Image = `data:image/jpg;base64,${data.processedImage}`;
-          
+
           setUploadedFile(base64Image);
           setExtractedDate(data.extractedDate);
           setExtractedTotal(data.extractedTotal);
           setShowForm(true);
-          
+
           if (data.roboflowResults) {
             console.log("Roboflow Results:", data.roboflowResults);
           }
@@ -61,11 +94,11 @@ export function ExpensesUpload() {
         console.error("Upload error:", err);
         alert("Error uploading file: " + err.message);
       } finally {
-        setIsLoading(false); 
+        setIsLoading(false);
       }
     }
   };
-  
+
   const closeForm = () => {
     setShowForm(false);
     setUploadedFile(null);
@@ -82,18 +115,21 @@ export function ExpensesUpload() {
 
       <div className={styles.viewBy}>
         View By :
-        <select 
-          name="year" 
-          id="year" 
+        <select
+          name="year"
+          id="year"
           className={styles.yearSelect}
           onChange={handleYearChange}
         >
           <option value="">- Select Year -</option>
-          <option value="2022">2022</option>
-          <option value="2023">2023</option>
-          <option value="2024">2024</option>
+          {availableYears.map((year) => (
+            <option key={year} value={year}>
+              {year}
+            </option>
+          ))}
         </select>
       </div>
+
       <div className={styles.uploadContainer}>
         <div className={styles.iconWrapper}>
           <img
@@ -104,24 +140,25 @@ export function ExpensesUpload() {
           />
         </div>
         <div className={styles.uploadInstructions}>
-          <span style={{ fontFamily: 'NATS, sans-serif', fontWeight: 400 }}>
+          <span style={{ fontFamily: "NATS, sans-serif", fontWeight: 400 }}>
             Upload receipts
           </span>
           <span
             style={{
-              fontFamily: 'NATS, sans-serif',
+              fontFamily: "NATS, sans-serif",
               fontWeight: 400,
-              color: 'rgba(0,0,0,1)',
+              color: "rgba(0,0,0,1)",
             }}
           >
-            {' '}to track your expenses.{' '}
+            {" "}
+            to track your expenses.{" "}
           </span>
           <br />
           <span
             style={{
-              fontFamily: 'NATS, sans-serif',
+              fontFamily: "NATS, sans-serif",
               fontWeight: 400,
-              color: 'rgba(0,0,0,1)',
+              color: "rgba(0,0,0,1)",
             }}
           >
             Supported formats: JPG, PNG (&lt;5MB)
@@ -129,9 +166,9 @@ export function ExpensesUpload() {
           <br />
           <span
             style={{
-              fontFamily: 'NATS, sans-serif',
+              fontFamily: "NATS, sans-serif",
               fontWeight: 400,
-              color: 'rgba(0,0,0,1)',
+              color: "rgba(0,0,0,1)",
               fontSize: 16,
             }}
           >
@@ -140,20 +177,20 @@ export function ExpensesUpload() {
         </div>
         <div className={styles.uploadButtonWrapper}>
           <form>
-            <label htmlFor="fileUpload" className={styles['visually-hidden']}>
+            <label htmlFor="fileUpload" className={styles["visually-hidden"]}>
               Upload Receipt
             </label>
             <input
               type="file"
               id="fileUpload"
               accept=".jpeg,.jpg,.png,.pdf"
-              className={styles['visually-hidden']}
+              className={styles["visually-hidden"]}
               onChange={handleFileChange}
             />
             <button
               className={styles.uploadButton}
               type="button"
-              onClick={() => document.getElementById('fileUpload').click()}
+              onClick={() => document.getElementById("fileUpload").click()}
             >
               Upload Receipt
             </button>
@@ -162,14 +199,13 @@ export function ExpensesUpload() {
       </div>
 
       {showForm && (
-        <ReceiptForm 
+        <ReceiptForm
           uploadedFile={uploadedFile}
           extractedDate={extractedDate}
           extractedTotal={extractedTotal}
-          onClose={closeForm} 
+          onClose={closeForm}
         />
       )}
-
     </div>
   );
 }
