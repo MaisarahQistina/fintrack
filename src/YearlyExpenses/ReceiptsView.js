@@ -5,7 +5,7 @@ import { collection, getDocs, doc, deleteDoc } from "firebase/firestore";
 import { db } from "../firebase";
 import { getAuth } from "firebase/auth";
 
-const ReceiptsView = ({ year, month, categoryId }) => {
+const ReceiptsView = ({ year, month, categoryId, onTotalUpdate }) => {
   const [receipts, setReceipts] = useState([]);
   const [categoriesMap, setCategoriesMap] = useState({});
   const [showPopup, setShowPopup] = useState(false);
@@ -65,15 +65,17 @@ const ReceiptsView = ({ year, month, categoryId }) => {
         });
   
         setReceipts(filteredReceipts);
+        const total = filteredReceipts.reduce((sum, r) => sum + (r.totalAmount || 0), 0);
+        onTotalUpdate(total);
       } catch (error) {
         console.error("Error fetching receipts:", error);
       }
-    };
+    }
   
     if (year && month) {
       fetchData();
     }
-  }, [year, month, categoryId]);  
+  }, [year, month, categoryId, onTotalUpdate]);  
 
   const handleDeleteClick = (receipt) => {
     setReceiptToDelete(receipt);

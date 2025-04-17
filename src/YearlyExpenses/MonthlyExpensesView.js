@@ -18,6 +18,7 @@ function MonthlyExpensesView() {
     const [categories, setCategories] = useState([]);
     const [selectedCategoryId, setSelectedCategoryId] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+    const [monthlyTotal, setMonthlyTotal] = useState(0);
 
     // Get the year and month from URL only on component mount
     useEffect(() => {
@@ -110,7 +111,13 @@ function MonthlyExpensesView() {
                 year={year} 
                 month={month} 
                 categoryId={selectedCategoryId}
+                onTotalUpdate={setMonthlyTotal}
             />
+
+            <div className={styles.monthlyTotal}>
+            <h2>Total Expenses: RM {monthlyTotal.toFixed(2)}</h2>
+            </div>
+
         </main>
     );
 }

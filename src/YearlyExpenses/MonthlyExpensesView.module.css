@@ -8,6 +8,7 @@
   position: relative;
   background-color: #F8F5EF;
   padding-left: 50px; 
+  padding-bottom: 20px;
 }
 
 /* Year > Month */
@@ -28,6 +29,18 @@
   margin-top: 20px; /* 20px below the "2024 > January" text */
   position: relative;
   width: 100%;
+}
+
+.monthlyTotal {
+  position: absolute;
+  bottom: 20px;
+  right: 50px;
+  font-size: 18px;
+  font-weight: bold;
+  background-color: #ffffff;
+  padding: 7px 12px;
+  border-radius: 8px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
 }
 
 .monthSelect {
