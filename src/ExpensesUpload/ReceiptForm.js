@@ -21,6 +21,7 @@ const ReceiptForm = ({
   const [showSuccess, setShowSuccess] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
+  const formattedTotalAmount = parseFloat(totalAmount).toFixed(2);
 
   const formatDate = (date) => {
     // Check if the date is already in YYYY-MM-DD format
@@ -220,7 +221,7 @@ const ReceiptForm = ({
                   <input 
                     type="text" 
                     id="totalAmount" 
-                    value={totalAmount}
+                    value={formattedTotalAmount}
                     onChange={handleAmountChange}
                     className={styles.inputField}
                   />
