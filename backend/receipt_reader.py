@@ -9,7 +9,7 @@ from skimage.filters import threshold_local
 
 pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
 
-#Extract Total Amount of receipt
+# Extract Total Amount of receipt
 def extract_total(base64_image):
     try:
         image_data = base64.b64decode(base64_image)
@@ -21,13 +21,11 @@ def extract_total(base64_image):
         custom_config = r'--psm 6 --oem 3'
 
         extracted_text = pytesseract.image_to_string(enhanced_image, config=custom_config)
-
-        # 🧼 Fix OCR errors like '33 .26' → '33.26'
         extracted_text = re.sub(r'(\d)\s*\.\s*(\d{2})', r'\1.\2', extracted_text)
 
-        print("🔍 Extracted Text:\n", extracted_text)
+        print("Extracted Text:\n", extracted_text)
 
-        # First try strict match for Grand Total
+        # Try strict match for Grand Total
         grand_total_pattern = re.search(
             r'\bgrand\s+total\b[:\s]*\$?(\d{1,3}(?:,\d{3})*(?:\.\d{2})?)',
             extracted_text.lower()
@@ -37,7 +35,7 @@ def extract_total(base64_image):
             print(f"Grand total match found: {total_value}")
             return total_value
 
-        # Try match for generic Total (skip Subtotal later)
+        # Try match for generic Total 
         total_matches = re.findall(
             r'\btotal\b[:\s]*\$?(\d{1,3}(?:,\d{3})*(?:\.\d{2})?)',
             extracted_text.lower()
@@ -48,7 +46,6 @@ def extract_total(base64_image):
             print(f"Last total match found: {formatted_total}")
             return formatted_total
 
-        # Structured OCR
         ocr_data = pytesseract.image_to_data(enhanced_image, output_type=pytesseract.Output.DICT, config=custom_config)
 
         keywords = [
@@ -103,7 +100,7 @@ def extract_total(base64_image):
                             continue
 
         if matched_totals:
-            # Sort by confidence then by vertical position (lower = closer to bottom)
+            # Sort by confidence then by vertical position 
             matched_totals.sort(key=lambda x: (x[1], -x[2]), reverse=True)
             best_total = matched_totals[0][0]
             print(f"Best matched total: {best_total}")
@@ -125,7 +122,6 @@ def extract_total(base64_image):
             highest = max(amounts_with_pos, key=lambda x: x[0])
             last = valid_amounts[-1]
 
-            # If the highest is >5x the last, it's probably wrong
             if highest[0] > 5 * last:
                 print(f"Fallback - highest value too high, using last: {last}")
                 return last
@@ -140,42 +136,31 @@ def extract_total(base64_image):
         print("OCR Error:", str(e))
         return None
 
-#Extract Date of receipt
+# Extract Date of receipt 
 def extract_date(base64_image):
     try:
-        # Decode the base64 image
         image_data = base64.b64decode(base64_image)
         nparr = np.frombuffer(image_data, np.uint8)
         image = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
         
-        # Use OCR to extract text
         custom_config = r'--psm 6 --oem 3'
         extracted_text = pytesseract.image_to_string(image, config=custom_config)
         
         # Date pattern list
         date_patterns = [
-            # MM/DD/YYYY or MM-DD-YYYY
-            r'(\d{1,2}[\/\-\.]\d{1,2}[\/\-\.]\d{2,4})',
-            # MMM DD, YYYY (Jan 01, 2023)
-            r'([A-Za-z]{3,9}\.?\s+\d{1,2},?\s+\d{2,4})',
-            # DD-MMM-YYYY (01-Jan-2023)
-            r'(\d{1,2}[\-\.]\s*[A-Za-z]{3}[\-\.]\s*\d{2,4})',
-            # YYYY-MM-DD (ISO format)
-            r'(\d{4}[\/\-\.]\d{1,2}[\/\-\.]\d{1,2})',
-            # Special formats often found on receipts
+            r'(\d{1,2}[\/\-\.]\d{1,2}[\/\-\.]\d{2,4})', # MM/DD/YYYY or MM-DD-YYYY
+            r'([A-Za-z]{3,9}\.?\s+\d{1,2},?\s+\d{2,4})', # MMM DD, YYYY (Jan 01, 2023)
+            r'(\d{1,2}[\-\.]\s*[A-Za-z]{3}[\-\.]\s*\d{2,4})', # DD-MMM-YYYY (01-Jan-2023)
+            r'(\d{4}[\/\-\.]\d{1,2}[\/\-\.]\d{1,2})', # YYYY-MM-DD (ISO format)
             r'(?:Date|DATE|Dt):?\s*(\d{1,2}[\/\-\.]\d{1,2}[\/\-\.]\d{2,4})',
             r'(\d{1,2}[\-\.](?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[\-\.]\d{2,4})',
-            # Format seen in your example: DD-MMM-YYYY (04-Nov-2018)
-            r'(\d{1,2}\-[A-Za-z]{3}\-\d{4})',
-            # Another format from examples: 30-Aug-2019
-            r'(\d{1,2}\-[A-Za-z]{3}\-\d{4})'
+            r'(\d{1,2}\-[A-Za-z]{3}\-\d{4})', # DD-MMM-YYYY (04-Nov-2018)
+            r'(\d{1,2}\-[A-Za-z]{3}\-\d{4})' # 30-Aug-2019
         ]
         
-        # Try to find all dates in the extracted text
         for pattern in date_patterns:
             matches = re.findall(pattern, extracted_text, re.IGNORECASE)
             if matches:
-                # Return the first found date
                 print(f"Date found: {matches[0]}")
                 return matches[0]
         
@@ -204,6 +189,7 @@ def extract_date(base64_image):
         print(f"Date extraction error: {str(e)}")
         return None
 
+# Format date extracted
 def format_date(extracted_date):
     try:
         date_obj = None
@@ -216,7 +202,7 @@ def format_date(extracted_date):
         
         if date_obj:
             formatted_date = date_obj.strftime('%m/%d/%Y')  # Format to MM/DD/YYYY
-            print(f"Formatted Date: {formatted_date}")  # Debug output
+            print(f"Formatted Date: {formatted_date}")  
             return formatted_date
         else:
             print("Date format not recognized.")
@@ -224,3 +210,66 @@ def format_date(extracted_date):
     except Exception as e:
         print(f"Error formatting date: {e}")
         return None
+
+# Extract line items from receipt
+def extract_line_items(base64_image):
+    try:
+        image_data = base64.b64decode(base64_image)
+        nparr = np.frombuffer(image_data, np.uint8)
+        image = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+        
+        custom_config = r'--psm 6 --oem 3'
+        extracted_text = pytesseract.image_to_string(image, config=custom_config)
+        
+        print("Full extracted text for line item processing:")
+        print(extracted_text)
+        
+        # Split text into lines
+        lines = extracted_text.split('\n')
+        line_items = []
+        
+        # Identify sections of the receipt
+        header_section = True
+        footer_section = False
+        
+        for line in lines:
+            line = line.strip()
+            if not line:
+                continue
+                
+            # Common header lines
+            if header_section:
+                if any(header in line.lower() for header in ['receipt', 'store', 'phone', 'address', 'tel', 'date', 'time', 'order', 'server', 'cashier', 'guests']): 
+                    continue
+                
+                if re.search(r'\$?\d+\.\d{2}', line) or re.search(r'\d+\s*@\s*\$?\d+\.\d{2}', line):
+                    header_section = False
+            
+            # Footer section
+            if any(keyword in line.lower() for keyword in ['subtotal', 'tax', 'total', 'balance due', 'change', 'cash', 'credit', 'payment']):
+                footer_section = True
+                continue
+                
+            if not header_section and not footer_section:
+                if re.search(r'\d', line) and len(line.split()) > 1:  
+                    # Clean up the line & remove excessive whitespace
+                    clean_line = re.sub(r'\s+', ' ', line).strip()
+                    
+                    # Remove any logos or non-item text by excluding specific patterns
+                    if re.search(r'(facebook|twitter|logo)', clean_line, re.IGNORECASE):
+                        continue
+
+                    if clean_line:
+                        line_items.append(clean_line)
+        
+        if line_items:
+            result = '\n'.join(line_items)
+            print(f"Extracted line items: {result}")
+            return result
+        else:
+            print("No line items found, using full text as fallback")
+            return extracted_text
+        
+    except Exception as e:
+        print(f"Error extracting line items: {str(e)}")
+        return ""

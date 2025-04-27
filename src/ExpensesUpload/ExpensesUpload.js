@@ -12,6 +12,7 @@ export function ExpensesUpload() {
   const [isLoading, setIsLoading] = useState(false);
   const [extractedDate, setExtractedDate] = useState(null);
   const [extractedTotal, setExtractedTotal] = useState(null);
+  const [suggestedCategoryId, setSuggestedCategoryId] = useState(null);
   const [availableYears, setAvailableYears] = useState([]);
 
   const navigate = useNavigate();
@@ -81,10 +82,15 @@ export function ExpensesUpload() {
           setUploadedFile(base64Image);
           setExtractedDate(data.extractedDate);
           setExtractedTotal(data.extractedTotal);
+          setSuggestedCategoryId(data.suggestedCategoryId || "19"); // Default to Miscellaneous if not provided
           setShowForm(true);
 
           if (data.roboflowResults) {
             console.log("Roboflow Results:", data.roboflowResults);
+          }
+          
+          if (data.extractedText) {
+            console.log("Extracted Text:", data.extractedText);
           }
         } else {
           console.error("No processedImage in response");
@@ -203,6 +209,7 @@ export function ExpensesUpload() {
           uploadedFile={uploadedFile}
           extractedDate={extractedDate}
           extractedTotal={extractedTotal}
+          initialCategoryId={suggestedCategoryId}
           onClose={closeForm}
         />
       )}
