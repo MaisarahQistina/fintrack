@@ -122,7 +122,7 @@ def extract_total(base64_image):
             highest = max(amounts_with_pos, key=lambda x: x[0])
             last = valid_amounts[-1]
 
-            if highest[0] > 5 * last:
+            if highest[0] > 100 * last:
                 print(f"Fallback - highest value too high, using last: {last}")
                 return last
             else:
@@ -156,6 +156,7 @@ def extract_date(base64_image):
             r'(\d{1,2}[\-\.](?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[\-\.]\d{2,4})',
             r'(\d{1,2}\-[A-Za-z]{3}\-\d{4})', # DD-MMM-YYYY (04-Nov-2018)
             r'(\d{1,2}\-[A-Za-z]{3}\-\d{4})' # 30-Aug-2019
+            r'([A-Za-z]{3}[\/\-\.]\d{1,2}[\/\-\.]\d{4})'# Mon-DD-YYYY
         ]
         
         for pattern in date_patterns:
