@@ -8,9 +8,9 @@ import io
 import re
 
 # Load the pre-trained model and tokenizer
-model_name = "maiqos/bert-receipt-categorization"
-tokenizer = None
-model = None
+model_name = "maiqos/bert-receipt-categorization-v2"
+tokenizer = AutoTokenizer.from_pretrained(model_name)
+model = AutoModelForSequenceClassification.from_pretrained(model_name)
 
 # Define category mapping based on SystemCategory
 CATEGORY_MAPPING = {
