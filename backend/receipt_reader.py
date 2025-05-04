@@ -215,61 +215,41 @@ def format_date(extracted_date):
 # Extract line items from receipt
 def extract_line_items(base64_image):
     try:
+        # Decode the base64 image
         image_data = base64.b64decode(base64_image)
         nparr = np.frombuffer(image_data, np.uint8)
         image = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
         
+        # Use Tesseract OCR to extract text
         custom_config = r'--psm 6 --oem 3'
         extracted_text = pytesseract.image_to_string(image, config=custom_config)
         
-        print("Full extracted text for line item processing:")
+        print("Full extracted text:")
         print(extracted_text)
         
-        # Split text into lines
+        # Clean extracted text line-by-line
         lines = extracted_text.split('\n')
-        line_items = []
-        
-        # Identify sections of the receipt
-        header_section = True
-        footer_section = False
+        clean_lines = []
         
         for line in lines:
             line = line.strip()
             if not line:
                 continue
-                
-            # Common header lines
-            if header_section:
-                if any(header in line.lower() for header in ['receipt', 'store', 'phone', 'address', 'tel', 'date', 'time', 'order', 'server', 'cashier', 'guests']): 
-                    continue
-                
-                if re.search(r'\$?\d+\.\d{2}', line) or re.search(r'\d+\s*@\s*\$?\d+\.\d{2}', line):
-                    header_section = False
             
-            # Footer section
-            if any(keyword in line.lower() for keyword in ['subtotal', 'tax', 'total', 'balance due', 'change', 'cash', 'credit', 'payment']):
-                footer_section = True
+            # Remove obvious logo/social media junk
+            if re.search(r'(facebook|twitter|instagram|logo)', line, re.IGNORECASE):
                 continue
-                
-            if not header_section and not footer_section:
-                if re.search(r'\d', line) and len(line.split()) > 1:  
-                    # Clean up the line & remove excessive whitespace
-                    clean_line = re.sub(r'\s+', ' ', line).strip()
-                    
-                    # Remove any logos or non-item text by excluding specific patterns
-                    if re.search(r'(facebook|twitter|logo)', clean_line, re.IGNORECASE):
-                        continue
-
-                    if clean_line:
-                        line_items.append(clean_line)
+            
+            clean_lines.append(line)
         
-        if line_items:
-            result = '\n'.join(line_items)
-            print(f"Extracted line items: {result}")
-            return result
+        # Recombine cleaned lines
+        final_text = '\n'.join(clean_lines)
+        
+        if final_text.strip():
+            return final_text
         else:
-            print("No line items found, using full text as fallback")
-            return extracted_text
+            print("Warning: OCR produced empty text after cleaning.")
+            return extracted_text  # fallback to raw text if cleaning too aggressive
         
     except Exception as e:
         print(f"Error extracting line items: {str(e)}")

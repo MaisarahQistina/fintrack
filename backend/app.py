@@ -1,15 +1,12 @@
 from flask import Flask, request, jsonify
 from receipt_processor import process_receipt_image
 from receipt_reader import extract_total, extract_date, format_date, extract_line_items
-from receipt_categorizer import categorize_receipt, load_model
+from receipt_categorizer import categorize_receipt
 from flask_cors import CORS
 import base64
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
-
-# Initialize the model when app starts
-load_model()
 
 # Identifying and cropping uploaded receipt 
 @app.route('/process-receipt', methods=['POST'])
