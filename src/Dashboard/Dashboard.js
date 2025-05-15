@@ -4,16 +4,24 @@ import DashboardMonthContainer from "./DashboardMonthContainer";
 import DashboardYearContainer from "./DashboardYearContainer";
 
 function Dashboard() {
-  const [view, setView] = useState("month"); // Track the current view
+  const [view, setView] = useState("month");
+
+  // Get current date
+  const currentDate = new Date();
+  const currentYear = currentDate.getFullYear();
+
+  // Get full month name
+  const currentMonth = currentDate.toLocaleString("default", { month: "long" });
 
   return (
     <main className={styles.DashboardView}>
       {/* Title and Month/Year */}
-        <div className={styles.title}>User Dashboard
+      <div className={styles.title}>
+        User Dashboard
         <div className={styles.month}>
-          {view === "month" ? "December 2024" : "2024"}
+          {view === "month" ? `${currentMonth} ${currentYear}` : `${currentYear}`}
         </div>
-        </div>
+      </div>
 
       {/* Show the correct container */}
       {view === "month" ? <DashboardMonthContainer /> : <DashboardYearContainer />}
