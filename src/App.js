@@ -4,7 +4,8 @@ import "./App.css";
 
 import { onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
-import { auth, db } from "./firebase"; // Import your Firebase setup
+import { auth, db } from "./firebase"; 
+import axios from "axios";
 
 import { FinTrackLanding } from "./LandingPage/FinTrackLanding"; 
 import { SignIn } from "./SignIn/SignIn"; 
@@ -69,6 +70,27 @@ const App = () => {
           role: "user", // fallback
         });
       }}
+
+        // Fetch ID Token and send to backend
+        const idToken = await authUser.getIdToken();
+        // Send the ID token to the backend for prediction
+        axios.post("http://localhost:5000/predict-budget", { idToken })
+          .then((response) => {
+            console.log("Prediction response:", response.data);
+            // Handle the prediction response as needed
+          })
+          .catch((error) => {
+            console.error("Error sending ID token to backend:", error);
+
+             // ✅ NEW: Log actual backend error message
+            if (error.response) {
+              console.error("❗ Server responded with:", error.response.data);
+              alert("Backend error: " + (error.response.data.error || "Unknown error"));
+            } else {
+              console.error("No response from backend");
+            }
+          });
+          
       } else {
         setUser(null);
       }
