@@ -62,7 +62,7 @@ def categorize_receipt(ocr_text, merchant_name=""):
                 print(f"Category {class_idx} ({CATEGORY_MAPPING.get(class_idx)}): {prob:.4f}")
 
         # Optional override rule based on common food words
-        food_keywords = ['salad', 'shrimp', 'combo', 'chicken', 'steak', 'caesar', 'rib', 'cocktail', 'spaghetti','reserve', 'restaurant', 'dine', 'grill', 'food', 'drink', 'dinner', 'beverage']
+        food_keywords = ['salad', 'shrimp', 'combo', 'chicken', 'steak', 'curry', 'caesar', 'rib', 'cocktail', 'spaghetti','reserve', 'restaurant', 'dine', 'grill', 'food', 'drink', 'dinner', 'beverage']
         if predicted_class != 2 and any(word in cleaned_items.lower() for word in food_keywords):
             print("Overriding prediction to Category 2 (Food & Drinks) based on keyword presence.")
             predicted_class = 2
