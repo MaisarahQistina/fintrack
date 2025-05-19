@@ -43,8 +43,8 @@ def aggregate_and_predict(id_token):
         # Get expenses data from receipt database
         receipts_ref = db.collection('Receipt').where('userID', '==', user_id)
         receipts = list(receipts_ref.stream())
-        if len(receipts) == 0:
-            return {"error": "No receipts found for this user."}
+        # if len(receipts) == 0:
+        #     return {"error": "No receipts found for this user."}
 
         monthly_data = {}
         for r in receipts:
@@ -64,8 +64,8 @@ def aggregate_and_predict(id_token):
             monthly_data[key]['categories'][cat_id] = monthly_data[key]['categories'].get(cat_id, 0) + amount
 
         sorted_months = sorted(monthly_data.keys())
-        if len(sorted_months) < 1:
-            return {"error": "Not enough data to train model"}
+        # if len(sorted_months) < 1:
+        #     return {"error": "Not enough data to train model"}
 
         totals = [monthly_data[k]['total'] for k in sorted_months]
         X = np.array(range(len(totals))).reshape(-1, 1)
