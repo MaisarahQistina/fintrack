@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { SignInForm } from './components/SignInForm';
 import { SignUpForm } from './components/SignUpForm';
@@ -8,17 +8,16 @@ export function SignIn() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Track the form state (Sign In or Sign Up)
+  // Track whether we're on the sign-in page
   const [isSignIn, setIsSignIn] = useState(location.pathname === '/sign-in');
+
+  useEffect(() => {
+    setIsSignIn(location.pathname === '/sign-in');
+  }, [location.pathname]);
 
   const handleFormToggle = (signInValue) => {
     setIsSignIn(signInValue);
-    // Only navigate if the user explicitly toggles forms
-    if (signInValue) {
-      navigate('/sign-in', { replace: true });
-    } else {
-      navigate('/sign-up', { replace: true });
-    }
+    navigate(signInValue ? '/sign-in' : '/sign-up', { replace: true });
   };
 
   return (
@@ -50,8 +49,7 @@ export function SignIn() {
               </div>
             </div>
           </div>
-          <div className="flex flex-col w-[58%] max-md:w-full">
-          </div>
+          <div className="flex flex-col w-[58%] max-md:w-full"></div>
         </div>
       </div>
     </div>

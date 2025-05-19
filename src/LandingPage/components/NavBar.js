@@ -2,7 +2,7 @@ import React from "react";
 import { Link, useLocation } from "react-router-dom";
 
 import { signOut } from "firebase/auth";
-import { auth } from "../../firebase"; // Import your Firebase setup
+import { auth } from "../../firebase"; 
 
 const NavBar = ({ user }) => {
   const location = useLocation();
