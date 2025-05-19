@@ -46,8 +46,24 @@ export function SignInForm() {
         }
   
       } catch (error) {
-        console.log(error.message);
-        toast.error(error.message, { position: "bottom-center" });
+        console.log("Firebase Auth Error:", error.code); // For debugging
+
+        let message = "";
+
+        switch (error.code) {
+          case "auth/user-not-found":
+          case "auth/wrong-password":
+          case "auth/invalid-credential":
+            message = "Invalid email or password. Please try again.";
+            break;
+          case "auth/too-many-requests":
+            message = "Too many failed attempts. Please wait and try again later.";
+            break;
+          default:
+            message = "Something went wrong. Please try again.";
+        }
+
+        toast.error(message, { position: "bottom-center" });
       }
     }
   };
