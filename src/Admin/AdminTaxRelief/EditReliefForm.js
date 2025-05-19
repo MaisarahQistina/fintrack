@@ -6,8 +6,10 @@ import styles from "./ReliefForm.module.css";
 const EditReliefForm = ({ reliefDetails, onClose }) => {
   const [reliefLimit, setReliefLimit] = useState(reliefDetails.reliefLimit);
   const [reliefYear, setReliefYear] = useState(reliefDetails.reliefYear || "");
-  const [categoryId, setCategoryId] = useState(""); // will store selected systemCategoryId
-  const [categories, setCategories] = useState([]); // list of all categories
+  const [categoryId, setCategoryId] = useState(""); 
+  const [categories, setCategories] = useState([]); 
+  const [description, setDescription] = useState(reliefDetails.description || "");
+  const [isActive, setIsActive] = useState(reliefDetails.isActive ?? true);
   const [isLoading, setIsLoading] = useState(true);
   const [showSuccess, setShowSuccess] = useState(false);
 
@@ -51,9 +53,11 @@ const EditReliefForm = ({ reliefDetails, onClose }) => {
     try {
       // Prepare the updated data
       const updatedData = {
+        description,
         reliefLimit,
         reliefYear,
-        systemCategoryId: categoryId
+        systemCategoryId: categoryId,
+        isActive
       };
 
       // Get the document reference for the category to update
@@ -122,6 +126,18 @@ const EditReliefForm = ({ reliefDetails, onClose }) => {
                 </div>
 
                 <div className={styles.formGroup}>
+                  <label htmlFor="description">Description</label>
+                  <input
+                    type="text"
+                    id="description"
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    className={styles.inputField}
+                    placeholder="Describe what expenses qualify under this relief so the system can match eligible receipts"
+                  />
+                </div>
+
+                <div className={styles.formGroup}>
                   <label htmlFor="reliefLimit">Relief Limit</label>
                   <input
                     type="text"
@@ -156,6 +172,19 @@ const EditReliefForm = ({ reliefDetails, onClose }) => {
                         {cat.categoryName}
                       </option>
                     ))}
+                  </select>
+                </div>
+
+                <div className={styles.formGroup}>
+                  <label htmlFor="isActive">Category Status</label>
+                  <select
+                    id="isActive"
+                    value={isActive ? "true" : "false"}
+                    onChange={(e) => setIsActive(e.target.value === "true")}
+                    className={styles.inputField}
+                  >
+                    <option value="true">Active</option>
+                    <option value="false">Inactive</option>
                   </select>
                 </div>
 

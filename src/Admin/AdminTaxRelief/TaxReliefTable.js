@@ -93,10 +93,11 @@ function TaxReliefTable() {
     <div className={styles.table}>
       <div className={styles.tableHeader}>
         <div className={styles.headerCell}>No.</div>
-        <div className={styles.headerCell}>ID</div>
         <div className={styles.headerCell}>Relief Category</div>
+        <div className={styles.headerCell}>Description</div>
         <div className={styles.headerCell}>Relief Limit</div>
         <div className={styles.headerCell}>Applicable Year</div>
+        <div className={styles.headerCell}>Category Status</div>
         <div className={styles.headerCell}>System Category</div>
         <div className={styles.headerCell}></div>
         <div className={styles.headerCell}></div>
@@ -106,10 +107,12 @@ function TaxReliefTable() {
           key={item.reliefCatID}
           className={index % 2 === 0 ? styles.tableRow : styles.tableRowAlt}>
           <div className={styles.cell}>{index + 1}</div>
-          <div className={styles.cell}>{item.reliefCatID}</div>
+          {/* <div className={styles.cell}>{item.reliefCatID}</div> */}
           <div className={styles.cell}>{item.reliefCategory}</div>
+          <div className={styles.cell}>{item.description}</div>
           <div className={styles.cell}>{item.reliefLimit}</div>
           <div className={styles.cell}>{item.reliefYear}</div>
+          <div className={styles.cell}>{item.isActive ? "Active" : "Inactive"}</div>
           <div className={styles.cell}>
             {systemCategories[item.systemCategoryId] || "Unknown"}
           </div>

@@ -10,6 +10,8 @@ const NewReliefForm = ({ onClose }) => {
   const [systemCategoryId, setSystemCategoryId] = useState(""); 
   const [systemCategories, setSystemCategories] = useState({});
   const [nextReliefCatID, setNextReliefCatID] = useState("");
+  const [description, setDescription] = useState("");
+  const [isActive, setIsActive] = useState(true);
   const [showSuccess, setShowSuccess] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -52,7 +54,7 @@ const NewReliefForm = ({ onClose }) => {
   };
 
   const handleSave = async () => {
-    if (!reliefCategory || !reliefLimit || !applicableYear || !systemCategoryId) {
+    if (!reliefCategory || !reliefLimit || !applicableYear || !systemCategoryId || !description) {
       alert("All fields are required. Please fill in all fields.");
       return;
     }
@@ -64,7 +66,9 @@ const NewReliefForm = ({ onClose }) => {
         reliefCategory: reliefCategory,
         reliefLimit: reliefLimit,
         reliefYear: applicableYear,
-        systemCategoryId: systemCategoryId
+        systemCategoryId: systemCategoryId,
+        description: description,
+        isActive: isActive
       };
 
       // Add document to Firestore
@@ -103,7 +107,7 @@ const NewReliefForm = ({ onClose }) => {
               <p>Fill in the details for the new category.</p>
               <span className={styles.closeBtn} onClick={handleClose}>X</span>
             </div>
-            
+
             <div className={styles.formBody}>
               <div className={styles.formFields}>
                 <div className={styles.formGroup}>
@@ -128,6 +132,17 @@ const NewReliefForm = ({ onClose }) => {
                   />
                 </div>
                 
+                <div className={styles.formGroup}>
+                  <label htmlFor="description">Description</label>
+                  <textarea
+                    id="description"
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    className={styles.inputField}
+                    placeholder="Describe what expenses qualify under this relief so the system can match eligible receipts"
+                  />
+                </div>
+
                 <div className={styles.formGroup}>
                   <label htmlFor="reliefLimit">Relief Limit</label>
                   <input
@@ -169,6 +184,19 @@ const NewReliefForm = ({ onClose }) => {
                   </select>
                 </div>
                 
+                <div className={styles.formGroup}>
+                  <label htmlFor="isActive">Category Status</label>
+                  <select
+                    id="isActive"
+                    value={isActive ? "true" : "false"}
+                    onChange={(e) => setIsActive(e.target.value === "true")}
+                    className={styles.inputField}
+                  >
+                    <option value="true">Active</option>
+                    <option value="false">Inactive</option>
+                  </select>
+                </div>
+
                 <button className={styles.saveButton} onClick={handleSave}>
                   Save
                 </button>

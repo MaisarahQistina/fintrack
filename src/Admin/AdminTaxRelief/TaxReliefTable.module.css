@@ -1,7 +1,7 @@
 .table {
     background-color: #fff;
     border: 1px solid #000;
-    width: 1200px;
+    width: 1500px;
     margin: 0 auto;
   }
   
@@ -33,28 +33,52 @@
     flex: 1;
   }
   
-  .headerCell:nth-child(1), .cell:nth-child(1) { /* No. column */
-    flex: 0.3; /* Reduce size */
-    min-width: 50px; /* Prevent from being too small */
+.headerCell, .cell {
+  flex: 1;
+  padding: 8px;
+  text-align: left;
+  overflow-wrap: anywhere;
 }
 
-.headerCell:nth-child(2), .cell:nth-child(2) { /* User ID column */
-    flex: 0.3; /* Slightly smaller */
-    min-width: 50px;
+.headerCell:nth-child(1), .cell:nth-child(1) {
+  flex: 0.2;
+  min-width: 40px;
 }
 
-.headerCell:nth-child(3), .cell:nth-child(3) { /* Feedback column */
-    flex: 3; /* Takes the remaining space */
+.headerCell:nth-child(2), .cell:nth-child(2) {
+  flex: 1.5;
+  min-width: 130px;
 }
 
-.headerCell:nth-child(7), .cell:nth-child(7) { /* User ID column */
-  flex: 0.3; /* Slightly smaller */
+.headerCell:nth-child(3), .cell:nth-child(3) {
+  flex: 2;
+  min-width: 170px;
+}
+
+.headerCell:nth-child(4), .cell:nth-child(4) {
+  flex: 0.5;
   min-width: 70px;
 }
 
-.headerCell:nth-child(8), .cell:nth-child(8) { /* User ID column */
-  flex: 0.3; /* Slightly smaller */
+.headerCell:nth-child(5), .cell:nth-child(5) {
+  flex: 0.5;
   min-width: 70px;
+}
+
+.headerCell:nth-child(6), .cell:nth-child(6) {
+  flex: 0.4;
+  min-width: 50px;
+}
+
+.headerCell:nth-child(7), .cell:nth-child(7) {
+  flex: 1;
+  min-width: 70px;
+}
+
+.headerCell:nth-child(8), .cell:nth-child(8),
+.headerCell:nth-child(9), .cell:nth-child(9) {
+  flex: 0.3;
+  min-width: 50px;
 }
 
 /* Table Body */
