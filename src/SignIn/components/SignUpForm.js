@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; 
 
 import { auth, db } from "../../firebase"; 
 import { createUserWithEmailAndPassword } from "firebase/auth";
@@ -7,6 +8,8 @@ import { setDoc, doc} from "firebase/firestore";
 import { toast } from "react-toastify";
 
 export function SignUpForm() {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     fullName: "",
     dob: "",
@@ -56,6 +59,10 @@ export function SignUpForm() {
         toast.success("Registration successful! Please sign in to continue.", {
           position: "top-center",
         });
+
+        setTimeout(() => {
+          navigate('/sign-in'); // Adjust the path according to your routing setup
+        }, 2000);
       } catch (error) {
         console.log(error.message);
         toast.error(error.message, {
