@@ -14,6 +14,8 @@ export function ExpensesUpload() {
   const [extractedTotal, setExtractedTotal] = useState(null);
   const [suggestedCategoryId, setSuggestedCategoryId] = useState(null);
   const [availableYears, setAvailableYears] = useState([]);
+  const [showError, setShowError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const navigate = useNavigate();
 
@@ -53,9 +55,39 @@ export function ExpensesUpload() {
     }
   };
 
+  const showErrorAndReload = (message) => {
+    setErrorMessage(message);
+    setShowError(true);
+
+    const timeoutId = setTimeout(() => {
+      window.location.reload();
+    }, 3000);
+
+    const handleClick = () => {
+      clearTimeout(timeoutId);
+      window.location.reload();
+    };
+
+    document.addEventListener("click", handleClick, { once: true });
+  };
+
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
     if (file) {
+      // Validation for file size and type
+      const allowedTypes = ["image/jpeg", "image/png", "application/pdf"];
+      const maxSizeMB = 5;
+
+      if (!allowedTypes.includes(file.type)) {
+        showErrorAndReload("Invalid file type. Please upload JPG, PNG, or PDF files only.");
+        return;
+      }
+
+      if (file.size > maxSizeMB * 1024 * 1024) {
+        showErrorAndReload("File size exceeds 5MB limit. Please upload a smaller file.");
+        return;
+      }
+
       try {
         setIsLoading(true); // Start loading
 
@@ -213,6 +245,16 @@ export function ExpensesUpload() {
           onClose={closeForm}
         />
       )}
+
+      {showError && (
+        <div className={styles.popupOverlay} onClick={() => window.location.reload()}>
+          <div className={styles.popupError} onClick={(e) => e.stopPropagation()}>
+            <img src="/XMark.png" alt="Error" width="60" height="60" />
+            <p>{errorMessage}</p>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }
