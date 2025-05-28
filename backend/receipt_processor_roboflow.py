@@ -5,12 +5,87 @@ from skimage.filters import threshold_local
 from inference_sdk import InferenceHTTPClient
 import tempfile
 import os
+from pdf2image import convert_from_path
+
+POPPLER_PATH=r"C:\Users\60115\Downloads\Release-24.08.0-0\poppler-24.08.0\Library\bin"
 
 def process_receipt_image(file):
     try:
         file.seek(0)
-        file_bytes = np.asarray(bytearray(file.read()), dtype=np.uint8)
-        image = cv2.imdecode(file_bytes, cv2.IMREAD_COLOR)
+        file_bytes = file.read()
+        
+        # Always check file content first - PDF files start with %PDF
+        is_pdf = file_bytes.startswith(b'%PDF')
+        
+        # If not detected by content, check extension as backup
+        if not is_pdf:
+            file_ext = file.name.split('.')[-1].lower() if '.' in file.name else ''
+            is_pdf = file_ext == 'pdf'
+
+        # Handle PDF
+        if is_pdf:
+            print(f"Processing PDF file, size: {len(file_bytes)} bytes")
+            with tempfile.NamedTemporaryFile(delete=False, suffix='.pdf') as temp_pdf:
+                temp_pdf.write(file_bytes)
+                temp_pdf_path = temp_pdf.name
+
+            try:
+                images_from_pdf = convert_from_path(temp_pdf_path, poppler_path=POPPLER_PATH)
+                print(f"PDF converted: {len(images_from_pdf)} pages")
+            except Exception as e:
+                print(f"Error converting PDF: {str(e)}")
+                os.unlink(temp_pdf_path)
+                return {'success': False, 'error': f'PDF conversion failed: {str(e)}'}
+            
+            os.unlink(temp_pdf_path)
+
+            if not images_from_pdf:
+                return {'success': False, 'error': 'No pages found in PDF'}
+
+            # Convert PIL image to OpenCV format properly
+            pil_image = images_from_pdf[0]  # Only first page
+            print(f"PIL image mode: {pil_image.mode}, size: {pil_image.size}")
+            
+            # Convert PIL to numpy array
+            pil_array = np.array(pil_image)
+            print(f"PIL array shape: {pil_array.shape}, dtype: {pil_array.dtype}")
+            
+            # Handle different image modes
+            if pil_image.mode == 'RGBA':
+                # Convert RGBA to RGB first, then to BGR
+                image = cv2.cvtColor(pil_array, cv2.COLOR_RGBA2BGR)
+            elif pil_image.mode == 'RGB':
+                # Convert RGB to BGR
+                image = cv2.cvtColor(pil_array, cv2.COLOR_RGB2BGR)
+            elif pil_image.mode == 'L':
+                # Convert grayscale to BGR
+                image = cv2.cvtColor(pil_array, cv2.COLOR_GRAY2BGR)
+            else:
+                # Try to convert to RGB first, then to BGR
+                pil_image = pil_image.convert('RGB')
+                pil_array = np.array(pil_image)
+                image = cv2.cvtColor(pil_array, cv2.COLOR_RGB2BGR)
+            
+            print(f"OpenCV image shape: {image.shape}, dtype: {image.dtype}")
+            
+            # Ensure image is not empty and has correct data type
+            if image is None or image.size == 0:
+                return {'success': False, 'error': 'Failed to convert PDF page to image'}
+            
+            # Ensure proper data type
+            image = image.astype(np.uint8)
+        else:
+            print(f"Processing image file, size: {len(file_bytes)} bytes")
+            file_array = np.asarray(bytearray(file_bytes), dtype=np.uint8)
+            image = cv2.imdecode(file_array, cv2.IMREAD_COLOR)
+            if image is not None:
+                print(f"Image loaded successfully, shape: {image.shape}")
+            else:
+                print("Failed to decode image file")
+
+        # Additional check to ensure image is valid before proceeding
+        if image is None or image.size == 0:
+            return {'success': False, 'error': 'Failed to load or decode image'}
 
         with tempfile.NamedTemporaryFile(suffix='.jpg', delete=False) as temp_file:
             temp_filename = temp_file.name

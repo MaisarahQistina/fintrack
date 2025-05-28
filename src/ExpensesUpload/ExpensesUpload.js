@@ -167,7 +167,7 @@ export function ExpensesUpload() {
               color: "rgba(0,0,0,1)",
             }}
           >
-            Supported formats: JPG, PNG (&lt;5MB)
+            Supported formats: JPG, PNG, PDF (&lt;5MB)
           </span>
           <br />
           <span
