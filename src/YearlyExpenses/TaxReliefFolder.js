@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { collection, getDocs } from "firebase/firestore";
-import { db } from "../firebase"; // Ensure Firebase setup is correctly imported
+import { db } from "../firebase";
+import { getAuth } from "firebase/auth";
+import { getStorage, ref, getDownloadURL } from "firebase/storage";
+import JSZip from "jszip";
 import TaxRelief from "./TaxRelief";
 import styles from "./MonthlyExpensesView.module.css";
 
@@ -13,6 +16,7 @@ function TaxReliefFolder() {
     const [categories, setCategories] = useState([]);
     const [selectedCategoryId, setSelectedCategoryId] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+    const [isDownloading, setIsDownloading] = useState(false);
 
     // Fetch categories from Firestore on component mount
     useEffect(() => {
@@ -40,6 +44,157 @@ function TaxReliefFolder() {
         setSelectedCategoryId(e.target.value);
     };
 
+    // Function to fetch tax relief receipts for download
+    const fetchTaxReliefReceipts = async () => {
+        try {
+            const auth = getAuth();
+            const user = auth.currentUser;
+
+            if (!user) {
+                console.error("No user is signed in.");
+                return [];
+            }
+
+            const userID = user.uid;
+
+            // Fetch tax relief receipts
+            const receiptSnapshot = await getDocs(collection(db, "Receipt"));
+            const filteredReceipts = [];
+
+            console.log("Total receipts found:", receiptSnapshot.size);
+
+            receiptSnapshot.forEach(doc => {
+                const receipt = doc.data();
+                const receiptDateStr = receipt.receiptTransDate || receipt.transactionDate;
+                const isUserMatch = receipt.userID === userID;
+                
+                // Check for tax relief eligibility - match TaxRelief component logic
+                const isTaxRelief = receipt.isRelief === "Yes";
+                
+                const matchCategory = !selectedCategoryId || receipt.systemCategoryID === selectedCategoryId;
+
+                console.log("Receipt check:", {
+                    id: doc.id,
+                    hasDate: !!receiptDateStr,
+                    isUserMatch,
+                    isTaxRelief,
+                    matchCategory,
+                    isReliefValue: receipt.isRelief,
+                    userID: receipt.userID,
+                    currentUserID: userID
+                });
+
+                if (receiptDateStr && isUserMatch && isTaxRelief && matchCategory) {
+                    const receiptDate = new Date(receiptDateStr);
+                    const receiptYear = receiptDate.getFullYear();
+
+                    if (!year || receiptYear === parseInt(year)) {
+                        filteredReceipts.push({
+                            id: doc.id,
+                            ...receipt
+                        });
+                    }
+                }
+            });
+
+            console.log("Filtered receipts found:", filteredReceipts.length);
+
+            return filteredReceipts;
+        } catch (error) {
+            console.error("Error fetching tax relief receipts:", error);
+            return [];
+        }
+    };
+
+    // Function to download image from URL
+    const downloadImage = async (url) => {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error(`Failed to fetch image: ${response.statusText}`);
+            }
+            return await response.blob();
+        } catch (error) {
+            console.error("Error downloading image:", error);
+            return null;
+        }
+    };
+
+    // Function to get original filename from URL
+    const getOriginalFileName = (url, index) => {
+        try {
+            // Extract filename from URL (before query parameters)
+            const urlParts = url.split('/');
+            const fileNameWithParams = urlParts[urlParts.length - 1];
+            const fileName = fileNameWithParams.split('?')[0];
+            
+            // Decode the filename
+            const decodedFileName = decodeURIComponent(fileName);
+            return decodedFileName || `receipt_${index + 1}.jpg`;
+        } catch (error) {
+            return `receipt_${index + 1}.jpg`;
+        }
+    };
+
+    const handleDownload = async () => {
+  setIsDownloading(true);
+  try {
+    const filteredReceipts = await fetchTaxReliefReceipts();
+
+    if (filteredReceipts.length === 0) {
+      alert("No tax relief receipts found for the selected criteria.");
+      setIsDownloading(false);
+      return;
+    }
+
+    const storage = getStorage();
+    const zip = new JSZip();
+
+    await Promise.all(filteredReceipts.map(async (receipt, index) => {
+      if (!receipt.receiptURL) {
+        console.log(`No receiptURL for receipt ${index + 1}`);
+        return;
+      }
+      try {
+        const storageRef = ref(storage, receipt.receiptURL);
+        const downloadUrl = await getDownloadURL(storageRef);
+        const imageBlob = await downloadImage(downloadUrl);
+        if (imageBlob) {
+          const fileName = getOriginalFileName(downloadUrl, index);
+          zip.file(fileName, imageBlob);
+        } else {
+          console.log(`Failed to download image blob for receipt ${index + 1}`);
+        }
+      } catch (error) {
+        console.error(`Error downloading receipt ${index + 1}:`, error);
+      }
+    }));
+
+    const zipBlob = await zip.generateAsync({ type: "blob" });
+    const url = window.URL.createObjectURL(zipBlob);
+    const link = document.createElement("a");
+    link.href = url;
+
+    const categoryName = selectedCategoryId
+      ? categories.find(cat => cat.id === selectedCategoryId)?.categoryName || "Category"
+      : "AllCategories";
+
+    const zipFileName = `TaxRelief_${year || "AllYears"}_${categoryName}.zip`;
+    link.download = zipFileName;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+
+  } catch (error) {
+    console.error("Error creating zip file:", error);
+    alert("An error occurred while downloading the receipts. Please try again.");
+  } finally {
+    setIsDownloading(false);
+  }
+};
+
+
     return (
         <main className={styles.monthlyExpensesView}>
             {/* View By Section */}
@@ -58,7 +213,7 @@ function TaxReliefFolder() {
                     className={styles.monthSelect} 
                     value={selectedCategoryId} 
                     onChange={handleCategoryChange}
-                    disabled={isLoading} // Disable dropdown while loading
+                    disabled={isLoading || isDownloading}
                 >
                     <option value="">- Select Category -</option>
                     {categories.map((category) => (
@@ -69,9 +224,17 @@ function TaxReliefFolder() {
                 </select>
                 {isLoading && <span className={styles.loadingIndicator}></span>}
 
-                <button className={styles.reliefDownload}>
-                    <img src="/download.png" alt="Download" style={{ width: "16px", height: "16px" }} />
-                    Download
+                <button 
+                    className={styles.reliefDownload}
+                    onClick={handleDownload}
+                    disabled={isDownloading}
+                >
+                    <img 
+                        src="/download.png" 
+                        alt="Download" 
+                        style={{ width: "16px", height: "16px" }} 
+                    />
+                    {isDownloading ? "Downloading..." : "Download"}
                 </button>
             </div>
 
