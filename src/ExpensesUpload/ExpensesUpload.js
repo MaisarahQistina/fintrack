@@ -12,10 +12,19 @@ export function ExpensesUpload() {
   const [isLoading, setIsLoading] = useState(false);
   const [extractedDate, setExtractedDate] = useState(null);
   const [extractedTotal, setExtractedTotal] = useState(null);
+  const [extractedLineItems, setExtractedLineItems] = useState([]);
   const [suggestedCategoryId, setSuggestedCategoryId] = useState(null);
   const [availableYears, setAvailableYears] = useState([]);
   const [showError, setShowError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+
+  // Add state for relief data
+  const [reliefData, setReliefData] = useState({
+    isReliefEligible: "No",
+    reliefCategoryID: "",
+    reliefExplanation: "",
+    matchingReliefCategory: ""
+  });
 
   const navigate = useNavigate();
 
@@ -107,6 +116,10 @@ export function ExpensesUpload() {
         }
 
         const data = await response.json();
+        
+        // Debug log to see what data we're getting
+        console.log("=== PROCESS RECEIPT RESPONSE ===");
+        console.log("Full response:", data);
 
         if (data.processedImage) {
           const base64Image = `data:image/jpg;base64,${data.processedImage}`;
@@ -114,7 +127,23 @@ export function ExpensesUpload() {
           setUploadedFile(base64Image);
           setExtractedDate(data.extractedDate);
           setExtractedTotal(data.extractedTotal);
+          setExtractedLineItems(data.extractedLineItems || []);
           setSuggestedCategoryId(data.suggestedCategoryId || "19"); // Default to Miscellaneous if not provided
+          
+          // Set relief data from response
+          setReliefData({
+            isReliefEligible: data.isReliefEligible || "No",
+            reliefCategoryID: data.reliefCategoryID || "",
+            reliefExplanation: data.reliefExplanation || "",
+            matchingReliefCategory: data.matchingReliefCategory || ""
+          });
+
+          console.log("=== EXTRACTED RELIEF DATA ===");
+          console.log("isReliefEligible:", data.isReliefEligible);
+          console.log("reliefCategoryID:", data.reliefCategoryID);
+          console.log("reliefExplanation:", data.reliefExplanation);
+          console.log("matchingReliefCategory:", data.matchingReliefCategory);
+
           setShowForm(true);
 
           if (data.roboflowResults) {
@@ -140,6 +169,13 @@ export function ExpensesUpload() {
   const closeForm = () => {
     setShowForm(false);
     setUploadedFile(null);
+    // Reset relief data when closing
+    setReliefData({
+      isReliefEligible: "No",
+      reliefCategoryID: "",
+      reliefExplanation: "",
+      matchingReliefCategory: ""
+    });
   };
 
   return (
@@ -241,8 +277,16 @@ export function ExpensesUpload() {
           uploadedFile={uploadedFile}
           extractedDate={extractedDate}
           extractedTotal={extractedTotal}
+          extractedLineItems={extractedLineItems}
           initialCategoryId={suggestedCategoryId}
+          // Pass the relief data as props
+          initialIsReliefEligible={reliefData.isReliefEligible}
+          initialReliefCategoryID={reliefData.reliefCategoryID}
+          initialReliefExplanation={reliefData.reliefExplanation}
+          initialMatchingReliefCategory={reliefData.matchingReliefCategory}
           onClose={closeForm}
+          isSavedReceipt={false}
+          receiptId={null}
         />
       )}
 
