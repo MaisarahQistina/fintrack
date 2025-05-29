@@ -46,7 +46,8 @@ const NavBar = ({ user }) => {
               text === "Expenses" &&
               (location.pathname === "/my-expenses" ||
                 location.pathname === "/yearly-expenses" ||
-                location.pathname === "/monthly-expenses");
+                location.pathname === "/monthly-expenses" ||
+                location.pathname === "/tax-relief");
 
             return (
               <Link
