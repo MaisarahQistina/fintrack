@@ -52,7 +52,7 @@
   border: 2px solid #999;
   border-radius: 8px;
   padding: 8px 12px;
-  width: 15vw;
+  width: 17vw;
   cursor: pointer;
 }
 
@@ -273,7 +273,7 @@
   font: 400 18px/1 Montserrat, -apple-system, Roboto, Helvetica, sans-serif;
   border: none;
   cursor: pointer;
-  width: 140px;
+  width: 170px;
   height: 43px;
   display: flex;
   align-items: center;

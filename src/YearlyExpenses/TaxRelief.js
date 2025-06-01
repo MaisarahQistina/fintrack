@@ -27,11 +27,15 @@ const TaxRelief = ({ year, categoryId }) => {
   
         const userID = user.uid;
   
-        // Fetch categories
-        const categorySnapshot = await getDocs(collection(db, "SystemCategory"));
+        // Fetch categories from ReliefCategory instead of SystemCategory
+        const categorySnapshot = await getDocs(collection(db, "ReliefCategory"));
         const categoryData = {};
         categorySnapshot.forEach(doc => {
-          categoryData[doc.id] = doc.data().categoryName;
+          const data = doc.data();
+          // Map document ID (which is the reliefCatID) to reliefCategory name
+          if (data.reliefCategory) {
+            categoryData[doc.id] = data.reliefCategory;
+          }
         });
         setCategoriesMap(categoryData);
   
@@ -44,7 +48,8 @@ const TaxRelief = ({ year, categoryId }) => {
           const receiptDateStr = receipt.receiptTransDate || receipt.transactionDate;
           const isUserMatch = receipt.userID === userID;
           const isTaxRelief = receipt.isRelief === "Yes";
-          const matchCategory = !categoryId || receipt.systemCategoryID === categoryId;
+          // Match using reliefCategoryID instead of systemCategoryID
+          const matchCategory = !categoryId || receipt.reliefCategoryID === categoryId;
   
           if (receiptDateStr && isUserMatch && isTaxRelief && matchCategory) {
             const receiptDate = new Date(receiptDateStr);
@@ -130,7 +135,7 @@ const TaxRelief = ({ year, categoryId }) => {
             <div className={styles.categoryWrapper}>
               <div className={styles.categoryScroll}>
                 <span className={styles.categoryLabel}>
-                  {categoriesMap[receipt.systemCategoryID] || "Unknown"}
+                  {categoriesMap[receipt.reliefCategoryID] || "Unknown"}
                 </span>
               </div>
             </div>
@@ -178,7 +183,7 @@ const TaxRelief = ({ year, categoryId }) => {
           uploadedFile={selectedReceipt.receiptURL}
           extractedDate={selectedReceipt.receiptTransDate || selectedReceipt.transactionDate}
           extractedTotal={selectedReceipt.totalAmount ? selectedReceipt.totalAmount.toString() : ""}
-          initialCategoryId={selectedReceipt.systemCategoryID}
+          initialCategoryId={selectedReceipt.reliefCategoryID}
           onClose={handleCloseForm}
           isSavedReceipt={true}
           receiptId={selectedReceipt.id}
