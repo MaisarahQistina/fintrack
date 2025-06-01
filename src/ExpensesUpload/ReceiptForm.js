@@ -363,7 +363,7 @@ const ReceiptForm = ({
                       type="text" 
                       id="reliefStatus" 
                       value={isReliefEligible === "Yes" 
-                        ? `Eligible${reliefCategoryId ? `-Category: ${getReliefCategoryName(reliefCategoryId)}` : ''}`
+                        ? `Eligible${reliefCategoryId ? ` (${getReliefCategoryName(reliefCategoryId)})` : ''}`
                         : "Not Eligible"
                       }
                       readOnly
