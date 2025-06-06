@@ -156,4 +156,13 @@ html, body {
     color: #05445E;
 }
 
+  .taxCounter {
+    font-size: 16px;
+    font-family: 'NATS', sans-serif;
+    font-weight: bold;
+    color: #05445E;
+    width: 126px;
+    text-align: center; 
+    margin-top: 4px; 
+  }  
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback} from "react";
 import { useSearchParams } from "react-router-dom";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase";
@@ -17,6 +17,9 @@ function TaxReliefFolder() {
     const [selectedCategoryId, setSelectedCategoryId] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [isDownloading, setIsDownloading] = useState(false);
+    const [totalExpenses, setTotalExpenses] = useState(0);
+    // eslint-disable-next-line no-unused-vars
+    const [receiptCount, setReceiptCount] = useState(0);
 
     // Fetch categories from ReliefCategory collection on component mount
     useEffect(() => {
@@ -41,11 +44,59 @@ function TaxReliefFolder() {
         };
 
         fetchCategories();
-    }, []);
+    }, [year, selectedCategoryId]);
 
     const handleCategoryChange = (e) => {
         setSelectedCategoryId(e.target.value);
     };
+
+    const fetchTotalExpenses = useCallback(async () => {
+        try {
+            const auth = getAuth();
+            const user = auth.currentUser;
+            if (!user) {
+                console.error("No user is signed in.");
+                setTotalExpenses(0);
+                setReceiptCount(0);
+                return;
+            }
+
+            const userID = user.uid;
+            const receiptSnapshot = await getDocs(collection(db, "Receipt"));
+            let total = 0;
+            let count = 0;
+
+            receiptSnapshot.forEach(doc => {
+                const receipt = doc.data();
+                const receiptDateStr = receipt.receiptTransDate || receipt.transactionDate;
+                const isUserMatch = receipt.userID === userID;
+                const isTaxRelief = receipt.isRelief === "Yes";
+                const matchCategory = !selectedCategoryId || receipt.reliefCategoryID === selectedCategoryId;
+
+                if (receiptDateStr && isUserMatch && isTaxRelief && matchCategory) {
+                    const receiptDate = new Date(receiptDateStr);
+                    const receiptYear = receiptDate.getFullYear();
+
+                    if (!year || receiptYear === parseInt(year)) {
+                        const amount = parseFloat(receipt.totalAmount) || 0;
+                        total += amount;
+                        count++;
+                    }
+                }
+            });
+
+            setTotalExpenses(total);
+            setReceiptCount(count);
+        } catch (error) {
+            console.error("Error fetching total expenses:", error);
+            setTotalExpenses(0);
+            setReceiptCount(0);
+        }
+    }, [year, selectedCategoryId]);
+
+    useEffect(() => {
+        fetchTotalExpenses();
+    }, [fetchTotalExpenses]);
 
     // Function to fetch tax relief receipts for download
     const fetchTaxReliefReceipts = async () => {
@@ -245,6 +296,10 @@ function TaxReliefFolder() {
 
             {/* Receipts Grid */}
             <TaxRelief year={year} categoryId={selectedCategoryId} />
+
+            <div className={styles.monthlyTotal}>
+            <h2>Total Relief - Eligible Expenses: RM {totalExpenses}</h2>
+            </div>
         </main>
     );
 }

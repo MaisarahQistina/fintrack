@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { collection, getDocs } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
 import { db } from "../firebase"; // Adjust this import to your Firebase setup
 import MonthsRow from "./MonthsRow";
 import styles from "./YearlyExpensesView.module.css";
@@ -13,6 +14,7 @@ function YearlyExpensesView() {
   const location = useLocation();
   const [year, setYear] = useState(new Date().getFullYear().toString()); // Default to current year
   const [receiptCounts, setReceiptCounts] = useState({});
+  const [taxReliefCount, setTaxReliefCount] = useState(0);
   
   useEffect(() => {
     // Get the year from URL query parameters
@@ -25,6 +27,7 @@ function YearlyExpensesView() {
     
     // Fetch receipts for the specified year
     fetchReceiptCountsByMonth(yearParam || year);
+    fetchTaxReliefCount(yearParam || year);
   }, [location.search, year]);
 
   const fetchReceiptCountsByMonth = async (year) => {
@@ -80,6 +83,58 @@ function YearlyExpensesView() {
     }
   };
 
+  const fetchTaxReliefCount = async (year) => {
+    try {
+      const auth = getAuth();
+      const user = auth.currentUser;
+
+      if (!user) {
+        console.error("No user is signed in.");
+        setTaxReliefCount(0);
+        return;
+      }
+
+      const userID = user.uid;
+      
+      // Reference to the Receipt collection
+      const receiptsRef = collection(db, "Receipt");
+      const receiptsSnapshot = await getDocs(receiptsRef);
+      
+      let count = 0;
+      
+      // Count tax relief receipts for the specific year and user
+      receiptsSnapshot.forEach((doc) => {
+        const data = doc.data();
+        const receiptDateStr = data.receiptTransDate || data.transactionDate;
+        const isUserMatch = data.userID === userID;
+        const isTaxRelief = data.isRelief === "Yes";
+        
+        if (receiptDateStr && isUserMatch && isTaxRelief) {
+          let date;
+          
+          // Handle different date formats
+          if (receiptDateStr.toDate) {
+            date = receiptDateStr.toDate();
+          } else if (typeof receiptDateStr === 'string') {
+            date = new Date(receiptDateStr);
+          } else if (receiptDateStr instanceof Date) {
+            date = receiptDateStr;
+          }
+          
+          if (date && date.getFullYear().toString() === year) {
+            count++;
+          }
+        }
+      });
+      
+      console.log("Tax relief receipt count for year", year, ":", count);
+      setTaxReliefCount(count);
+    } catch (error) {
+      console.error("Error fetching tax relief count:", error);
+      setTaxReliefCount(0);
+    }
+  };
+
   const handleTaxReliefClick = () => {
     navigate(`/tax-relief?year=${year}`);
   };
@@ -98,7 +153,10 @@ function YearlyExpensesView() {
       {/* Tax Relief Folder */}
       <div className={styles.taxRelief} onClick={handleTaxReliefClick} style={{ cursor: "pointer" }}>
         <img src="/taxFolder.png" alt="Folder Icon" />
-        <span>Tax Relief</span>
+        <div>
+          <span>Tax Relief</span><br></br>
+          <div className={styles.taxCounter}>Total: {taxReliefCount}</div>
+        </div>
       </div>
     </main>
   );
