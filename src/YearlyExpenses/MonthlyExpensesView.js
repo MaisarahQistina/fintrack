@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase"; 
 import ReceiptsView from "./ReceiptsView";
@@ -13,6 +13,7 @@ const MONTH_NAMES = [
 
 function MonthlyExpensesView() {
     const location = useLocation();
+    const navigate = useNavigate();
     const [month, setMonth] = useState("");
     const [year, setYear] = useState("");
     const [categories, setCategories] = useState([]);
@@ -78,12 +79,32 @@ function MonthlyExpensesView() {
         setSelectedCategoryId(e.target.value);
     };
 
+    const handleYearClick = () => {
+        // Navigate back to the year view - adjust the route as needed
+        navigate(`/yearly-expenses?year=${year}`);
+    };
+
     return (
         <main className={styles.monthlyExpensesView}>
             {/* View By Section */}
             <div className={styles.viewBy}>
                 <img src="/Calendar.png" alt="Calendar" width="40" height="40" />
-                <span>{`${year} > ${month}`}</span>
+                <span>
+                    <span 
+                        className={styles.clickableYear}
+                        onClick={handleYearClick}
+                        role="button"
+                        tabIndex={0}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                                handleYearClick();
+                            }
+                        }}
+                    >
+                        {year}
+                    </span>
+                    {` > ${month}`}
+                </span>
             </div>
 
             {/* Dropdown Selection */}
