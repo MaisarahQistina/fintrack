@@ -5,7 +5,9 @@ import "./App.css";
 import { onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import { auth, db } from "./firebase"; 
+
 import axios from "axios";
+import sessionManager from "./utils/sessionManager";
 
 import { FinTrackLanding } from "./LandingPage/FinTrackLanding"; 
 import { SignIn } from "./SignIn/SignIn"; 
@@ -22,7 +24,7 @@ import AdminHome from "./Admin/AdminHomepage/AdminHome";
 import AdminFeedback from "./Admin/AdminFeedbacks/FeedbackPage";
 import AdminInfographics from "./Admin/AdminInfographics/AdminInfographics";
 import AdminTaxRelief from "./Admin/AdminTaxRelief/AdminTaxRelief";
-import { Footer } from "./LandingPage/components/Footer"; // Your shared footer component
+import { Footer } from "./LandingPage/components/Footer"; 
 
 import { ToastContainer } from "react-toastify";
 
@@ -71,6 +73,9 @@ const App = () => {
         });
       }}
 
+      // Start user session
+      sessionManager.startSession();
+
         // Fetch ID Token and send to backend
         const idToken = await authUser.getIdToken();
         // Send the ID token to the backend for prediction
@@ -92,13 +97,17 @@ const App = () => {
           });
           
       } else {
+        sessionManager.endSession();
         setUser(null);
       }
 
       setLoading(false);
     });
 
-    return () => unsubscribe(); // Clean up listener 
+    return () => {
+      sessionManager.endSession();
+      unsubscribe();
+    };
   }, []);
 
   if (loading) {
@@ -129,7 +138,7 @@ const App = () => {
           />
           <Route
             path="/my-expenses"
-            element={user ? <ExpensesUpload /> : <Navigate to="/sign-up" replace />}
+            element={user ? <ExpensesUpload /> : <Navigate to="/" replace />}
           />
           <Route
             path="/yearly-expenses"
