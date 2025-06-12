@@ -49,8 +49,8 @@ def extract_total(base64_image):
         ocr_data = pytesseract.image_to_data(enhanced_image, output_type=pytesseract.Output.DICT, config=custom_config)
 
         keywords = [
-            'total', 'totl', 'tl', 'ttl', 'grand total', 'amount due', 'balance due', 'to-go',
-            'final total', 'total amount', 'amount payable', 'total payable', 'total due'
+            'total', 'totl', 'tl', 'ttl', 'grand total', 'amount due', 'balance due', 'to-go', 'RM'
+            'final total', 'total amount', 'amount payable', 'total payable', 'total due', 'the sum of'
         ]
 
         exclude_keywords = [
