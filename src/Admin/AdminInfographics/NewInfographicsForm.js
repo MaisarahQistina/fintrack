@@ -24,6 +24,15 @@ const NewInfographicsForm = ({ uploadedFile, onClose, fileObject }) => {
       return;
     }
 
+    if (resource) {
+      try {
+        new URL(resource); // This will throw if invalid
+      } catch (_) {
+        alert("Please enter a valid URL.");
+        return;
+      }
+    }
+    
     try {
       setIsLoading(true);
 
@@ -117,12 +126,12 @@ const NewInfographicsForm = ({ uploadedFile, onClose, fileObject }) => {
                     />
                   </div>                
                   <input 
-                    type="text" 
+                    type="url" 
                     id="resourceLink" 
                     placeholder="Add Link"
                     value={resource}
                     onChange={(e) => setResource(e.target.value)}
-                    className={styles.inputField}
+                    className={styles.inputWithIconField}
                   />
                 </div>
               </div>

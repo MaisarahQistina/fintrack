@@ -405,10 +405,9 @@ select {
   display: block;
 }
 
-.inputWithIconField {
+.inputWithIconField{
   width: 100%;
   padding: 10px 15px 10px 40px;
-  text-indent: 20px;
   border: 1px solid #ddd;
   border-radius: 5px;
   font-size: 16px;
