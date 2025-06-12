@@ -102,7 +102,7 @@ const UserProfile = () => {
               <label htmlFor="monthlyIncome">Monthly Income</label>
                 <div className={styles.inputWithIcon}>
                     <input
-                    type="text"
+                    type="number"
                     id="monthlyIncome"
                     value={monthlyIncome}
                     onChange={(e) => setMonthlyIncome(e.target.value)} // Allow editing

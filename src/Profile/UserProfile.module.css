@@ -148,6 +148,15 @@ select {
     outline: none;
 }
 
+input[type="number"] { 
+    width: 100%;
+    padding: 12px 30px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    outline: none; 
+}
+
 /* Button Style */
 .saveButton {
     cursor: pointer;
