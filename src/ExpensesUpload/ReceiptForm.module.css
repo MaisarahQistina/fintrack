@@ -139,7 +139,7 @@
 
 /* Input styling */
 input[type="date"], 
-select {
+select, option {
     width: 100%;
     padding: 12px 15px;
     border: 1px solid #ddd;
@@ -148,7 +148,26 @@ select {
     outline: none;
 }
 
-input[type="text"], 
+.inputField, input[type="text"]
+{
+    width: 100%;
+    padding: 12px 0px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    outline: none;
+}
+
+input[type="number"]
+{
+    width: 100%;
+    padding: 12px 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    outline: none;
+}
+
 select {
     width: 100%;
     padding: 12px 0px;
@@ -160,7 +179,7 @@ select {
 
 .calendar-icon {
     position: absolute;
-    right: 10px;
+    right: 15px;
     top: 50%;
     transform: translateY(-50%);
 }

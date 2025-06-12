@@ -347,7 +347,7 @@ const ReceiptForm = ({
                   <label htmlFor="totalAmount">Total Amount</label>
                   <div className={styles.inputWithIcon}>
                     <input 
-                      type="text" 
+                      type="number" 
                       id="totalAmount" 
                       value={totalAmount}
                       onChange={handleAmountChange} // Use the fixed handler
@@ -358,7 +358,7 @@ const ReceiptForm = ({
                 
                 <div className={styles.formGroup}>
                   <label htmlFor="reliefStatus">Tax Relief Status</label>
-                  <div className={styles.inputWithIcon}>
+                  <div>
                     <input 
                       type="text" 
                       id="reliefStatus" 
@@ -369,9 +369,6 @@ const ReceiptForm = ({
                       readOnly
                       className={styles.inputField}
                     />
-                      <input type="hidden" value={showReliefDetails} />
-                      <input type="hidden" value={isCheckingRelief} />
-                      <input type="hidden" value={handleCheckReliefEligibility} />
                   </div>
                 </div>
                 
@@ -383,6 +380,10 @@ const ReceiptForm = ({
           </div>
         </div>
       </div>
+
+      <input type="hidden" value={showReliefDetails} />
+      <input type="hidden" value={isCheckingRelief} />
+      <input type="hidden" value={handleCheckReliefEligibility} />
 
       {showSuccess && (
         <div className={styles.popupOverlay} onClick={() => setShowSuccess(false)}>
