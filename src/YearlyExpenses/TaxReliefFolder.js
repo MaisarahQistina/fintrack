@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback} from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase";
 import { getAuth } from "firebase/auth";
@@ -10,6 +10,7 @@ import styles from "./MonthlyExpensesView.module.css";
 
 function TaxReliefFolder() {
     const [searchParams] = useSearchParams();
+    const navigate = useNavigate();
     const year = searchParams.get("year");
 
     // State for storing categories
@@ -20,6 +21,11 @@ function TaxReliefFolder() {
     const [totalExpenses, setTotalExpenses] = useState(0);
     // eslint-disable-next-line no-unused-vars
     const [receiptCount, setReceiptCount] = useState(0);
+
+    // Function to navigate back to previous page
+    const handleYearClick = () => {
+        navigate(`/yearly-expenses?year=${year}`);
+    };
 
     // Fetch categories from ReliefCategory collection on component mount
     useEffect(() => {
@@ -257,7 +263,22 @@ function TaxReliefFolder() {
             {year && (
                 <div className={styles.viewBy}>
                     <img src="/Calendar.png" alt="Calendar" width="40" height="40" />
-                    <span>{`${year} > Tax Relief`}</span>
+                    <span>
+                        <span 
+                            className={styles.clickableYear}
+                            onClick={handleYearClick}
+                            role="button"
+                            tabIndex={0}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter' || e.key === ' ') {
+                                    handleYearClick();
+                                }
+                            }}
+                        >
+                            {year}
+                        </span>
+                        {` > Tax Relief`}
+                    </span>
                 </div>
             )}
 
