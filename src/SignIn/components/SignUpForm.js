@@ -75,7 +75,7 @@ export function SignUpForm() {
   return (
     <form className="flex flex-col flex-1 shrink self-stretch w-full basis-0 min-h-[600px] max-md:max-w-full" onSubmit={handleSubmit}>
       <div className="flex flex-col mt-4 w-full max-md:max-w-full">
-        <label htmlFor="fullName" className="text-xl leading-none text-black mb-3 text-[20] font-abhaya">
+        <label htmlFor="fullName" className="text-xl leading-none text-black mb-3 text-[20] font-abhaya mt-5">
           Full Name
         </label>
         <input
@@ -86,6 +86,9 @@ export function SignUpForm() {
           className="flex w-full bg-white rounded border border-solid border-neutral-200 min-h-[57px] px-4 text-base text-[18] font-abhaya"
           placeholder="Full Name"
           aria-label="Full Name"
+          pattern="^[A-Za-z\s]+$"
+          onInvalid={(e) => e.target.setCustomValidity("Please enter a valid name using only letters and spaces.")}
+          onInput={(e) => e.target.setCustomValidity("")} 
         />
 
         <label htmlFor="dob" className="text-xl leading-none text-black mb-3 text-[20] font-abhaya mt-5">

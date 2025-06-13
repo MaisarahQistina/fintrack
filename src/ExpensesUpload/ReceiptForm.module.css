@@ -148,7 +148,7 @@ select, option {
     outline: none;
 }
 
-.inputField, input[type="text"]
+.inputField
 {
     width: 100%;
     padding: 12px 0px;
