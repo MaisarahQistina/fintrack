@@ -67,7 +67,6 @@
     border: 1px solid rgb(126, 123, 123);
     overflow: hidden;
     margin-left: auto; /* Pushes month to the right */
-    margin-right: 25px;
 }
 
 /* ---------------------------------------------------------------------- */
@@ -797,3 +796,25 @@
     white-space: nowrap;
     margin-right: 10px;
   }
+
+  .dateNavigation {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.dateArrow {
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+}
+
+.dateArrow.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.arrow.active {
+  opacity: 1;
+  border: 2px solid;
+}
