@@ -113,11 +113,21 @@ useEffect(() => {
             const summariesSnapshot = await getDocs(yearQuery);
             
             if (summariesSnapshot.empty) {
-                setError("No data found for the current year");
+                // No data – fallback to default visuals
+                const defaultSummaries = Array.from({ length: 12 }, (_, i) => ({
+                    month: i + 1,
+                    totalActual: 0,
+                    totalPredicted: 0,
+                    categoryActuals: {},
+                }));
+
+                processMonthlyData(defaultSummaries);
+                setTopCategories([]);
+                setTotalExpenses(0);
                 setLoading(false);
                 return;
             }
-            
+
             // Process the monthly summaries data
             const monthlySummaries = [];
             let categoryTotals = {};

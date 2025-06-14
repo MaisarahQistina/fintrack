@@ -52,7 +52,7 @@ import styles from "./Dashboard.module.css";
     "19": "Miscellaneous Items",
   };
 
-function DashboardContainer() {
+function DashboardMonthContainer({ selectedMonth, selectedYear }) {
   // State for all the dynamic data
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -142,8 +142,12 @@ function DashboardContainer() {
         });
         setSpendingData(spendingBreakdown);
       } else {
-        // Handle no summary found (optional)
-        setError("No monthly summary found for this month.");
+        // No summary found – fallback to empty state
+        setExpenses(0);
+        setBudget(0);
+        setRemaining(0);
+        setBudgetCategoriesData([]);
+        setSpendingData([]);
       }
 
       setLoading(false);
@@ -359,4 +363,4 @@ function DashboardContainer() {
   );
 }
 
-export default DashboardContainer;
+export default DashboardMonthContainer;
