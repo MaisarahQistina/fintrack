@@ -50,7 +50,7 @@ def extract_total(base64_image):
 
         keywords = [
             'total', 'totl', 'tl', 'ttl', 'grand total', 'amount due', 'balance due', 'to-go', 'RM'
-            'final total', 'total amount', 'amount payable', 'total payable', 'total due', 'the sum of'
+            'final total', 'total amount', 'amount payable', 'total payable', 'jumlah', 'total due', 'the sum of'
         ]
 
         exclude_keywords = [
@@ -168,7 +168,7 @@ def extract_date(base64_image):
         # If no pattern matches, use OCR data for further inspection
         ocr_data = pytesseract.image_to_data(image, output_type=pytesseract.Output.DICT, config=custom_config)
         
-        date_indicators = ['date', 'dt', 'dated', 'receipt date']
+        date_indicators = ['date', 'dt', 'dated', 'receipt date', 'tarikh']
         
         for i, word in enumerate(ocr_data['text']):
             cleaned_word = word.lower().strip()
