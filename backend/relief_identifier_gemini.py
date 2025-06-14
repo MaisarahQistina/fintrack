@@ -72,6 +72,12 @@ def check_relief_eligibility(line_items, relief_description=None):
         
         Available relief categories and descriptions:
         {relief_description}
+
+        STRICT MATCHING RULES:
+        1. Items must LITERALLY match the category description
+        2. NO creative interpretations or extensions
+        3. NO stretching definitions to make items fit
+        4. When unsure, choose NOT eligible
         
         Respond in JSON format with the following structure:
         {{
