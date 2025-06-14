@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import styles from "./CardSlider.module.css";
 import linkIcon from "./icons/link.png";
 import enlargeIcon from "./icons/enlarge.png";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, query, orderBy } from "firebase/firestore";
 import { db } from "../firebase"; // Adjust the path as needed
 
 function CardSlider() {
@@ -12,7 +12,9 @@ function CardSlider() {
   useEffect(() => {
     const fetchInfographics = async () => {
       try {
-        const querySnapshot = await getDocs(collection(db, "Infographics"));
+        // Query with ordering - most efficient approach
+        const q = query(collection(db, "Infographics"), orderBy("createdAt", "desc"));
+        const querySnapshot = await getDocs(q);
         const fetchedCards = querySnapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data()
