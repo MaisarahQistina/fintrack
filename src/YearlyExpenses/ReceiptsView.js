@@ -92,11 +92,33 @@ const ReceiptsView = ({ year, month, categoryId, onTotalUpdate }) => {
         setReceipts((prevReceipts) => 
           prevReceipts.filter(receipt => receipt.id !== receiptToDelete.id)
         );
+
+        console.log("Deleting receipt ID:", receiptToDelete.id);
+
+        // ✅ Trigger backend to recompute monthly summaries
+        const auth = getAuth();
+        const user = auth.currentUser;
+        if (user) {
+          const idToken = await user.getIdToken();
+
+          await fetch("http://localhost:5000/predict-budget", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ idToken }),
+          });
+        }
       }
       
       setShowPopup(false);
       setShowSuccess(true);
-      setTimeout(() => setShowSuccess(false), 2000);
+
+      // Simple delayed reload
+      setTimeout(() => {
+        setShowSuccess(false);
+        window.location.reload();
+      }, 2000);
+      
+      // setTimeout(() => setShowSuccess(false), 2000);
     } catch (error) {
       console.error("Error deleting receipt:", error);
       setShowPopup(false);
