@@ -5,54 +5,54 @@ import { getFirestore, doc, getDoc } from "firebase/firestore";
 import styles from "./Dashboard.module.css";
 
 // Colors for different categories
-  const categoryColors = {
-    0: "#FF6384",   // Red-ish
-    1: "#36A2EB",   // Blue
-    2: "#FFCE56",   // Yellow
-    3: "#4BC0C0",   // Teal
-    4: "#9966FF",   // Purple
-    5: "#FF9F40",   // Orange
-    6: "#C9CBCF",   // Light Gray
-    7: "#8BC34A",   // Light Green
-    8: "#E91E63",   // Hot Pink
-    9: "#3F51B5",   // Indigo
-    10: "#00BCD4",  // Cyan
-    11: "#CDDC39",  // Lime
-    12: "#9C27B0",  // Violet
-    13: "#FF5722",  // Deep Orange
-    14: "#607D8B",  // Slate
-    15: "#795548",  // Brown
-    16: "#009688",  // Sea Green
-    17: "#FFC107",  // Amber
-    18: "#673AB7",  // Deep Purple
-    19: "#AED581",  // Soft Green
-  };
+const categoryColors = {
+  0: "#FF6384",   // Red-ish
+  1: "#36A2EB",   // Blue
+  2: "#FFCE56",   // Yellow
+  3: "#4BC0C0",   // Teal
+  4: "#9966FF",   // Purple
+  5: "#FF9F40",   // Orange
+  6: "#C9CBCF",   // Light Gray
+  7: "#8BC34A",   // Light Green
+  8: "#E91E63",   // Hot Pink
+  9: "#3F51B5",   // Indigo
+  10: "#00BCD4",  // Cyan
+  11: "#CDDC39",  // Lime
+  12: "#9C27B0",  // Violet
+  13: "#FF5722",  // Deep Orange
+  14: "#607D8B",  // Slate
+  15: "#795548",  // Brown
+  16: "#009688",  // Sea Green
+  17: "#FFC107",  // Amber
+  18: "#673AB7",  // Deep Purple
+  19: "#AED581",  // Soft Green
+};
 
-  // Category name mapping
-  const categoryNames = {
-    "0": "Family",
-    "1": "Insurance",
-    "2": "Food & Drinks",
-    "3": "Groceries",
-    "4": "Medical Expenses",
-    "5": "Rent",
-    "6": "Utilities",
-    "7": "Education",
-    "8": "Books & Magazines",
-    "9": "Gadget & Electronics",
-    "10": "Subscription",
-    "11": "Contributions",
-    "12": "Transportation",
-    "13": "Sports",
-    "14": "Apparel",
-    "15": "Entertainment",
-    "16": "Personal Care & Beauty",
-    "17": "Travel",
-    "18": "Accessories",
-    "19": "Miscellaneous Items",
-  };
+// Category name mapping
+const categoryNames = {
+  "0": "Family",
+  "1": "Insurance",
+  "2": "Food & Drinks",
+  "3": "Groceries",
+  "4": "Medical Expenses",
+  "5": "Rent",
+  "6": "Utilities",
+  "7": "Education",
+  "8": "Books & Magazines",
+  "9": "Gadget & Electronics",
+  "10": "Subscription",
+  "11": "Contributions",
+  "12": "Transportation",
+  "13": "Sports",
+  "14": "Apparel",
+  "15": "Entertainment",
+  "16": "Personal Care & Beauty",
+  "17": "Travel",
+  "18": "Accessories",
+  "19": "Miscellaneous Items",
+};
 
-function DashboardMonthContainer({ selectedMonth, selectedYear }) {
+function DashboardMonthContainer({ year, month }) {
   // State for all the dynamic data
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -63,103 +63,105 @@ function DashboardMonthContainer({ selectedMonth, selectedYear }) {
   const [budgetCategoriesData, setBudgetCategoriesData] = useState([]);
   const [spendingData, setSpendingData] = useState([]);
 
-  // Get current date info for database queries
-  const currentDate = new Date();
-  const currentYear = currentDate.getFullYear(); // 2025
-  const currentMonth = currentDate.getMonth() + 1; // May = 5
+  // Convert month from 0-11 to 1-12 for database query
+  const dbMonth = month + 1;
+  const dbYear = year;
+
+  // Get month name for display
+  const monthName = new Date(year, month).toLocaleString('default', { month: 'long' });
 
   useEffect(() => {
-  async function fetchData() {
-    try {
-      setLoading(true);
-      const auth = getAuth();
-      const user = auth.currentUser;
+    async function fetchData() {
+      try {
+        setLoading(true);
+        const auth = getAuth();
+        const user = auth.currentUser;
 
-      if (!user) {
-        setError("User not logged in");
+        if (!user) {
+          setError("User not logged in");
+          setLoading(false);
+          return;
+        }
+
+        const db = getFirestore();
+        const userId = user.uid;
+
+        // Fetch user profile for income and overall budget if needed
+        const userProfileRef = doc(db, "User", userId);
+        const userProfileSnap = await getDoc(userProfileRef);
+        if (userProfileSnap.exists()) {
+          const profileData = userProfileSnap.data();
+          const income = Number(profileData.monthlyIncome) || 0;
+          setMonthlyIncome(income);
+        }
+
+        // Fetch monthly summary document for the SELECTED month and year (not current)
+        const summaryId = `${userId}_${dbYear}_${dbMonth}`;
+        const monthlySummaryRef = doc(db, "monthly_summaries", summaryId);
+        const monthlySummarySnap = await getDoc(monthlySummaryRef);
+
+        if (monthlySummarySnap.exists()) {
+          const summaryData = monthlySummarySnap.data();
+
+          // Use categoryActuals directly
+          const categoriesActual = Object.fromEntries(
+            Object.entries(summaryData.categoryActuals || {}).map(([k, v]) => [parseInt(k), v])
+          );
+
+          // Use categoryPredictions as your budget data
+          const categoriesBudget = Object.fromEntries(
+            Object.entries(summaryData.categoryPredictions || {}).map(([k, v]) => [parseInt(k), v])
+          );
+
+          // Calculate total expenses from actuals or fallback to summary totalActual
+          const totalExpenses = Object.values(categoriesActual).reduce((sum, val) => sum + val, 0) 
+                                || summaryData.totalActual || 0;
+          setExpenses(totalExpenses);
+
+          // Calculate remaining budget (totalPredicted - actual expenses)
+          const totalBudget = Object.values(categoriesBudget).reduce((sum, val) => sum + val, 0)
+                             || summaryData.totalPredicted || 0;
+          setBudget(totalBudget);
+          setRemaining(totalBudget - totalExpenses);
+
+          // Prepare pie chart data for budget categories (from predictions)
+          const budgetPieData = Object.entries(categoriesBudget).map(([catId, amount]) => ({
+            name: categoryNames[catId] || `Category ${catId}`,
+            value: amount,
+            color: categoryColors[catId] || `#${Math.floor(Math.random() * 16777215).toString(16)}`,
+          }));
+          setBudgetCategoriesData(budgetPieData);
+
+          // Prepare spending breakdown (budget vs spent per category)
+          const spendingBreakdown = Object.entries(categoriesBudget).map(([catId, budgetAmount]) => {
+            const numericCatId = parseInt(catId);
+            return {
+              name: categoryNames[numericCatId] || `Category ${numericCatId}`,
+              value: budgetAmount,
+              spent: categoriesActual[numericCatId] || 0,
+              color: categoryColors[numericCatId] || `#${Math.floor(Math.random() * 16777215).toString(16)}`,
+            };
+          });
+          setSpendingData(spendingBreakdown);
+        } else {
+          // No summary found – fallback to empty state
+          setExpenses(0);
+          setBudget(0);
+          setRemaining(0);
+          setBudgetCategoriesData([]);
+          setSpendingData([]);
+        }
+
         setLoading(false);
-        return;
+      } catch (err) {
+        console.error("Error fetching data:", err);
+        setError("Failed to load dashboard data");
+        setLoading(false);
       }
-
-      const db = getFirestore();
-      const userId = user.uid;
-
-      // Fetch user profile for income and overall budget if needed
-      const userProfileRef = doc(db, "User", userId);
-      const userProfileSnap = await getDoc(userProfileRef);
-      if (userProfileSnap.exists()) {
-        const profileData = userProfileSnap.data();
-        const income = Number(profileData.monthlyIncome) || 0; // Convert to number explicitly
-        setMonthlyIncome(income);
-      }
-
-      // Fetch monthly summary document for the current month and year
-      const summaryId = `${userId}_${currentYear}_${currentMonth}`;
-      const monthlySummaryRef = doc(db, "monthly_summaries", summaryId);
-      const monthlySummarySnap = await getDoc(monthlySummaryRef);
-
-      if (monthlySummarySnap.exists()) {
-        const summaryData = monthlySummarySnap.data();
-
-        // Use categoryActuals directly
-        const categoriesActual = Object.fromEntries(
-          Object.entries(summaryData.categoryActuals || {}).map(([k, v]) => [parseInt(k), v])
-        );
-
-        // Use categoryPredictions as your budget data
-        const categoriesBudget = Object.fromEntries(
-          Object.entries(summaryData.categoryPredictions || {}).map(([k, v]) => [parseInt(k), v])
-        );
-
-        // Calculate total expenses from actuals or fallback to summary totalActual
-        const totalExpenses = Object.values(categoriesActual).reduce((sum, val) => sum + val, 0) 
-                              || summaryData.totalActual || 0;
-        setExpenses(totalExpenses);
-
-        // Calculate remaining budget (totalPredicted - actual expenses)
-        const totalBudget = Object.values(categoriesBudget).reduce((sum, val) => sum + val, 0)
-                           || summaryData.totalPredicted || 0;
-        setBudget(totalBudget);
-        setRemaining(totalBudget - totalExpenses);
-
-        // Prepare pie chart data for budget categories (from predictions)
-        const budgetPieData = Object.entries(categoriesBudget).map(([catId, amount]) => ({
-          name: categoryNames[catId] || `Category ${catId}`,
-          value: amount,
-          color: categoryColors[catId] || `#${Math.floor(Math.random() * 16777215).toString(16)}`,
-        }));
-        setBudgetCategoriesData(budgetPieData);
-
-        // Prepare spending breakdown (budget vs spent per category)
-        const spendingBreakdown = Object.entries(categoriesBudget).map(([catId, budgetAmount]) => {
-          const numericCatId = parseInt(catId);
-          return {
-            name: categoryNames[numericCatId] || `Category ${numericCatId}`,
-            value: budgetAmount,
-            spent: categoriesActual[numericCatId] || 0,
-            color: categoryColors[numericCatId] || `#${Math.floor(Math.random() * 16777215).toString(16)}`,
-          };
-        });
-        setSpendingData(spendingBreakdown);
-      } else {
-        // No summary found – fallback to empty state
-        setExpenses(0);
-        setBudget(0);
-        setRemaining(0);
-        setBudgetCategoriesData([]);
-        setSpendingData([]);
-      }
-
-      setLoading(false);
-    } catch (err) {
-      console.error("Error fetching data:", err);
-      setError("Failed to load dashboard data");
-      setLoading(false);
     }
-  }
 
-  fetchData();
-}, [currentMonth, currentYear]);
+    fetchData();
+  }, [dbMonth, dbYear]); // Changed dependency from currentMonth/currentYear to dbMonth/dbYear
 
   const CustomTooltip = ({ active, payload }) => {
     if (active && payload && payload.length) {
@@ -168,7 +170,7 @@ function DashboardMonthContainer({ selectedMonth, selectedYear }) {
           <p className={styles.customTooltipTitle}>{payload[0].name}</p>
           <p className={styles.customTooltipValue}>RM {payload[0].value.toFixed(2)}</p>
           <p className={styles.customTooltipPercentage}>
-            {(payload[0].value / budget * 100).toFixed(1)}% of budget
+            {budget > 0 ? (payload[0].value / budget * 100).toFixed(1) : 0}% of budget
           </p>
         </div>
       );
@@ -242,12 +244,12 @@ function DashboardMonthContainer({ selectedMonth, selectedYear }) {
           <div className={styles.progressBarContainer}>
             <div
               className={styles.expensesBar}
-              style={{ width: `${(expenses / monthlyIncome) * 100}%` }}
+              style={{ width: `${monthlyIncome > 0 ? (expenses / monthlyIncome) * 100 : 0}%` }}
             ></div>
 
             <div
               className={styles.budgetBar}
-              style={{ width: `${((budget - expenses) / monthlyIncome) * 100}%` }}
+              style={{ width: `${monthlyIncome > 0 ? ((budget - expenses) / monthlyIncome) * 100 : 0}%` }}
             ></div>
           </div>
 
@@ -346,7 +348,7 @@ function DashboardMonthContainer({ selectedMonth, selectedYear }) {
                     <div 
                       className={styles.spendingProgressBar}
                       style={{ 
-                        width: `${Math.min((category.spent / category.value) * 100, 100)}%`,
+                        width: `${category.value > 0 ? Math.min((category.spent / category.value) * 100, 100) : 0}%`,
                         backgroundColor: category.color 
                       }}
                     ></div>
@@ -355,7 +357,9 @@ function DashboardMonthContainer({ selectedMonth, selectedYear }) {
               ))}
             </div>
           ) : (
-            <div className={styles.noSpendingData}>No spending data available for May 2025</div>
+            <div className={styles.noSpendingData}>
+              No spending data available for {monthName} {year}
+            </div>
           )}
         </div>
       </section>

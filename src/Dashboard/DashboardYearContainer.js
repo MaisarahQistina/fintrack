@@ -28,7 +28,7 @@ const categoryNames = {
   "19": "Miscellaneous Items",
 };
 
-function DashboardYearContainer() {
+function DashboardYearContainer({ year }) {
     // State to store processed data
     const [monthlyData, setMonthlyData] = useState([]);
     const [topCategories, setTopCategories] = useState([]);
@@ -36,149 +36,150 @@ function DashboardYearContainer() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    // Get current year for the dashboard
-    const currentYear = new Date().getFullYear(); // 2025
+    // Use the passed year prop instead of current year
+    const selectedYear = year;
 
-useEffect(() => {
-    // Color classes for categories
-    const colorClasses = [
-        styles.category1, // Darkest blue for highest expense
-        styles.category2,
-        styles.category3,
-        styles.category4,
-        styles.category5  // Lightest blue for lowest expense
-    ];
+    useEffect(() => {
+        // Color classes for categories
+        const colorClasses = [
+            styles.category1, // Darkest blue for highest expense
+            styles.category2,
+            styles.category3,
+            styles.category4,
+            styles.category5  // Lightest blue for lowest expense
+        ];
 
-    const processMonthlyData = (summaries) => {
-    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-    
-        // Map each month to its actual values (no accumulation)
-    const monthlyData = summaries.map((summary) => ({
-        name: monthNames[summary.month - 1],
-        expenses: parseFloat(summary.totalActual) || 0,
-        budget: parseFloat(summary.totalPredicted) || 0,
-        monthIndex: summary.month,
-    }));
-
-    // Sort by month index just in case
-    monthlyData.sort((a, b) => a.monthIndex - b.monthIndex);
-    setMonthlyData(monthlyData);
-    };
-
-    // Top 5 Categories by Expenses
-    const calculateTopCategories = (categoryTotals) => {
-        // Convert to array and sort by amount for top 5
-        const categoriesArray = Object.entries(categoryTotals).map(([categoryId, amount]) => ({
-            id: categoryId,
-            name: categoryNames[categoryId] || `Category ${categoryId}`,
-            amount: amount
-        }));
-        
-        // Sort by amount (descending) and take top 5
-        const top5Categories = categoriesArray
-            .sort((a, b) => b.amount - a.amount)
-            .slice(0, 5)
-            .map((category, index) => ({
-                ...category,
-                class: colorClasses[index]
+        const processMonthlyData = (summaries) => {
+            const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+            
+            // Map each month to its actual values (no accumulation)
+            const monthlyData = summaries.map((summary) => ({
+                name: monthNames[summary.month - 1],
+                expenses: parseFloat(summary.totalActual) || 0,
+                budget: parseFloat(summary.totalPredicted) || 0,
+                monthIndex: summary.month,
             }));
-        
-        setTopCategories(top5Categories);
-    };
 
-    const fetchYearData = async () => {
-        try {
-            setLoading(true);
+            // Sort by month index just in case
+            monthlyData.sort((a, b) => a.monthIndex - b.monthIndex);
+            setMonthlyData(monthlyData);
+        };
+
+        // Top 5 Categories by Expenses
+        const calculateTopCategories = (categoryTotals) => {
+            // Convert to array and sort by amount for top 5
+            const categoriesArray = Object.entries(categoryTotals).map(([categoryId, amount]) => ({
+                id: categoryId,
+                name: categoryNames[categoryId] || `Category ${categoryId}`,
+                amount: amount
+            }));
             
-            const auth = getAuth();
-            const user = auth.currentUser;
-            
-            if (!user) {
-                setError("User not logged in");
-                setLoading(false);
-                return;
-            }
-            
-            const db = getFirestore();
-            const userId = user.uid;
-            
-            // Query all monthly summaries for the current year
-            const summariesRef = collection(db, "monthly_summaries");
-            const yearQuery = query(
-                summariesRef,
-                where("userID", "==", userId),
-                where("year", "==", currentYear)
-            );
-            
-            const summariesSnapshot = await getDocs(yearQuery);
-            
-            if (summariesSnapshot.empty) {
-                // No data – fallback to default visuals
-                const defaultSummaries = Array.from({ length: 12 }, (_, i) => ({
-                    month: i + 1,
-                    totalActual: 0,
-                    totalPredicted: 0,
-                    categoryActuals: {},
+            // Sort by amount (descending) and take top 5
+            const top5Categories = categoriesArray
+                .sort((a, b) => b.amount - a.amount)
+                .slice(0, 5)
+                .map((category, index) => ({
+                    ...category,
+                    class: colorClasses[index]
                 }));
+            
+            setTopCategories(top5Categories);
+        };
 
-                processMonthlyData(defaultSummaries);
-                setTopCategories([]);
-                setTotalExpenses(0);
-                setLoading(false);
-                return;
-            }
-
-            // Process the monthly summaries data
-            const monthlySummaries = [];
-            let categoryTotals = {};
-
-            summariesSnapshot.forEach((doc) => {
-                const data = doc.data();
-                const monthIndex = data.month; // 1-12
+        const fetchYearData = async () => {
+            try {
+                setLoading(true);
                 
-                // Create monthly summary object
-                const monthlySummary = {
-                    month: monthIndex,
-                    totalActual: data.totalActual || 0,
-                    totalPredicted: data.totalPredicted || 0,
-                    categoryActuals: data.categoryActuals || {},
-                };
+                const auth = getAuth();
+                const user = auth.currentUser;
                 
-                monthlySummaries.push(monthlySummary);
-                
-                // Accumulate category totals for top categories calculation
-                if (data.categoryActuals) {
-                    Object.entries(data.categoryActuals).forEach(([categoryId, amount]) => {
-                        if (!categoryTotals[categoryId]) {
-                            categoryTotals[categoryId] = 0;
-                        }
-                        categoryTotals[categoryId] += parseFloat(amount) || 0;
-                    });
+                if (!user) {
+                    setError("User not logged in");
+                    setLoading(false);
+                    return;
                 }
-            });
-            
-            // Sort monthly summaries by month
-            monthlySummaries.sort((a, b) => a.month - b.month);
-            
-            // Process the monthly data for the line chart
-            processMonthlyData(monthlySummaries);
-            
-            // Calculate the top 5 categories by total
-            calculateTopCategories(categoryTotals);
-            
-            // Calculate total expenses for the year 
-            const total = monthlySummaries.reduce((sum, month) => sum + month.totalActual, 0);
-            setTotalExpenses(total);
-            
-            setLoading(false);
-        } catch (err) {
-            console.error("Error fetching year data:", err);
-            setError("Failed to load dashboard data");
-            setLoading(false);
-        }
-    };
-    fetchYearData();
-}, [currentYear]);
+                
+                const db = getFirestore();
+                const userId = user.uid;
+                
+                // Query all monthly summaries for the SELECTED year (not current year)
+                const summariesRef = collection(db, "monthly_summaries");
+                const yearQuery = query(
+                    summariesRef,
+                    where("userID", "==", userId),
+                    where("year", "==", selectedYear)  // Changed from currentYear to selectedYear
+                );
+                
+                const summariesSnapshot = await getDocs(yearQuery);
+                
+                if (summariesSnapshot.empty) {
+                    // No data – fallback to default visuals
+                    const defaultSummaries = Array.from({ length: 12 }, (_, i) => ({
+                        month: i + 1,
+                        totalActual: 0,
+                        totalPredicted: 0,
+                        categoryActuals: {},
+                    }));
+
+                    processMonthlyData(defaultSummaries);
+                    setTopCategories([]);
+                    setTotalExpenses(0);
+                    setLoading(false);
+                    return;
+                }
+
+                // Process the monthly summaries data
+                const monthlySummaries = [];
+                let categoryTotals = {};
+
+                summariesSnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    const monthIndex = data.month; // 1-12
+                    
+                    // Create monthly summary object
+                    const monthlySummary = {
+                        month: monthIndex,
+                        totalActual: data.totalActual || 0,
+                        totalPredicted: data.totalPredicted || 0,
+                        categoryActuals: data.categoryActuals || {},
+                    };
+                    
+                    monthlySummaries.push(monthlySummary);
+                    
+                    // Accumulate category totals for top categories calculation
+                    if (data.categoryActuals) {
+                        Object.entries(data.categoryActuals).forEach(([categoryId, amount]) => {
+                            if (!categoryTotals[categoryId]) {
+                                categoryTotals[categoryId] = 0;
+                            }
+                            categoryTotals[categoryId] += parseFloat(amount) || 0;
+                        });
+                    }
+                });
+                
+                // Sort monthly summaries by month
+                monthlySummaries.sort((a, b) => a.month - b.month);
+                
+                // Process the monthly data for the line chart
+                processMonthlyData(monthlySummaries);
+                
+                // Calculate the top 5 categories by total
+                calculateTopCategories(categoryTotals);
+                
+                // Calculate total expenses for the year 
+                const total = monthlySummaries.reduce((sum, month) => sum + month.totalActual, 0);
+                setTotalExpenses(total);
+                
+                setLoading(false);
+            } catch (err) {
+                console.error("Error fetching year data:", err);
+                setError("Failed to load dashboard data");
+                setLoading(false);
+            }
+        };
+        
+        fetchYearData();
+    }, [selectedYear]); // Changed dependency from currentYear to selectedYear
 
     // Custom tooltip for the chart
     const CustomTooltip = ({ active, payload, label }) => {
@@ -216,7 +217,7 @@ useEffect(() => {
     return (
         <div className={styles.dashboard2Wrapper}>
             <section className={styles.dashboardContainer3}>
-                <h3 className={styles.chartTitle}>Expenses VS Budget ({currentYear})</h3>
+                <h3 className={styles.chartTitle}>Expenses VS Budget ({selectedYear})</h3>
                 <div className={styles.chartContainer}>
                     {monthlyData.length > 0 ? (
                         <ResponsiveContainer width="100%" height={280}>
@@ -265,7 +266,7 @@ useEffect(() => {
                             </LineChart>
                         </ResponsiveContainer>
                     ) : (
-                        <div className={styles.noData}>No data available for {currentYear}</div>
+                        <div className={styles.noData}>No data available for {selectedYear}</div>
                     )}
                 </div>
             </section>
